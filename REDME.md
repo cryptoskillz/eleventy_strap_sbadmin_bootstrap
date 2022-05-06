@@ -1,18 +1,19 @@
-this is a 11.ty template with sanity admin
+this is a 11.ty template with sb admin to build user control panels
 
-it is based on the santiy starter template and modified to my requirements
+it uses eleventy, sb admin & strapi.
 
-https://github.com/sanity-io/sanity-template-eleventy-blog/tree/55a9cfbd5e525070a44de68b3e7357e157e1bd70
+features
 
-It uses cloudflare pages for hosting, github to store the repo, sanity for the CMS / API and eleventy for the JAM frontend.
-
-It is all in one repo can can be hosted fully in cloudflare.  
+strapi integration to add / login in users via JWT
+sd admin 2 integrated into eleventy
 
 
 Other links
 
-https://www.sanity.io/
+https://startbootstrap.com/theme/sb-admin-2
 https://www.11ty.dev/
-https://pages.cloudflare.com/
+https://strapi.io/
+
+
 
 
