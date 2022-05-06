@@ -65,6 +65,11 @@ let validateEmail = (email) => {
     return re.test(email);
 };
 
+
+ 
+
+
+
 //this function makes the XHR calls.
 let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "", callback = '') => {
     //debug
@@ -147,3 +152,4 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
 
     }
 };
+
