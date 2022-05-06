@@ -5,6 +5,8 @@ let redirectUrl = ""; // hold the redcirect URL
 (function($) {
     "use strict"; // Start of use strict
 
+
+ 
     // Toggle the side navigation
     $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
         $("body").toggleClass("sidebar-toggled");
@@ -66,7 +68,36 @@ let validateEmail = (email) => {
 };
 
 
- 
+let checkLogin = () => {
+    //check if it is not a login page
+    if ((window.location.pathname == "/create-account/") || (window.location.pathname == "/login/") || (window.location.pathname == "/forgot-password/"))
+    {
+        //window.location = '/'
+    }
+    else
+    {
+        //get the user object
+        let tmpUser = window.localStorage.user
+        //check it exists
+        if (tmpUser != undefined)
+        {
+            //decode the json
+            user = JSON.parse(window.localStorage.user);
+            //check the user is logged in some one could spoof this so we could do a valid jwt check here 
+            //but i prefer to do it when we ping the api for the data for this user. 
+            if (user.loggedin != 1)
+            {
+                window.location = '/login'
+            }
+        }
+        else
+        {
+             window.location = '/login'   
+        }
+        
+    }
+}
+
 
 
 
@@ -122,7 +153,6 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     //result
     //todo (chris) make this eval back to a done function
     xhr.onload = function() {
-        alert('dd')
         //check if its an error
         if (xhr.status == 400) {
             //process the response
@@ -153,4 +183,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
 
     }
 };
+
+
+ checkLogin()
 

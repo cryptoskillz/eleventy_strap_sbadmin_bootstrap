@@ -4,7 +4,8 @@ const superagent = require('superagent');
 
 //async function to get the posts
 getData = async () => {
-    console.log(`${process.env.STRAPIAPI}backpage-projects/`)
+    let method = "test-endpoint/"
+    console.log(`${process.env.STRAPIAPI}${method}`)
     var res = await superagent.get(`${process.env.STRAPIAPI}backpage-projects/`).query({});
     //console.log(res.body)
     return (res.body)
@@ -13,13 +14,12 @@ getData = async () => {
 
 module.exports = async () => {
     //set an array 
-    let properties = []
+    let resArray = []
     //call the get get Data fuction
-    if (properties.length === 0) properties = await getData();
-    //console.log(properties[0].id)
+    //if (resArray.length === 0) resArray = await getData();
 
     return {
-        propertiesArray: properties
+        resArray: resArray
     }
 
 }
