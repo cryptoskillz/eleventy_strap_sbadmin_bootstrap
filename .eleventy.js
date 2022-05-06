@@ -27,6 +27,14 @@ module.exports = function(eleventyConfig) {
     "assets/webfonts": "assets/webfonts"
   });
   eleventyConfig.addPassthroughCopy({
+    "assets/vendor": "assets/vendor"
+  });
+  eleventyConfig.addPassthroughCopy({
+    "assets/scss": "assets/scss"
+  });
+    
+
+  eleventyConfig.addPassthroughCopy({
     "robots.txt": "robots.txt"
   });
 
@@ -38,13 +46,6 @@ module.exports = function(eleventyConfig) {
     }
     return minified.code;
   });
-
-  eleventyConfig.addFilter('sanityToHTML', function(value) {
-    return blocksToHtml({
-      blocks: value,
-    })
-  })
-
 
 
   // Add plugins
