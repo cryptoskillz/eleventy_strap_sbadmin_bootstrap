@@ -122,6 +122,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     //result
     //todo (chris) make this eval back to a done function
     xhr.onload = function() {
+        alert('dd')
         //check if its an error
         if (xhr.status == 400) {
             //process the response
@@ -131,16 +132,16 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
 
             //get the message
             //we just display the error returned from strapi but you can do what you want  hre
-            let error = document.getElementById('loginAlert')
-            error.innerHTML = res.error.message
-            error.classList.remove('d-none')
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = res.error.message
+            alert.classList.remove('d-none')
 
         }
         //check if it was ok.
         if (xhr.status == 200) {
-            let error = document.getElementById('loginAlert')
-            error.innerHTML = ""
-            error.classList.add('d-none')
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = ""
+            alert.classList.add('d-none')
             //check if a redirecr url as passed.
             if (redirectUrl != "") {
                 window.location = redirectUrl
