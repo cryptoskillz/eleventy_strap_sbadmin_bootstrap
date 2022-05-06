@@ -1,3 +1,14 @@
+
+document.getElementById('btn-reset-password').addEventListener('click', function() {
+    alert('forget password')
+});
+
+document.getElementById('btn-create-account').addEventListener('click', function() {
+    alert('create account')
+});
+
+
+
 //this function handles the login
 document.getElementById('btn-login').addEventListener('click', function() {
     /*
