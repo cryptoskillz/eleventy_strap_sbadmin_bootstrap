@@ -6,7 +6,7 @@ let redirectUrl = ""; // hold the redcirect URL
     "use strict"; // Start of use strict
 
 
- 
+
     // Toggle the side navigation
     $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
         $("body").toggleClass("sidebar-toggled");
@@ -70,36 +70,27 @@ let validateEmail = (email) => {
 
 let checkLogin = () => {
     //check if it is not a login page
-    if ((window.location.pathname == "/create-account/") || (window.location.pathname == "/login/") || (window.location.pathname == "/forgot-password/"))
-    {
+    if ((window.location.pathname == "/create-account/") || (window.location.pathname == "/login/") || (window.location.pathname == "/forgot-password/")) {
         //window.location = '/'
-    }
-    else
-    {
+    } else {
         //get the user object
         let tmpUser = window.localStorage.user
         //check it exists
-        if (tmpUser != undefined)
-        {
+        if (tmpUser != undefined) {
             //decode the json
             user = JSON.parse(window.localStorage.user);
             //check the user is logged in some one could spoof this so we could do a valid jwt check here 
             //but i prefer to do it when we ping the api for the data for this user. 
-            if (user.loggedin != 1)
-            {
+            if (user.loggedin != 1) {
                 window.location = '/login'
-            }
-            else
-            {
-                
+            } else {
+
                 document.getElementById('user-account-header').innerHTML = user.email
             }
+        } else {
+            window.location = '/login'
         }
-        else
-        {
-             window.location = '/login'   
-        }
-        
+
     }
 }
 
@@ -107,7 +98,7 @@ let checkLogin = () => {
 
 
 //this function makes the XHR calls.
-let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "", callback = '') => {
+let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "", callback = '', auth = "") => {
     //debug
     //console.log(apiUrl)
     //console.log(bodyObj)
@@ -149,6 +140,8 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     //note (chris) this may have to be a switch
     if (setHeader == "json")
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    if (auth != "")
+        xhr.setRequestHeader("Authorization", "Bearer " + auth);
     //send the body object if one was passed
     if (bodyObj !== '') {
         xhr.send(bodyObj);
@@ -174,9 +167,6 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         }
         //check if it was ok.
         if (xhr.status == 200) {
-            let alert = document.getElementById('accountsAlert')
-            alert.innerHTML = ""
-            alert.classList.add('d-none')
             //check if a redirecr url as passed.
             if (redirectUrl != "") {
                 window.location = redirectUrl
@@ -189,6 +179,17 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     }
 };
 
+checkLogin()
 
- checkLogin()
 
+/*
+test for fetch data              
+    //string it 
+    //done function
+    let testDone = (xhr) => {
+        console.log(xhr.response)
+    }
+    //call the create account endpoint
+    xhrcall(1, "backpages", "", "json", "", testDone,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjUxODY4MjY2LCJleHAiOjE2NTQ0NjAyNjZ9.VkSALRg3Jp5HZsdRAssRfjnS1mEzbZT6sTPQw93eDl4")
+
+*/

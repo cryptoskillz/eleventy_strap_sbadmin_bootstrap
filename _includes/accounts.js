@@ -44,6 +44,9 @@ whenDocumentReady(isReady = () => {
             let password2 = document.getElementById('inp-password2');
 
             //reset errors
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = ""
+            alert.classList.add('d-none')
             document.getElementById('accountsSuccess').classList.add('d-none')
             document.getElementById('accountsAlert').classList.add('d-none')
             document.getElementById('error-password1').classList.add('d-none')
@@ -106,6 +109,9 @@ whenDocumentReady(isReady = () => {
             //get the details
             let email = document.getElementById('inp-email');
             //reset errors
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = ""
+            alert.classList.add('d-none')
             document.getElementById('accountsSuccess').classList.add('d-none')
             document.getElementById('accountsAlert').classList.add('d-none')
             document.getElementById('error-email').classList.add('d-none')
@@ -163,6 +169,9 @@ whenDocumentReady(isReady = () => {
             let password2 = document.getElementById('inp-password2');
 
             //reset errors
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = ""
+            alert.classList.add('d-none')
             document.getElementById('accountsSuccess').classList.add('d-none')
             document.getElementById('accountsAlert').classList.add('d-none')
             document.getElementById('error-email').classList.add('d-none')
@@ -239,7 +248,9 @@ whenDocumentReady(isReady = () => {
             let password1 = document.getElementById('inp-password1');
 
             //reset errors
-            //reset errors
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = ""
+            alert.classList.add('d-none')
             document.getElementById('accountsSuccess').classList.add('d-none')
             document.getElementById('accountsAlert').classList.add('d-none')
             document.getElementById('error-email').classList.add('d-none')
