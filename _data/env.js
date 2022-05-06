@@ -20,8 +20,10 @@ require('dotenv').config();
 
 
 let todaysDate = new Date();
-let _YEAR = todaysDate.getFullYear(); 
+let _YEAR = todaysDate.getFullYear();
 
 module.exports = {
-    YEAR:_YEAR
+    YEAR: _YEAR,
+    TITLE: "BACKPAGE GENERATOR",
+    APIURL: process.env.STRAPIAPI
 }
