@@ -3,6 +3,7 @@
 TODO 
 
 check the sendemail works for forogot password
+check for logout paramter
 
 
 notes
