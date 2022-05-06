@@ -89,6 +89,11 @@ let checkLogin = () => {
             {
                 window.location = '/login'
             }
+            else
+            {
+                
+                document.getElementById('user-account-header').innerHTML = user.email
+            }
         }
         else
         {
