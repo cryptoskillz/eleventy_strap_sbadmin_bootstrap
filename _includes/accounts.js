@@ -19,6 +19,7 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
 
+
     //this function checks if an element exists
     let checkElement = (element) => {
         let checkedElement = document.getElementById(element);
@@ -274,7 +275,7 @@ whenDocumentReady(isReady = () => {
                     //get the JWT
                     let token = res.jwt
                     //set the user object
-                    let user = { "email": res.user.email, "username": res.user.username, "loggedin": 1, "walletconnected": 0 }
+                    let user = { "email": res.user.email, "loggedin": 1 }
                     //debug
                     //console.log(res)
                     //console.log(token)
