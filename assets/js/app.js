@@ -67,6 +67,18 @@ let validateEmail = (email) => {
     return re.test(email);
 };
 
+let getToken = () => {
+    let token = window.localStorage.token;
+    if ((token != "") && (token != undefined))
+    {
+        return(token);        
+    }
+    else
+    {
+        return("")
+    }
+}
+
 
 let checkLogin = () => {
     //check if it is not a login page
@@ -152,19 +164,26 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     //todo (chris) make this eval back to a done function
     xhr.onload = function() {
         //check if its an error
-        if (xhr.status == 400) {
+        let res = xhr.response;
+        let errorMessage = "";
+
+        //check for errors
+        if (xhr.status == 400){
             //process the response
-            let res = xhr.response;
-
             res = JSON.parse(res)
-
-            //get the message
-            //we just display the error returned from strapi but you can do what you want  hre
-            let alert = document.getElementById('accountsAlert')
-            alert.innerHTML = res.error.message
-            alert.classList.remove('d-none')
-
+            errorMessage = res.error.message            
         }
+        if (xhr.status == 405) {
+            errorMessage = res
+        }
+        
+        if (errorMessage != "")
+        {
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = errorMessage
+            alert.classList.remove('d-none')
+        }
+
         //check if it was ok.
         if (xhr.status == 200) {
             //check if a redirecr url as passed.
