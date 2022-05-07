@@ -1,5 +1,6 @@
 let redirectUrl = ""; // hold the redcirect URL
-
+let token;
+let user;
 
 //TODO: replace this with plain js
 (function($) {
@@ -67,8 +68,17 @@ let validateEmail = (email) => {
     return re.test(email);
 };
 
+/* 
+
+start of global account stuff
+
+Ideally this should live in accounts.js but seeing as require it on every page we put it here instead otherwise we would have
+to include accounts.js and app.js in every page
+
+*/
+
 let getToken = () => {
-    let token = window.localStorage.token;
+    token = window.localStorage.token;
     if ((token != "") && (token != undefined))
     {
         return(token);        
@@ -77,6 +87,11 @@ let getToken = () => {
     {
         return("")
     }
+}
+
+
+let logout = () => {
+    alert('to do logout')
 }
 
 
@@ -91,13 +106,18 @@ let checkLogin = () => {
         if (tmpUser != undefined) {
             //decode the json
             user = JSON.parse(window.localStorage.user);
+            console.log(user.email)
             //check the user is logged in some one could spoof this so we could do a valid jwt check here 
             //but i prefer to do it when we ping the api for the data for this user. 
             if (user.loggedin != 1) {
                 window.location = '/login'
             } else {
-
-                document.getElementById('user-account-header').innerHTML = user.email
+                //set the jwt and user
+                getToken();
+                if ((user.username != "") && (user.username != undefined))
+                    document.getElementById('user-account-header').innerHTML = user.username
+                else
+                    document.getElementById('user-account-header').innerHTML = user.email
             }
         } else {
             window.location = '/login'
@@ -105,6 +125,13 @@ let checkLogin = () => {
 
     }
 }
+
+
+/* 
+
+end of global account stuff
+
+*/
 
 
 
@@ -168,7 +195,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         let errorMessage = "";
 
         //check for errors
-        if ((xhr.status == 400) || (xhr.status == 403)){
+        if ((xhr.status == 400) || (xhr.status == 403) || (xhr.status == 500)){
             //process the response
             res = JSON.parse(res)
             errorMessage = res.error.message            
