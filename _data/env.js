@@ -25,5 +25,6 @@ let _YEAR = todaysDate.getFullYear();
 module.exports = {
     YEAR: _YEAR,
     TITLE: "BACKPAGE GENERATOR",
-    APIURL: process.env.STRAPIAPI
+    APIURL: process.env.STRAPIAPI,
+    COPYRIGHT: "Your website "+_YEAR
 }

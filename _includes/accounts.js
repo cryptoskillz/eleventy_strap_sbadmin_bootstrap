@@ -4,12 +4,13 @@ TODO
 
 check the sendemail works for forogot password
 check for logout paramter
+rationlise the error check functions
 
 
 notes
 
 to make forgot / reset password I have to test the send mail funciton to see how it actually works.
-in strapi these permissions are disabled so you have to go to settings / roles / public  / user permissions / tick forgot password & reset pssword
+in strapi these permissions are disabled so you have to go to settings / roles / public  / user permissions / tick forgot password & reset pssword and update on user
 
 */
 
@@ -33,6 +34,45 @@ whenDocumentReady(isReady = () => {
     }
 
 
+
+
+if (checkElement("btn-profile-update") == true) {
+    document.getElementById('btn-profile-update').addEventListener('click', function() {
+        //set the valid var
+        let valid = 1;
+        let username = document.getElementById('inp-username');
+        //reset errors
+        let alert = document.getElementById('accountsAlert')
+        alert.innerHTML = ""
+        alert.classList.add('d-none')
+        document.getElementById('accountsSuccess').classList.add('d-none')
+
+        if (username.value == "") {
+                //error with the password
+                valid = 0;
+                let error = document.getElementById('error-username')
+                error.innerHTML = 'Username cannot be blank'
+                error.classList.remove('d-none')
+        }
+
+        if (valid == 1) {
+                //build the json
+                let bodyobj = {
+                    username: username.value,
+                }
+                //string it 
+                var bodyobjectjson = JSON.stringify(bodyobj);
+                //done function
+                let profileUpdateDone = () => {
+                    let alert = document.getElementById('accountsAlert')
+                    alert.innerHTML = "Update done"
+                    alert.classList.remove('d-none')
+                }
+                //call the create account endpoint
+                xhrcall(0, "auth/forgot-password", bodyobjectjson, "json", "", profileUpdateDone)
+        }
+    })
+}
 
     if (checkElement("btn-reset-password") == true) {
         document.getElementById('btn-reset-password').addEventListener('click', function() {
