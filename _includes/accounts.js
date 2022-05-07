@@ -38,6 +38,8 @@ whenDocumentReady(isReady = () => {
 
 if (checkElement("btn-profile-update") == true) {
     document.getElementById('btn-profile-update').addEventListener('click', function() {
+        let token = getToken();
+
         //set the valid var
         let valid = 1;
         let username = document.getElementById('inp-username');
@@ -69,7 +71,7 @@ if (checkElement("btn-profile-update") == true) {
                     alert.classList.remove('d-none')
                 }
                 //call the create account endpoint
-                xhrcall(0, "auth/forgot-password", bodyobjectjson, "json", "", profileUpdateDone)
+                xhrcall(4, "users", bodyobjectjson, "json", "", profileUpdateDone,token)
         }
     })
 }
@@ -126,13 +128,13 @@ if (checkElement("btn-profile-update") == true) {
                 //string it 
                 var bodyobjectjson = JSON.stringify(bodyobj);
                 //done function
-                let forgotPasswordDone = () => {
+                let resetPasswordDone = () => {
                     let alert = document.getElementById('accountsAlert')
                     alert.innerHTML = "Password has been reset"
                     alert.classList.remove('d-none')
                 }
                 //call the create account endpoint
-                xhrcall(0, "auth/reset-password", bodyobjectjson, "json", "", forgotPasswordDone)
+                xhrcall(0, "auth/reset-password", bodyobjectjson, "json", "", resetPasswordDone)
 
 
 
