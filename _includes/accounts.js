@@ -66,12 +66,12 @@ if (checkElement("btn-profile-update") == true) {
                 var bodyobjectjson = JSON.stringify(bodyobj);
                 //done function
                 let profileUpdateDone = () => {
-                    let alert = document.getElementById('accountsAlert')
-                    alert.innerHTML = "Update done"
-                    alert.classList.remove('d-none')
+                    let success = document.getElementById('accountsSuccess')
+                    success.innerHTML = "Update done"
+                    success.classList.remove('d-none')
                 }
                 //call the create account endpoint
-                xhrcall(4, "users", bodyobjectjson, "json", "", profileUpdateDone,token)
+                xhrcall(4, "users/2", bodyobjectjson, "json", "", profileUpdateDone,token)
         }
     })
 }
