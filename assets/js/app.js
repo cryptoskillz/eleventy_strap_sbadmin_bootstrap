@@ -168,7 +168,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         let errorMessage = "";
 
         //check for errors
-        if (xhr.status == 400){
+        if ((xhr.status == 400) || (xhr.status == 403)){
             //process the response
             res = JSON.parse(res)
             errorMessage = res.error.message            
