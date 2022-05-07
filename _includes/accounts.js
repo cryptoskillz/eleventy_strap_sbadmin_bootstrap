@@ -38,7 +38,7 @@ whenDocumentReady(isReady = () => {
 
 if (checkElement("btn-profile-update") == true) {
     document.getElementById('btn-profile-update').addEventListener('click', function() {
-        let token = getToken();
+        
 
         //set the valid var
         let valid = 1;
@@ -69,9 +69,14 @@ if (checkElement("btn-profile-update") == true) {
                     let success = document.getElementById('accountsSuccess')
                     success.innerHTML = "Update done"
                     success.classList.remove('d-none')
+                    let updateUser = { "id": user.id,"username": username.value,"email": user.email, "loggedin": 1 }
+                    window.localStorage.user = JSON.stringify(updateUser);
+                    user = updateUser;
+                    document.getElementById('user-account-header').innerHTML = user.username
+
                 }
                 //call the create account endpoint
-                xhrcall(4, "users/2", bodyobjectjson, "json", "", profileUpdateDone,token)
+                xhrcall(4, "users/"+user.id, bodyobjectjson, "json", "", profileUpdateDone,token)
         }
     })
 }
@@ -329,7 +334,7 @@ if (checkElement("btn-profile-update") == true) {
                     //get the JWT
                     let token = res.jwt
                     //set the user object
-                    let user = { "email": res.user.email, "loggedin": 1 }
+                    let user = { "id": res.user.id,"username": res.user.username,"email": res.user.email, "loggedin": 1 }
                     //debug
                     //console.log(res)
                     //console.log(token)
@@ -353,6 +358,11 @@ if (checkElement("btn-profile-update") == true) {
 
             }
         })
+    }
+
+    //maybe this is better in profile.js
+    if (window.location.pathname == "/profile/") {
+        document.getElementById('inp-username').value  = user.username;
     }
 
 });
