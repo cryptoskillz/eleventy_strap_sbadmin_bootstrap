@@ -321,8 +321,10 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    
-                      {{ content | safe }}
+                    <div class="spinner-border d-none" role="status" id="spinner">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    {{ content | safe }}
                     
                  </div>
                   
@@ -397,9 +399,6 @@
 
     <!-- Page level custom scripts -->
     <script src="/assets/js/demo/datatables-demo.js"></script>
-  <script type="text/javascript">
-     
-  </script>
 </body>
 
 </html>

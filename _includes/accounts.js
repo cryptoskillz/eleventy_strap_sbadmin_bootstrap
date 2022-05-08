@@ -3,9 +3,8 @@
 TODO 
 
 check the sendemail works for forogot password
-check for logout paramter
+check for logout paramater
 rationlise the error check functions
-login store the id as we require it for udpates
 
 notes
 
