@@ -24,7 +24,7 @@ let _YEAR = todaysDate.getFullYear();
 
 module.exports = {
     YEAR: _YEAR,
-    TITLE: "PEOJECT STARTER",
+    TITLE: "PROJECT STARTER",
     APIURL: process.env.STRAPIAPI,
-    COPYRIGHT: "Your website "+_YEAR
+    COPYRIGHT: "Your website " + _YEAR
 }

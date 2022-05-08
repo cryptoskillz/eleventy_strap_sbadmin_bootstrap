@@ -4,9 +4,7 @@ let user;
 
 //TODO: replace this with plain js
 (function($) {
-    "use strict"; // Start of use strict
-
-
+    "use strict"; // Start of use strictß
 
     // Toggle the side navigation
     $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
@@ -79,13 +77,10 @@ to include accounts.js and app.js in every page
 
 let getToken = () => {
     token = window.localStorage.token;
-    if ((token != "") && (token != undefined))
-    {
-        return(token);        
-    }
-    else
-    {
-        return("")
+    if ((token != "") && (token != undefined)) {
+        return (token);
+    } else {
+        return ("")
     }
 }
 
@@ -106,7 +101,6 @@ let checkLogin = () => {
         if (tmpUser != undefined) {
             //decode the json
             user = JSON.parse(window.localStorage.user);
-            console.log(user.email)
             //check the user is logged in some one could spoof this so we could do a valid jwt check here 
             //but i prefer to do it when we ping the api for the data for this user. 
             if (user.loggedin != 1) {
@@ -147,6 +141,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     /*
       Note if we are not using strai and have a custom URL we can change it here like wise if we want to use 2 we can check the method to select the correct base url
     */
+    document.getElementById("spinner").classList.remove("d-none");
     let url = apiUrl + method;
     //store the type
     let xhrtype = '';
@@ -190,22 +185,22 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     //result
     //todo (chris) make this eval back to a done function
     xhr.onload = function() {
+        document.getElementById("spinner").classList.add("d-none");
         //check if its an error
         let res = xhr.response;
         let errorMessage = "";
 
         //check for errors
-        if ((xhr.status == 400) || (xhr.status == 403) || (xhr.status == 500)){
+        if ((xhr.status == 400) || (xhr.status == 403) || (xhr.status == 500)) {
             //process the response
             res = JSON.parse(res)
-            errorMessage = res.error.message            
+            errorMessage = res.error.message
         }
         if (xhr.status == 405) {
             errorMessage = res
         }
-        
-        if (errorMessage != "")
-        {
+
+        if (errorMessage != "") {
             let alert = document.getElementById('accountsAlert')
             alert.innerHTML = errorMessage
             alert.classList.remove('d-none')
@@ -217,7 +212,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
             if (redirectUrl != "") {
                 window.location = redirectUrl
             } else {
-                eval(callback(xhr));
+                eval(callback(res));
             }
 
         }
