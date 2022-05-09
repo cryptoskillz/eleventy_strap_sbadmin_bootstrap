@@ -3,10 +3,10 @@ layout: layout.njk
 permalink: /projects/new/
 ---
 {% set theJs %}
-    {% include 'accounts.js' %}
+    {% include 'create-project.js' %}
 {% endset %}
 <!-- Page Heading -->
-<h1 class="h3 mb-4 text-gray-800">Profile</h1>
+<h1 class="h3 mb-4 text-gray-800">Create a new project</h1>
 <p class="mb-4">
 </p>
 <div class="alert alert-success  d-none" role="alert" id="accountsSuccess">
@@ -14,10 +14,10 @@ permalink: /projects/new/
 <div class="alert alert-danger  d-none" role="alert" id="accountsAlert">
 </div>
 <div class="form-group">
-    <input type="email" class="form-control form-control-user" id="inp-username" aria-describedby="emailHelp" placeholder="Enter Username...">
-   	<span class="text-danger d-none" id="error-username">Invalid Username </span>  
+    <input type="email" class="form-control form-control-user" id="inp-projectname" aria-describedby="emailHelp" placeholder="Enter a project name...">
+   	<span class="text-danger d-none" id="error-projectname">Name </span>  
 </div>
-<button class="btn btn-primary btn-user btn-block" id="btn-profile-update">
+<button class="btn btn-primary btn-user btn-block" id="btn-create">
     Update
 </button>
 {% if env.ENVIRONMENT == 'local' %}
