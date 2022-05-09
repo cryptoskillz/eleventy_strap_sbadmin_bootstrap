@@ -38,15 +38,15 @@ module.exports = function(eleventyConfig) {
     "robots.txt": "robots.txt"
   });
 
-  eleventyConfig.addFilter("jsmin", function (code) {
-    let minified = Terser.minify(code);
-    if (minified.error) {
-      console.log("Terser error: ", minified.error);
-      return code;
+ eleventyConfig.addNunjucksAsyncFilter("jsmin", async (code, callback) => {
+    try {
+      const minified = await Terser.minify(code);
+      return callback(null, minified.code);
+    } catch (err) {
+      console.error("Error during terser minify:", err);
+      return callback(err, code);
     }
-    return minified.code;
   });
-
 
   // Add plugins
   eleventyConfig.addPlugin(pluginRss);

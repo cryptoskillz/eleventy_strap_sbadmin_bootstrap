@@ -19,4 +19,8 @@ layout: layout.njk
 <button class="btn btn-primary btn-user btn-block" id="btn-profile-update">
     Update
 </button>
-<script type="text/javascript">{{theJs  | safe}}</script>
+{% if env.ENVIRONMENT == 'local' %}
+    <script type="text/javascript">{{theJs | safe}}</script>
+{% else %}
+    <script type="text/javascript">{{theJs | jsmin | safe}}</script>
+{% endif %}
