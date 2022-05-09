@@ -8,8 +8,10 @@ whenDocumentReady(isReady = () => {
 
 let xhrDone = (res) => {
      res = JSON.parse(res)
-     //console.log(res.meta.pagination.total)
-     document.getElementById("backpageprojects").innerHTML =  res.meta.pagination.total
+     console.log(res)
+     //document.getElementById("backpageprojects").innerHTML =  res.meta.pagination.total
+
+
 }
 //call the create account endpoint
 xhrcall(1, "backpage-projects/", "", "json", "", xhrDone,token)

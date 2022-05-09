@@ -29,4 +29,8 @@ layout: layout.njk
         </div>
     </div>
 </div>
-<script type="text/javascript">{{theJs | safe}}</script>
+{% if env.ENVIRONMENT == 'local' %}
+    <script type="text/javascript">{{theJs | safe}}</script>
+{% else %}
+    <script type="text/javascript">{{theJs | jsmin | safe}}</script>
+{% endif %}
