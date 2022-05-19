@@ -233,14 +233,27 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
 checkLogin()
 
 
-/*
-test for fetch data              
-    //string it 
-    //done function
-    let testDone = (xhr) => {
-        console.log(xhr.response)
-    }
-    //call the create account endpoint
-    xhrcall(1, "backpages", "", "json", "", testDone,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjUxODY4MjY2LCJleHAiOjE2NTQ0NjAyNjZ9.VkSALRg3Jp5HZsdRAssRfjnS1mEzbZT6sTPQw93eDl4")
+/* start of  modal  code */
 
-*/
+let deleteId = 0;
+let deleteMethod = "";
+
+document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
+    //alert(deleteId)
+    //alert(deleteMethod)
+    $('#confirmation-modal').modal('toggle')
+    let xhrDone = (res) => {
+        //parse the response
+        let success = document.getElementById('accountsSuccess');
+        success.innerHTML = "project has been deleted"
+        success.classList.remove('d-none');  
+    }
+
+    //call the create account endpoint
+    //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
+    xhrcall(3, `${deleteMethod}/${deleteId}/`, "", "json", "", xhrDone, token)
+
+})
+
+/* end of  modal  code */
+

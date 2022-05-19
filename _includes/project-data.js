@@ -13,13 +13,10 @@ whenDocumentReady(isReady = () => {
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
 
-            //console.log(res.data[i].attributes.template)
-            let databutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-eye fa-sm text-white-50"></i> Data</a>`
-            let templatebutton = `<a href="/project/template/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
-            let editbutton = `<a href="/project/edit/?name=${res.data[i].attributes.name}&id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
+            let publishbutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>` 
+            let viewbutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-eye fa-sm text-white-50"></i> View</a>` 
             let deletebutton = `<a href="javascript:deleteProject(${res.data[i].id})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
@@ -27,9 +24,11 @@ whenDocumentReady(isReady = () => {
             let createdAt = new Date(res.data[i].attributes.createdAt);
             //convert, apis should give a formatted data option!
             createdAt = `${createdAt.getDate()}/${createdAt.getDate()}/${createdAt.getFullYear()}`
+
+            let data = JSON.stringify(res.data[i].attributes.data)
             //add the records
             var rowNode = table
-                .row.add([res.data[i].id, res.data[i].attributes.name, createdAt, `${databutton} ${editbutton} ${templatebutton} ${deletebutton} `])
+                .row.add([res.data[i].id, createdAt, data , ` ${viewbutton} ${deletebutton} ${publishbutton} `])
                 .draw()
                 .node();
         }
@@ -44,7 +43,7 @@ whenDocumentReady(isReady = () => {
     //string it
     var bodyobjectjson = JSON.stringify(bodyobj);
     //call the create account endpoint
-    xhrcall(1, "backpage-projects/?user=1", bodyobj, "json", "", xhrDone, token)
+    xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
 
 })
 
