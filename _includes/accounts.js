@@ -327,9 +327,8 @@ if (checkElement("btn-profile-update") == true) {
                 //login done function
                 let loginDone = (response) => {
                     //get the repsonse
-                    let res = response.response;
+                    let res = JSON.parse(response)
                     //parse it
-                    res = JSON.parse(res)
                     //get the JWT
                     let token = res.jwt
                     //set the user object

@@ -32,6 +32,7 @@ whenDocumentReady(isReady = () => {
             //call the create account endpoint
             //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not. 
             let bodyobj = {
+                user: 1,
                 data: {
                         name: projectname.value
                 }

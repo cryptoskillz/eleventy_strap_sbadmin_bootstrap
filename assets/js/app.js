@@ -128,6 +128,16 @@ end of global account stuff
 */
 
 
+let getUrlParamater = (param) => {
+    let searchParams = new URLSearchParams(window.location.search)
+    let res = searchParams.has(param) // true
+    if (res != false)
+        return (searchParams.get(param))
+    else
+        return ("");
+
+}
+
 
 
 //this function makes the XHR calls.

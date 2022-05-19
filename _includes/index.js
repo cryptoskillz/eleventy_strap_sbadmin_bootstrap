@@ -5,7 +5,6 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
 
-
 let xhrDone = (res) => {
      res = JSON.parse(res)
      //console.log(res.meta.pagination.total)
