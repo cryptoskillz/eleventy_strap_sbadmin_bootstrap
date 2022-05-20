@@ -33,6 +33,7 @@ whenDocumentReady(isReady = () => {
                 .draw()
                 .node();
         }
+        table.columns.adjust();
     }
     //build the json
     let bodyobj = {
