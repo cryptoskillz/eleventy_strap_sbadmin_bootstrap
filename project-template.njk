@@ -8,8 +8,14 @@ permalink: /project/template/
 <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800" id="project-header">Project Template</h1>
-        <a href="/projects/" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-        <i class="fas fa-backward fa-sm text-white-50"></i> Back</a>
+        <div class="mb-3">
+            <label for="pageActions">Actions</label>
+            <select class="form-control" id="pageActionSelect">
+                <option value="0">Select</option>
+                <option value="1">View</option>
+                <option value="2">Back</option>
+            </select>
+        </div>
     </div>
 <p class="mb-4">
 </p>
@@ -31,6 +37,7 @@ permalink: /project/template/
 <button class="btn btn-primary btn-user btn-block" id="btn-template">
     Update
 </button>
+
 
     <!-- include codemirror css/js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.js" integrity="sha512-/8pAp30QGvOa8tNBv7WmWiPFgYGOg2JdVtqI8vK+xZsqWHnNd939v9s+zJHXZcJe5wPD44D66zz+CLTD3KacYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

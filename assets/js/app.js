@@ -1,6 +1,7 @@
 let redirectUrl = ""; // hold the redcirect URL
 let token;
 let user;
+let checkElement
 
 //TODO: replace this with plain js
 (function($) {
@@ -108,10 +109,13 @@ let checkLogin = () => {
             } else {
                 //set the jwt and user
                 getToken();
-                if ((user.username != "") && (user.username != undefined))
-                    document.getElementById('user-account-header').innerHTML = user.username
-                else
-                    document.getElementById('user-account-header').innerHTML = user.email
+                checkElement = document.getElementById("user-account-header");
+                if (typeof(checkElement) != 'undefined' && checkElement != null) {
+                    if ((user.username != "") && (user.username != undefined))
+                        document.getElementById('user-account-header').innerHTML = user.username
+                    else
+                        document.getElementById('user-account-header').innerHTML = user.email
+                }
             }
         } else {
             window.location = '/login'
@@ -151,7 +155,12 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     /*
       Note if we are not using strai and have a custom URL we can change it here like wise if we want to use 2 we can check the method to select the correct base url
     */
-    document.getElementById("spinner").classList.remove("d-none");
+
+    checkElement = document.getElementById("spinner");
+
+    if (typeof(checkElement) != 'undefined' && checkElement != null) {
+        document.getElementById("spinner").classList.remove("d-none");
+    }
     let url = apiUrl + method;
     //store the type
     let xhrtype = '';
@@ -195,7 +204,11 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
     //result
     //todo (chris) make this eval back to a done function
     xhr.onload = function() {
-        document.getElementById("spinner").classList.add("d-none");
+        checkElement = document.getElementById("confirmation-modal-delete-button");
+
+        if (typeof(checkElement) != 'undefined' && checkElement != null) {
+            document.getElementById("spinner").classList.add("d-none");
+        }
         //check if its an error
         let res = xhr.response;
         let errorMessage = "";
@@ -238,22 +251,25 @@ checkLogin()
 let deleteId = 0;
 let deleteMethod = "";
 
-document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
-    //alert(deleteId)
-    //alert(deleteMethod)
-    $('#confirmation-modal').modal('toggle')
-    let xhrDone = (res) => {
-        //parse the response
-        let success = document.getElementById('accountsSuccess');
-        success.innerHTML = "project has been deleted"
-        success.classList.remove('d-none');  
-    }
+checkElement = document.getElementById("confirmation-modal-delete-button");
 
-    //call the create account endpoint
-    //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
-    xhrcall(3, `${deleteMethod}/${deleteId}/`, "", "json", "", xhrDone, token)
+if (typeof(checkElement) != 'undefined' && checkElement != null) {
+    document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
+        //alert(deleteId)
+        //alert(deleteMethod)
+        $('#confirmation-modal').modal('toggle')
+        let xhrDone = (res) => {
+            //parse the response
+            let success = document.getElementById('accountsSuccess');
+            success.innerHTML = "project has been deleted"
+            success.classList.remove('d-none');
+        }
 
-})
+        //call the create account endpoint
+        //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
+        xhrcall(3, `${deleteMethod}/${deleteId}/`, "", "json", "", xhrDone, token)
+
+    })
+}
 
 /* end of  modal  code */
-
