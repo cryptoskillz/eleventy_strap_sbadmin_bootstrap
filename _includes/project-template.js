@@ -37,6 +37,21 @@ let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
+//add the key to the html template
+let setKey = (theKey) => {
+    //get the cursor position
+    var cursor = myCodeMirror.getCursor();
+    //add the formatting it make it work with nunjucks
+    let param = `\{\{${theKey}\}\}`;
+    //buil a poistion json
+    var pos = {
+        line: cursor.line,
+        ch: cursor.ch
+    }
+    //add the paramater
+    myCodeMirror.replaceRange(param, pos);
+}
+
 whenDocumentReady(isReady = () => {
     //check for a paramater.
     let urlParam = getUrlParamater('id')
@@ -58,28 +73,37 @@ whenDocumentReady(isReady = () => {
 
             //get the template
             let xhrDone2 = (res) => {
+                let elements = "";
+                let elements2 = ""
                 //parse the response
                 res = JSON.parse(res)
                 //set the template
                 let theCode = res.data.attributes.template;
-                //check there is a template set and if not then set the default one.
-                if ((theCode == null) || (theCode == "")) {
-                    let elements="";
-                    //get the elements from the data 
+                if (keys != undefined) {
                     for (var i = 0; i < keys.length; ++i) {
                         //console.log(keys[i])
-                        elements = elements+`\{\{${keys[i]}\}\}<br>`
+                        elements = elements + `\{\{${keys[i]}\}\}<br>`
+                        elements2 = elements2 + `<a href="javascript:setKey('${keys[i]}')">${keys[i]}</a><br>`
                     }
+                }
+                //check there is a template set and if not then set the default one.
+                if ((theCode == null) || (theCode == "")) {
+                    //get the elements from the data 
                     //set the html5
                     theCode = html5layout
                     //put in the data elements
-                    theCode = theCode.replace("[[ELEMENTS]]",elements);
+                    theCode = theCode.replace("[[ELEMENTS]]", elements);
                     //it's default so change to add
                     document.getElementById("btn-template").innerHTML = "Create"
-                } else
-                {
+                } else {
                     //set it to the udpate.
                     document.getElementById("btn-template").innerHTML = "Update"
+                }
+
+                if (keys == undefined) {
+                    document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
+                } else {
+                    document.getElementById("projectkeys").innerHTML = "KEYS: <br>" + elements2;
                 }
 
                 //set the text area
@@ -104,13 +128,11 @@ whenDocumentReady(isReady = () => {
         var bodyobjectjson = JSON.stringify(bodyobj);
         //get the data so we can get the keys for the elements
         xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
-    }
-    else
-    {
-      //no project id so show an error.
-      let error = document.getElementById('accountsAlert');
-      error.innerHTML = "project not found"
-      error.classList.remove('d-none'); 
+    } else {
+        //no project id so show an error.
+        let error = document.getElementById('accountsAlert');
+        error.innerHTML = "project not found"
+        error.classList.remove('d-none');
     }
 })
 
