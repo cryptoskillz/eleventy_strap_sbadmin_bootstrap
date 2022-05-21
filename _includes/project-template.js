@@ -120,9 +120,19 @@ whenDocumentReady(isReady = () => {
 
         }
         //string it
-        var bodyobjectjson = JSON.stringify(bodyobj);
-        //get the data so we can get the keys for the elements
-        xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
+
+        if (urlParam != "") {
+            var bodyobjectjson = JSON.stringify(bodyobj);
+            //get the data so we can get the keys for the elements
+            xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
+        } else {
+            //no project id so show an error.
+            let error = document.getElementById('accountsAlert');
+            error.innerHTML = "project not found"
+            error.classList.remove('d-none');
+        }
+
+
     } else {
         //no project id so show an error.
         let error = document.getElementById('accountsAlert');
@@ -139,7 +149,7 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             if (urlParam != "") {
                 //set the project id
                 projectid = urlParam;
-                let href=`/project/template/view/?id=${projectid}`
+                let href = `/project/template/view/?id=${projectid}`
                 window.location.href = href
             }
             break;
