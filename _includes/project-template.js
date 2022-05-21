@@ -6,17 +6,12 @@ let html5layout = `<DOCTYPE! html>
 </head>
 <body class="hello">
   <header>
-    <h1>< header ></h1>
+    <h1></h1>
   </header>
   <nav>
-    < nav >
-    <ul>
-      <li>Menu Item</li>
-    </ul>
   </nav>
   <section>
-    < section >
-    <header>Hello, friend</header>
+    <header>Hello, friend this an example of how cool your backpage could look.</header>
     <article>
      [[ELEMENTS]]
     </article>
@@ -103,7 +98,7 @@ whenDocumentReady(isReady = () => {
                 if (keys == undefined) {
                     document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
                 } else {
-                    document.getElementById("projectkeys").innerHTML = "KEYS: <br>" + elements2;
+                    document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
                 }
 
                 //set the text area
@@ -135,6 +130,29 @@ whenDocumentReady(isReady = () => {
         error.classList.remove('d-none');
     }
 })
+
+document.getElementById('pageActionSelect').addEventListener('change', function() {
+    switch (this.value) {
+        case "1":
+            let urlParam = getUrlParamater('id')
+            //check if it is black
+            if (urlParam != "") {
+                //set the project id
+                projectid = urlParam;
+                let href=`/project/template/view/?id=${projectid}`
+                window.location.href = href
+            }
+            break;
+        case "2":
+            // code block
+            window.location.href = "/projects/"
+            break;
+        default:
+            // code block
+    }
+
+})
+
 
 document.getElementById('btn-template').addEventListener('click', function() {
     let html = myCodeMirror.getValue()
