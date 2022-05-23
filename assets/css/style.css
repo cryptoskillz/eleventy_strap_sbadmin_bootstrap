@@ -12637,3 +12637,5 @@ body.sidebar-toggled footer.sticky-footer {
 .copy-icon {
     background-image: url(../images/ilter_none.png);
 }
+.CodeMirror { float: left; width: 50%; height:100vh; }
+iframe { width: 50%; float: left; height: 300px; border:0; }
