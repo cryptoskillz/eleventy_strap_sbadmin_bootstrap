@@ -76,10 +76,9 @@ whenDocumentReady(isReady = () => {
                 res = JSON.parse(res)
 
                 //set the template name
-                if (res.data.attributes.template != "")
-                {
+                if (res.data.attributes.template != "") {
                     let templatename = document.getElementById('inp-template-name');
-                    templatename.value = res.data.attributes.templatename;                    
+                    templatename.value = res.data.attributes.templatename;
                 }
 
                 //set the template
@@ -179,12 +178,16 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
                 //set the project id
                 projectid = urlParam;
                 let href = `/project/template/view/?id=${projectid}`
-                window.location.href = href
+                window.open(
+                    href,
+                    '_blank' // <- This is what makes it open in a new window.
+                );
             }
             break;
         case "2":
             // code block
             window.location.href = "/projects/"
+            window.location.target = "_blank"
             break;
         default:
             // code block
@@ -206,24 +209,21 @@ document.getElementById('btn-template').addEventListener('click', function() {
 
     }
 
-    if (templatename.value == "")
-    {
+    if (templatename.value == "") {
         let error = document.getElementById('accountsAlert');
         error.innerHTML = "Template name cannot be blank"
         error.classList.remove('d-none');
         valid = 0;
     }
 
-    if (template == "")
-    {
+    if (template == "") {
         let error = document.getElementById('accountsAlert');
         error.innerHTML = "Template cannot be blank"
         error.classList.remove('d-none');
         valid = 0;
     }
 
-    if (valid == 1)
-    {
+    if (valid == 1) {
         let error = document.getElementById('accountsAlert');
         error.innerHTML = ""
         error.classList.add('d-none');
