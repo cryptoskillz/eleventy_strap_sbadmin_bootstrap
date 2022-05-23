@@ -9,7 +9,9 @@ whenDocumentReady(isReady = () => {
         let xhrDone = (res) => {
             //parse the response
             res = JSON.parse(res)
-
+            let success = document.getElementById('accountsSuccess');
+            success.innerHTML = "project has been created"
+            success.classList.remove('d-none');
         }
         //set the valid var
         let valid = 1;
@@ -34,7 +36,7 @@ whenDocumentReady(isReady = () => {
             let bodyobj = {
                 user: 1,
                 data: {
-                        name: projectname.value
+                    name: projectname.value
                 }
             }
             var bodyobjectjson = JSON.stringify(bodyobj);

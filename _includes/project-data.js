@@ -20,7 +20,7 @@ whenDocumentReady(isReady = () => {
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
 
-            let editbutton = `<a href="/project/edit/?name=${res.data[i].attributes.name}&id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let editbutton = `<a href="/project/data/edit/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             let publishbutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
