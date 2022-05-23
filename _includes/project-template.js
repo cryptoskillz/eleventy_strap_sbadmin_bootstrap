@@ -27,6 +27,7 @@ let html5layout = `<DOCTYPE! html>
 let projectid = 0;
 
 var myCodeMirror;
+var delay;
 
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
@@ -70,8 +71,17 @@ whenDocumentReady(isReady = () => {
             let xhrDone2 = (res) => {
                 let elements = "";
                 let elements2 = ""
+
                 //parse the response
                 res = JSON.parse(res)
+
+                //set the template name
+                if (res.data.attributes.template != "")
+                {
+                    let templatename = document.getElementById('inp-template-name');
+                    templatename.value = res.data.attributes.templatename;                    
+                }
+
                 //set the template
                 let theCode = res.data.attributes.template;
                 if (keys != undefined) {
@@ -100,12 +110,22 @@ whenDocumentReady(isReady = () => {
                 } else {
                     document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
                 }
-
                 //set the text area
                 let textArea = document.getElementById('inp-projectemplate');
-                myCodeMirror = CodeMirror.fromTextArea(textArea);
-                myCodeMirror.getDoc().setValue(theCode);
+                document.getElementById("showBody").classList.remove("d-none")
 
+
+
+                myCodeMirror = CodeMirror.fromTextArea(textArea, {
+                    mode: 'text/html',
+                    theme: 'monokai'
+                });
+                myCodeMirror.on("change", function() {
+                    clearTimeout(delay);
+                    delay = setTimeout(updatePreview, 300);
+                });
+                myCodeMirror.getDoc().setValue(theCode);
+                myCodeMirror.refresh();
             }
 
             //call the create account endpoint
@@ -141,6 +161,15 @@ whenDocumentReady(isReady = () => {
     }
 })
 
+function updatePreview() {
+    var previewFrame = document.getElementById('preview');
+    var preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+    preview.open();
+    preview.write(myCodeMirror.getValue());
+    preview.close();
+}
+setTimeout(updatePreview, 300);
+
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
@@ -165,7 +194,9 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 
 
 document.getElementById('btn-template').addEventListener('click', function() {
-    let html = myCodeMirror.getValue()
+    let template = myCodeMirror.getValue()
+    let templatename = document.getElementById('inp-template-name');
+    let valid = 1;
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
@@ -175,13 +206,37 @@ document.getElementById('btn-template').addEventListener('click', function() {
 
     }
 
-    let bodyobj = {
-        user: 1,
-        data: {
-            template: html
-        }
+    if (templatename.value == "")
+    {
+        let error = document.getElementById('accountsAlert');
+        error.innerHTML = "Template name cannot be blank"
+        error.classList.remove('d-none');
+        valid = 0;
     }
-    var bodyobjectjson = JSON.stringify(bodyobj);
-    xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrDone, token)
+
+    if (template == "")
+    {
+        let error = document.getElementById('accountsAlert');
+        error.innerHTML = "Template cannot be blank"
+        error.classList.remove('d-none');
+        valid = 0;
+    }
+
+    if (valid == 1)
+    {
+        let error = document.getElementById('accountsAlert');
+        error.innerHTML = ""
+        error.classList.add('d-none');
+        valid = 0;
+        let bodyobj = {
+            user: 1,
+            data: {
+                template: template,
+                templatename: templatename.value
+            }
+        }
+        var bodyobjectjson = JSON.stringify(bodyobj);
+        xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrDone, token)
+    }
 
 });
