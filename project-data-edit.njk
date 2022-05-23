@@ -1,9 +1,9 @@
 ---
 layout: layout.njk
-permalink: /project/edit/
+permalink: /project/data/edit/
 ---
 {% set theJs %}
-    {% include 'project-edit.js' %}
+    {% include 'project-data-edit.js' %}
 {% endset %}
 <!-- Page Heading -->
 <div class="alert alert-success  d-none" role="alert" id="accountsSuccess">
@@ -11,8 +11,7 @@ permalink: /project/edit/
 <div class="alert alert-danger  d-none" role="alert" id="accountsAlert">
 </div>
 
-
-<div id="projectform" class="d-none">
+<div id="showBody" class="d-none">
 
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -22,10 +21,11 @@ permalink: /project/edit/
     </div>
 <p class="mb-4">
 </p>
-    <div class="form-group">
-        <label>Project name</label>
-        <input type="text" class="form-control form-control-user" id="inp-projectname" aria-describedby="emailHelp" placeholder="Enter a project name...">
-       	<span class="text-danger d-none" id="error-projectname">Name </span>  
+    <div id="formInputs">
+        <div class="form-group" >
+            <input type="email" class="form-control form-control-user" id="inp-projectname" aria-describedby="emailHelp" placeholder="Enter a project name...">
+           	<span class="text-danger d-none" id="error-projectname">Name </span>  
+        </div>
     </div>
     <button class="btn btn-primary btn-user btn-block" id="btn-edit">
         Update
