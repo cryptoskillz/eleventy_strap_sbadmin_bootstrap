@@ -119,6 +119,8 @@ whenDocumentReady(isReady = () => {
                     mode: 'text/html',
                     theme: 'monokai'
                 });
+                myCodeMirror.setSize(null, 700);
+
                 myCodeMirror.on("change", function() {
                     clearTimeout(delay);
                     delay = setTimeout(updatePreview, 300);
