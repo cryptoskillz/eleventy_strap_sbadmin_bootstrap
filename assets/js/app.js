@@ -2,7 +2,7 @@ let redirectUrl = ""; // hold the redcirect URL
 let token;
 let user;
 let checkElement
-
+var table // datatable
 //TODO: replace this with plain js
 (function($) {
     "use strict"; // Start of use strictß
@@ -263,6 +263,8 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
             let success = document.getElementById('accountsSuccess');
             success.innerHTML = "project has been deleted"
             success.classList.remove('d-none');
+            table.row('#'+deleteId).remove().draw();
+
         }
 
         //call the create account endpoint
