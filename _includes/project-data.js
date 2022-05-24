@@ -1,4 +1,5 @@
 //add a ready function
+let projectid;
 
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
@@ -8,7 +9,9 @@ whenDocumentReady(isReady = () => {
     document.getElementById('showBody').classList.remove('d-none')
 
     //get the  template id
-    let urlParam = getUrlParamater('id')
+    let urlParam = getUrlParamater('projectid')
+    if (urlParam != '')
+        projectid = urlParam;
 
     //done function
     let xhrDone = (res) => {
@@ -49,10 +52,13 @@ whenDocumentReady(isReady = () => {
         var keys = Object.keys(results[0]);
         //loop through  the keys
         for (var i = 0; i < keys.length; ++i) {
-            //build a the daa
-            let json = `{\"data\" : \"${keys[i]}\"}`
-            json = JSON.parse(json)
-            cols.push(json)
+            if (keys[i] != "DT_RowId")
+            {
+                //build a the daa
+                let json = `{\"data\" : \"${keys[i]}\"}`
+                json = JSON.parse(json)
+                cols.push(json)
+            }   
         }
 
         //create the datatable
@@ -99,11 +105,11 @@ whenDocumentReady(isReady = () => {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-            let href = `/project/template/view/?id=${urlParam}`
+            let href = `/project/template/view/?id=${projectid}`
             window.location.href = href
             break;
         case "2":
-            window.location.href = "/projects/"
+            window.location.href = `/project/data/new/?projectid=${projectid}`
             break;
         case "3":
             window.location.href = `/projects/`

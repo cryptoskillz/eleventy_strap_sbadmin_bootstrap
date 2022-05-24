@@ -52,7 +52,7 @@ whenDocumentReady(isReady = () => {
     document.getElementById('showBody').classList.remove('d-none')
 
     //check for a paramater.
-    let urlParam = getUrlParamater('id')
+    let urlParam = getUrlParamater('projectid')
     //check if it is black
     if (urlParam != "") {
         //set the project id
@@ -177,11 +177,8 @@ setTimeout(updatePreview, 300);
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-            let urlParam = getUrlParamater('id')
             //check if it is black
-            if (urlParam != "") {
-                //set the project id
-                projectid = urlParam;
+            if (projectid != "") {
                 let href = `/project/template/view/?projectid=${projectid}`
                 window.open(
                     href,
