@@ -182,7 +182,7 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             if (urlParam != "") {
                 //set the project id
                 projectid = urlParam;
-                let href = `/project/template/view/?id=${projectid}`
+                let href = `/project/template/view/?projectid=${projectid}`
                 window.open(
                     href,
                     '_blank' // <- This is what makes it open in a new window.

@@ -1,4 +1,5 @@
 let projectid = 0;
+let dataid = 1
 
 
 let whenDocumentReady = (f) => {
@@ -8,12 +9,26 @@ let whenDocumentReady = (f) => {
 
 
 whenDocumentReady(isReady = () => {
-    //check for a paramater.
-    let urlParam = getUrlParamater('id')
+    let valid = 1;
+    //check for a projectid
+    let urlParam = getUrlParamater('projectid');
+    if (urlParam != "")
+    {
+        projectid = urlParam
+        urlParam = getUrlParamater('dataid');
+        if (urlParam != "")
+        {
+            dataid = urlParam
+        } 
+    }
+    else
+        valid = 0;
+
+
+
+    //if urlParam
     //check if it is black
-    if (urlParam != "") {
-        //set the project id
-        projectid = urlParam;
+    if (valid ==1) {
         //done function
         let xhrDone = (res) => {
             //parse the response
@@ -22,19 +37,21 @@ whenDocumentReady(isReady = () => {
             let keys;
             let theData
 
-
             //get the keys from the first data.
             for (var i = 0; i < res.data.length; ++i) {
-                theKeys = Object.keys(res.data[i].attributes.data)
-                theData = res.data[i].attributes.data
+                if (res.data[i].id == parseInt(dataid))
+                {
+                    theKeys = Object.keys(res.data[i].attributes.data)
+                    theData = res.data[i].attributes.data
+                }
             }
-
 
             //get the template
             let xhrDone2 = (res) => {
                 res = JSON.parse(res)
                 let theCode = res.data.attributes.template;
-                if (theCode == "") {
+                console.log(theCode)
+                if ((theCode == "") || (theCode == null)) {
                     //alert('No template')
                     document.getElementById("projectemplate").innerHTML = "Template not found for this project, please go back."
                 } else {
@@ -52,7 +69,9 @@ whenDocumentReady(isReady = () => {
                             }
                         }
                     }
-
+                    console.log(theData)
+                    if (theData == undefined)
+                        theCode= "No data added for this project"+theCode
                     document.open();
                     document.write(theCode);
                     document.close();
@@ -74,5 +93,9 @@ whenDocumentReady(isReady = () => {
         var bodyobjectjson = JSON.stringify(bodyobj);
         //get the data so we can get the keys for the elements
         xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
+    }
+    else
+    {
+        document.getElementById("projectemplate").innerHTML = "No project id found."
     }
 })
