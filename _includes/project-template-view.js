@@ -1,5 +1,5 @@
 let projectid = 0;
-let dataid = 1
+let dataid = 0
 
 
 let whenDocumentReady = (f) => {
@@ -24,9 +24,10 @@ whenDocumentReady(isReady = () => {
     else
         valid = 0;
 
+    //debug
+    //console.log(projectid)
+    //console.log(dataid)
 
-
-    //if urlParam
     //check if it is black
     if (valid ==1) {
         //done function
@@ -36,9 +37,11 @@ whenDocumentReady(isReady = () => {
             let results = []
             let keys;
             let theData
-
             //get the keys from the first data.
             for (var i = 0; i < res.data.length; ++i) {
+                //if we dont have a dataid passed set it to the first records id so it will be found in the next loop
+                if (dataid == 0)
+                    dataid = res.data[i].id 
                 if (res.data[i].id == parseInt(dataid))
                 {
                     theKeys = Object.keys(res.data[i].attributes.data)
@@ -50,7 +53,7 @@ whenDocumentReady(isReady = () => {
             let xhrDone2 = (res) => {
                 res = JSON.parse(res)
                 let theCode = res.data.attributes.template;
-                console.log(theCode)
+                //console.log(theCode)
                 if ((theCode == "") || (theCode == null)) {
                     //alert('No template')
                     document.getElementById("projectemplate").innerHTML = "Template not found for this project, please go back."

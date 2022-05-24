@@ -27,7 +27,7 @@ whenDocumentReady(isReady = () => {
         }
     }
     
-    urlParam = getUrlParamater('id')
+    urlParam = getUrlParamater('projectid')
     if (urlParam != "")
     {
         projectid = urlParam;

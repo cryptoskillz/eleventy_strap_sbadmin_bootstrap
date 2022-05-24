@@ -15,11 +15,11 @@ whenDocumentReady(isReady = () => {
         for (var i = 0; i < res.data.length; ++i) {
 
             //console.log(res.data[i].attributes.template)
-            let databutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let databutton = `<a href="/project/data/?projectid=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50"></i> Data</a>`
-            let templatebutton = `<a href="/project/template/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let templatebutton = `<a href="/project/template/?projectid=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
-            let editbutton = `<a href="/project/edit/?name=${res.data[i].attributes.name}&id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let editbutton = `<a href="/project/edit/?name=${res.data[i].attributes.name}&projectid=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             let deletebutton = `<a href="javascript:deleteProject(${res.data[i].id})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
