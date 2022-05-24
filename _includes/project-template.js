@@ -78,7 +78,8 @@ whenDocumentReady(isReady = () => {
                 res = JSON.parse(res)
 
                 //set the template name
-                if (res.data.attributes.template != "") {
+                console.log(res.data.attributes.template )
+                if ((res.data.attributes.template != "") && (res.data.attributes.template != null)) {
                     let templatename = document.getElementById('inp-template-name');
                     templatename.value = res.data.attributes.templatename;
                 }

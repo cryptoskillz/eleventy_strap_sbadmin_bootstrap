@@ -10,7 +10,7 @@ whenDocumentReady(isReady = () => {
         //parse the response
         res = JSON.parse(res)
         //get the datatable
-        var table = $('#dataTable').DataTable();
+        table = $('#dataTable').DataTable();
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
 
@@ -32,7 +32,7 @@ whenDocumentReady(isReady = () => {
             var rowNode = table
                 .row.add([res.data[i].id, res.data[i].attributes.name, createdAt, `${databutton} ${editbutton} ${templatebutton} ${deletebutton} `])
                 .draw()
-                .node();
+                .node().id = res.data[i].id;
         }
         table.columns.adjust();
     }
