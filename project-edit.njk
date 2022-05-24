@@ -6,13 +6,6 @@ permalink: /project/edit/
     {% include 'project-edit.js' %}
 {% endset %}
 <!-- Page Heading -->
-<div class="alert alert-success  d-none" role="alert" id="accountsSuccess">
-</div>
-<div class="alert alert-danger  d-none" role="alert" id="accountsAlert">
-</div>
-
-
-<div id="projectform" class="d-none">
 
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -30,7 +23,6 @@ permalink: /project/edit/
     <button class="btn btn-primary btn-user btn-block" id="btn-edit">
         Update
     </button>
-</div>
 
 {% if env.ENVIRONMENT == 'local' %}
     <script type="text/javascript">{{theJs | safe}}</script>

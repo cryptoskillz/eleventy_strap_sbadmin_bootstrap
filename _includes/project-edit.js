@@ -39,9 +39,8 @@ whenDocumentReady(isReady = () => {
         error.innerHTML = "project id not found"
         error.classList.remove('d-none');
     }
-
     if (allowIt == 1)
-        document.getElementById('projectform').classList.remove('d-none')
+        document.getElementById('showBody').classList.remove('d-none')
 
 
 
@@ -50,7 +49,7 @@ whenDocumentReady(isReady = () => {
             //parse the response
             res = JSON.parse(res);
 
-            document.getElementById('projectform').classList.add('d-none')
+            //document.getElementById('projectform').classList.add('d-none')
             projectname = document.getElementById('inp-projectname').value;
             document.getElementById('project-header').innerHTML = `${projectname} has been edited`;
             let success = document.getElementById('accountsSuccess');

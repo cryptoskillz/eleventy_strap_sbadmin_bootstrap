@@ -6,11 +6,7 @@ permalink: /project/data/
     {% include 'project-data.js' %}
 {% endset %}
 <!-- Page Heading -->
-<div class="alert alert-success  d-none" role="alert" id="accountsSuccess">
-</div>
-<div class="alert alert-danger  d-none" role="alert" id="accountsAlert">
-</div>
-<div id="showBody" class="d-none">
+
  <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Project Data</h1>
 
@@ -37,7 +33,6 @@ permalink: /project/data/
             <table class="table table-bordered" id="projectdatatable" width="100%" cellspacing="0"></table>
         </div>
     </div>
-</div>
 </div>
 {% if env.ENVIRONMENT == 'local' %}
     <script type="text/javascript">{{theJs | safe}}</script>
