@@ -16,12 +16,16 @@ whenDocumentReady(isReady = () => {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res)
-        //console.log(res)
+        console.log(res)
 
         //get the hets fro  the results array
         keys = Object.keys(res.data.attributes.data);
         //loop through  the keys
-        let inpHtml = "";
+        let inpHtml = `<div class="form-group" >
+        <label>Slug</label>
+            <input type="email" class="form-control form-control-user" id="inp-slug" aria-describedby="emailHelp" placeholder="Enter a slug..." value="${res.data.attributes.slug}">
+            <span class="text-danger d-none" id="error-projectslug">Slug </span>  
+        </div>`
         for (var i = 0; i < keys.length; ++i) {
             //console.log(keys[i])
             //build a the daa
@@ -71,11 +75,13 @@ document.getElementById('btn-edit').addEventListener('click', function() {
         //console.log(inpValue);
         data[keys[i]] = inpValue;
     }
+    let slug = document.getElementById("inp-slug").value;
 
-    console.log(data)
+    //console.log(data)
     let bodyobj = {
         user: 1,
         data: {
+            slug:slug,
             data: data
         }
     }
