@@ -26,8 +26,8 @@ whenDocumentReady(isReady = () => {
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             let publishbutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
-            let viewbutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-eye fa-sm text-white-50"></i> View</a>`
+            let viewbutton = `<a target="_blank" href="/project/template/view/?dataid=${res.data[i].id}&projectid=${urlParam}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             let deletebutton = `<a href="javascript:deleteProject(${res.data[i].id})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
@@ -107,6 +107,8 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
     }
 
 })
+
+
 
 
 //delete a project.
