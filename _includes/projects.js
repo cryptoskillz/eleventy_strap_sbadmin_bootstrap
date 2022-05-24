@@ -4,6 +4,7 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
+    document.getElementById('showBody').classList.remove('d-none')
 
     let xhrDone = (res) => {
         //parse the response

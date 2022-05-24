@@ -49,6 +49,8 @@ let setKey = (theKey) => {
 }
 
 whenDocumentReady(isReady = () => {
+    document.getElementById('showBody').classList.remove('d-none')
+
     //check for a paramater.
     let urlParam = getUrlParamater('id')
     //check if it is black
