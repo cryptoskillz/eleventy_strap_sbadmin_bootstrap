@@ -12,12 +12,12 @@ permalink: /project/data/
 
     <div class="mb-3">
         <label for="pageActionSelect">Actions</label><select class="form-control" id="pageActionSelect">
-            <option>Select</option>
+            <option value="0">Select</option>
             <!--<option>Publish</option>-->
-            <option  value="0">Import Data</option>
-            <option  value="1">Download Backpages</option>
-            <option  value="2">Add Record</option>
-            <option  value="3">Back</option>
+            <option  value="1">Import Data</option>
+            <option  value="2">Download Backpages</option>
+            <option  value="3">Add Record</option>
+            <option  value="4">Back</option>
 
         </select>
     </div>
@@ -39,3 +39,5 @@ permalink: /project/data/
 {% else %}
     <script type="text/javascript">{{theJs | jsmin | safe}}</script>
 {% endif %}
+<script type="text/javascript" src="/assets/js/jszip.min.js"></script>
+

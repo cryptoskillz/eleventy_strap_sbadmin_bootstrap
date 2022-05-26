@@ -192,7 +192,6 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             // code block
     }
     //reset the dropdown
-    this.value = 0;
 
 
 })
