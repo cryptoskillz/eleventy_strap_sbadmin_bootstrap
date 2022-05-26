@@ -1,23 +1,20 @@
 ---
 layout: layout.njk
-permalink: /project/data/
+permalink: /project/data/import/
 ---
 {% set theJs %}
-    {% include 'project-data.js' %}
+    {% include 'project-data-import.js' %}
 {% endset %}
-<!-- Page Heading -->
-
  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Project Data</h1>
+    <h1 class="h3 mb-0 text-gray-800">Project Imported Data</h1>
 
     <div class="mb-3">
         <label for="pageActionSelect">Actions</label><select class="form-control" id="pageActionSelect">
             <option value="0">Select</option>
             <!--<option>Publish</option>-->
-            <option  value="1">Import</option>
-            <option  value="2">Download Backpages</option>
-            <option  value="3">Add Record</option>
-            <option  value="4">Back</option>
+            <option  value="1">Import Data</option>
+            <option  value="2">Edit Schema</option>
+            <option  value="3">Back</option>
 
         </select>
     </div>
@@ -25,12 +22,12 @@ permalink: /project/data/
 </div>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Currect project Data</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Imported Data</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
         <table id="example" class="display" width="100%"></table>
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0"></table>
+            <table class="table table-bordered" id="projectdatatable" width="100%" cellspacing="0"></table>
         </div>
     </div>
 </div>

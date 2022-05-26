@@ -67,6 +67,10 @@ let validateEmail = (email) => {
     return re.test(email);
 };
 
+let goBack = () => {
+    history.back();
+}
+
 let showAlert = (message, alertType,timeoutBool=1) => {
     let alertEl;
     //set the alert type

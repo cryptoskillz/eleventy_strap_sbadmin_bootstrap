@@ -78,9 +78,6 @@ whenDocumentReady(isReady = () => {
         let results = []
         let cols = [];
 
-        //loop through the data
-        table = $('#dataTable').DataTable();
-
         for (var i = 0; i < res.data.length; ++i) {
 
             let editbutton = `<a href="/project/data/edit/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
@@ -123,7 +120,7 @@ whenDocumentReady(isReady = () => {
         }
 
         //create the datatable
-        table = $('#projectdatatable').DataTable({
+        table = $('#dataTable').DataTable({
             "data": results,
             "columns": cols,
 
@@ -179,7 +176,7 @@ whenDocumentReady(isReady = () => {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-            alert('import')
+            window.location.href = `/project/data/import/?projectid=${projectid}`
             break;
         case "2":
             zipBackPages()
