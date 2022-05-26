@@ -23,7 +23,7 @@ whenDocumentReady(isReady = () => {
         let cols = [];
 
         //loop through the data
-                table = $('#dataTable').DataTable();
+        table = $('#dataTable').DataTable();
 
         for (var i = 0; i < res.data.length; ++i) {
 
@@ -39,11 +39,13 @@ whenDocumentReady(isReady = () => {
             //get the data
             let obj = {} 
             obj = res.data[i].attributes.data;
+            //add the slug 
+            obj.slug = res.data[i].attributes.slug
             //set the id for the table row
             obj.DT_RowId = res.data[i].id
             //add another attr to the end for the table actions
             obj.action = `${editbutton} ${viewbutton} ${deletebutton}`
-            console.log(obj)
+            //console.log(obj)
             //add it to the results array
             results.push(obj)
         }
@@ -51,14 +53,17 @@ whenDocumentReady(isReady = () => {
         //get the hets fro  the results array
         var keys = Object.keys(results[0]);
         //loop through  the keys
+        let hidecol = 0;
         for (var i = 0; i < keys.length; ++i) {
+            //get the col id of the row id 
             if (keys[i] != "DT_RowId")
-            {
+                hidecol = i-1;
+            //{
                 //build a the daa
                 let json = `{\"data\" : \"${keys[i]}\"}`
                 json = JSON.parse(json)
                 cols.push(json)
-            }   
+            //}   
         }
 
         //create the datatable
@@ -72,10 +77,24 @@ whenDocumentReady(isReady = () => {
         note : this is kind of hacky, you should be able to do it by using title and data with datatables. It is good enough for now I will fix it later.
         */
         for (var i = 0; i < keys.length; ++i) {
-            $(table.column(i).header()).text(keys[i]);
-            //to fix : footer does not alter for some reason
-            $(table.column(i).footer()).text(keys[i]);
+            //if (keys[i] != "DT_RowId")
+            //{
+                $(table.column(i).header()).text(keys[i]);
+                //to fix : footer does not alter for some reason
+                $(table.column(i).footer()).text(keys[i]);
+            //}
         }
+
+        if (hidecol != 0)
+        {
+            // Get the column API object
+            var column = table.column(hidecol);
+            // Toggle the visibility
+            column.visible(!column.visible());          
+        }
+
+
+
     }
     //build the json
     let bodyobj = {
@@ -117,6 +136,8 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
         default:
             // code block
     }
+    this.value = 0;
+
 
 })
 
