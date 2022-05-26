@@ -1,5 +1,61 @@
 //add a ready function
 let projectid;
+let backpages;
+
+let zipBackPages = () => {
+    let xhrDone = (res) => {
+        res = JSON.parse(res)
+        let theCode = res.data.attributes.template;
+        let theTemplateName = res.data.attributes.templatename;
+        if ((theCode == "") || (theCode == null)) {
+            alert('No template')
+        } else {
+            //process the data
+            let keys;
+            let theData;
+            let theName
+            //init the zipper
+            let zip = new JSZip();
+            //loop through the pages
+            for (var i = 0; i < backpages.data.length; ++i) {
+                //the keys should not be different so we could move this out of the loop
+                theKeys = Object.keys(backpages.data[i].attributes.data)
+                //get the data
+                theData = backpages.data[i].attributes.data
+                //set the template
+                theName = theTemplateName
+                //loop through the data
+                for (var key in theData) {
+                    //loop through the keys
+                    for (var key2 in theKeys) {
+                        //check if we have a matching key
+                        if (key == theKeys[key2]) {
+                            //set it up to suport liqiud
+                            let keyReplace = `\{\{${key}\}\}`
+                            //replace the key in the template with the data
+                            theCode = theCode.replace(keyReplace, theData[key])
+                            //check it is not blank
+                            if (theData[key] != "")
+                                theName = theName.replace(keyReplace,theData[key])
+                            else
+                                theName = theName.replace(keyReplace,"")
+                        }
+                    }
+                }
+                //add the zip file
+                zip.file(`backpages/${theName}/index.html`, theCode);
+            }
+            //create the zip
+            zip.generateAsync({
+                type: "base64"
+            }).then(function(content) {
+                window.location.href = "data:application/zip;base64," + content;
+            });
+        }
+    }
+    //get the project details
+    xhrcall(1, `backpage-projects/${projectid}`, "", "json", "", xhrDone, token)
+}
 
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
@@ -17,7 +73,7 @@ whenDocumentReady(isReady = () => {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res)
-
+        backpages = res;
         //set the results and cols arrys
         let results = []
         let cols = [];
@@ -37,7 +93,7 @@ whenDocumentReady(isReady = () => {
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
             //get the data
-            let obj = {} 
+            let obj = {}
             obj = res.data[i].attributes.data;
             //add the slug 
             obj.slug = res.data[i].attributes.slug
@@ -57,12 +113,12 @@ whenDocumentReady(isReady = () => {
         for (var i = 0; i < keys.length; ++i) {
             //get the col id of the row id 
             if (keys[i] != "DT_RowId")
-                hidecol = i-1;
+                hidecol = i - 1;
             //{
-                //build a the daa
-                let json = `{\"data\" : \"${keys[i]}\"}`
-                json = JSON.parse(json)
-                cols.push(json)
+            //build a the daa
+            let json = `{\"data\" : \"${keys[i]}\"}`
+            json = JSON.parse(json)
+            cols.push(json)
             //}   
         }
 
@@ -79,18 +135,17 @@ whenDocumentReady(isReady = () => {
         for (var i = 0; i < keys.length; ++i) {
             //if (keys[i] != "DT_RowId")
             //{
-                $(table.column(i).header()).text(keys[i]);
-                //to fix : footer does not alter for some reason
-                $(table.column(i).footer()).text(keys[i]);
+            $(table.column(i).header()).text(keys[i]);
+            //to fix : footer does not alter for some reason
+            $(table.column(i).footer()).text(keys[i]);
             //}
         }
 
-        if (hidecol != 0)
-        {
+        if (hidecol != 0) {
             // Get the column API object
             var column = table.column(hidecol);
             // Toggle the visibility
-            column.visible(!column.visible());          
+            column.visible(!column.visible());
         }
 
 
@@ -124,20 +179,21 @@ whenDocumentReady(isReady = () => {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-            let href = `/project/template/view/?id=${projectid}`
-            window.location.href = href
+            alert('import')
             break;
         case "2":
-            window.location.href = `/project/data/new/?projectid=${projectid}`
+            zipBackPages()
             break;
         case "3":
+            window.location.href = `/project/data/new/?projectid=${projectid}`
+            break;
+        case "4":
             window.location.href = `/projects/`
             break;
         default:
             // code block
     }
     this.value = 0;
-
 
 })
 
