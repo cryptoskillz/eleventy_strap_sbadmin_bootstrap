@@ -67,6 +67,24 @@ let validateEmail = (email) => {
     return re.test(email);
 };
 
+let showAlert = (message, alertType,timeoutBool=1) => {
+    let alertEl;
+    //set the alert type
+    if (alertType == 1)
+        alertEl = document.getElementById('accountsSuccess');
+    if (alertType == 2)
+        alertEl = document.getElementById('accountsDanger');
+    //set the message
+    alertEl.innerHTML = message
+    //remove the class
+    alertEl.classList.remove('d-none');
+    //clear it after 5 seconds
+    if (timeoutBool == 1 )
+        alertTimeout = setTimeout(function() {alertEl.classList.add('d-none')}, 5000);
+
+
+}
+
 /* 
 
 start of global account stuff
@@ -263,7 +281,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
             let success = document.getElementById('accountsSuccess');
             success.innerHTML = "project has been deleted"
             success.classList.remove('d-none');
-            table.row('#'+deleteId).remove().draw();
+            table.row('#' + deleteId).remove().draw();
 
         }
 

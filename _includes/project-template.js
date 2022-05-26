@@ -49,8 +49,6 @@ let setKey = (theKey) => {
 }
 
 whenDocumentReady(isReady = () => {
-    document.getElementById('showBody').classList.remove('d-none')
-
     //check for a paramater.
     let urlParam = getUrlParamater('projectid')
     //check if it is black
@@ -148,20 +146,19 @@ whenDocumentReady(isReady = () => {
         if (urlParam != "") {
             var bodyobjectjson = JSON.stringify(bodyobj);
             //get the data so we can get the keys for the elements
+            document.getElementById('showBody').classList.remove('d-none')
+
             xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
         } else {
             //no project id so show an error.
-            let error = document.getElementById('accountsAlert');
-            error.innerHTML = "project not found"
-            error.classList.remove('d-none');
+            showAlert("project not found", 2,0)
         }
 
 
     } else {
         //no project id so show an error.
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = "project not found"
-        error.classList.remove('d-none');
+        showAlert("project not found", 2,0)
+
     }
 })
 
@@ -194,6 +191,9 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
         default:
             // code block
     }
+    //reset the dropdown
+    this.value = 0;
+
 
 })
 
@@ -205,30 +205,23 @@ document.getElementById('btn-template').addEventListener('click', function() {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        let success = document.getElementById('accountsSuccess');
-        success.innerHTML = "project template has been updated"
-        success.classList.remove('d-none');
+                    showAlert("project template has been updated", 1)
 
     }
 
+    let errorMesage;
+
     if (templatename.value == "") {
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = "Template name cannot be blank"
-        error.classList.remove('d-none');
+        errorMesage = "Template name cannot be blank"
         valid = 0;
     }
 
     if (template == "") {
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = "Template cannot be blank"
-        error.classList.remove('d-none');
+        errorMesage = "Template cannot be blank"
         valid = 0;
     }
 
     if (valid == 1) {
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = ""
-        error.classList.add('d-none');
         valid = 0;
         let bodyobj = {
             user: 1,
@@ -237,8 +230,12 @@ document.getElementById('btn-template').addEventListener('click', function() {
                 templatename: templatename.value
             }
         }
+        
+
         var bodyobjectjson = JSON.stringify(bodyobj);
         xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrDone, token)
     }
+    else
+            showAlert(errorMesage, 2)
 
 });
