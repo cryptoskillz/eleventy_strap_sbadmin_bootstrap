@@ -72,6 +72,7 @@ whenDocumentReady(isReady = () => {
             complete: function(results) {
                 //show the table div
                 document.getElementById("csvtable").classList.remove("d-none")
+                document.getElementById('uploadfiletext').innerHTML = "First row must contain headers.  If you import again the existing data will be overwritten."
                 //console.log(results);
                 //set some arrays to hold the data
                 let dataresult = []
