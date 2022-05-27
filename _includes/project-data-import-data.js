@@ -3,8 +3,9 @@
 /*
 todo 
 
-check if there is data and if so show it and give them the option to replace it
-render the table
+update the table render of the data import  (maybe)
+delete the records when you add more
+
 */
 
 let keys;
@@ -15,6 +16,35 @@ let whenDocumentReady = (f) => {
 
 let deleteImportData = (id) => {
     alert('belete id')
+}
+
+let renderTable = (data) => {
+    //set some array
+    let columns = []
+    let dataresult = []
+    //get the keys
+    var keys = Object.keys(data.data[0].attributes.data);
+    //loop through the keys
+    for (var i = 0; i < keys.length; ++i) {
+        //build the column
+        colJson = { title: keys[i] }
+        //add it it the columns object
+        columns.push(colJson)
+    }
+    //loop through the data
+    for (var i = 0; i < data.data.length; ++i) {
+        //pull out the values and store in the array
+        dataresult.push(Object.values(data.data[i].attributes.data))
+    }
+    //render the table
+    table = $('#dataTable').DataTable({
+        data: dataresult,
+        rowId: 'id',
+        columns: columns,
+
+    });
+
+
 }
 
 whenDocumentReady(isReady = () => {
@@ -40,8 +70,6 @@ whenDocumentReady(isReady = () => {
             header: true,
             dynamicTyping: true,
             complete: function(results) {
-                //hide the upload file
-                document.getElementById("uploadfile").classList.add("d-none");
                 //show the table div
                 document.getElementById("csvtable").classList.remove("d-none")
                 //console.log(results);
@@ -58,9 +86,7 @@ whenDocumentReady(isReady = () => {
                     //add it to the data array for sending to the database
                     data[results.meta.fields[p]] = "";
                 }
-                //create and add the json object for datatables
-                colJson = { title: "actions" }
-                columns.push(colJson)
+    
                 //loop through the data
                 for (var i = 0; i < results.data.length; i++) {
                     //get the data row
@@ -87,13 +113,7 @@ whenDocumentReady(isReady = () => {
 
                     //check we have some data
                     if (datarow.length != 1) {
-                        /*
-                         let deletebutton = `<a href="javascript:deleteImportData(${results.data[i].id})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
-    */ //we will add delete functionaliy later
-                        let deletebutton = ""
                         //add the delete button actions
-                        datarow.push([deletebutton])
                         dataresult.push(datarow)
                     }
                 }
@@ -113,15 +133,14 @@ whenDocumentReady(isReady = () => {
     let xhrDone = (res) => {
         res = JSON.parse(res)
         if (res.meta.pagination.total == 0) {
-            showAlert(`No data imported for this project import data <a href="/project/data/import/data/?projectid=${projectid}">here</a>`, 1, 0)
-            document.getElementById('importeddatatable').classList.add("d-none")
             document.getElementById('uploadfiletext').innerHTML = "First row must contain headers"
         } else {
             document.getElementById('uploadfiletext').innerHTML = "First row must contain headers.  If you import again the existing data will be overwritten."
             //todo : render the table
+            renderTable(res)
+            document.getElementById('csvtable').classList.remove("d-none")
         }
         document.getElementById('uploadfile').classList.remove("d-none")
-        document.getElementById('csvtables').classList.remove("d-none")
     }
     xhrcall(1, "backpage-data-imports", "", "json", "", xhrDone, token)
 
