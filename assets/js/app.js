@@ -246,9 +246,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         }
 
         if (errorMessage != "") {
-            let alert = document.getElementById('accountsAlert')
-            alert.innerHTML = errorMessage
-            alert.classList.remove('d-none')
+            showAlert(errorMessage,2)
         }
 
         //check if it was ok.
