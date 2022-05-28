@@ -97,9 +97,9 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
 }
 
 
-let deleteTableItem = (id,recordid,method) => {
-    deleteId = recordid;
-    tableRowId = id
+let deleteTableItem = (dId, tId, method) => {
+    deleteId = dId;
+    tableRowId = tId;
     deleteMethod = method;
     $('#confirmation-modal').modal('toggle')
 }
@@ -107,14 +107,15 @@ let deleteTableItem = (id,recordid,method) => {
 
 
 //table render
-let renderTable = (data,rowId=0,actions=[]) => {
+let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     /*actions
         0 = delete button
     */
-    
+    //console.log(data);
     //set some array
     let columns = []
     let dataresult = []
+    let idTableRow;
     //get the keys
     var keys = Object.keys(data.data[0].attributes.data);
     //loop through the keys
@@ -124,29 +125,73 @@ let renderTable = (data,rowId=0,actions=[]) => {
         //add it it the columns object
         columns.push(colJson)
     }
-    if (actions.length != 0)
-    {
+    if (addId == 1) {
+        columns.push({ title: "id" })
+        idTableRow = columns.length - 1
+
+    }
+    if (actions.length != 0) {
         columns.push({ title: "actions" })
     }
+
+    if (rowId != "")
+    {
+        idTableRow = rowId
+    }
+
     //loop through the data
     for (var i = 0; i < data.data.length; ++i) {
         //pull out the values and store in the array
+        //console.log(data.data[i])
         let tmp = data.data[i].attributes.data;
-        let recordId = data.data[i].id
-        if (actions.length != 0)
+
+        let recordId;
+        let tableDeleteId;
+
+        if (addId == 1) {
+            recordId = data.data[i].id
+            tableDeleteId = data.data[i].id
+            tmp.id = recordId
+        }
+        else
         {
-            let buttons;
+            recordId = data.data[i].id
+            //console.log(tmp)
+            tableDeleteId = tmp.id
+            
+        }
+        //console.log(tmp)
+        if (actions.length != 0) {
+            let buttons = "";
+
+            //edit button
             if (actions[0] == 1)
-                 buttons = `<a href="javascript:deleteTableItem(${tmp.id},${recordId},'backpage-data-imports')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="/project/data/edit/?id=${recordId}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
+            //publish button
+            if (actions[1] == 1)
+                buttons = buttons + `<a href="/project/data/?id=${recordId}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
+            //view button
+            if (actions[2] == 1)
+                buttons = buttons + `<a target="_blank" href="/project/template/view/?dataid=${recordId}&projectid=${projectid}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
+            //delete button
+            if (actions[3] == 1)
+                buttons = buttons + `<a href="javascript:deleteTableItem(${recordId},'${tableDeleteId}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
+
+
+
             tmp.actions = buttons;
         }
+        //console.log(tmp)
         dataresult.push(Object.values(tmp))
     }
     //render the table
     table = $('#dataTable').DataTable({
         data: dataresult,
-        rowId: rowId,
+        rowId: idTableRow,
         columns: columns,
 
     });
@@ -168,7 +213,7 @@ let goBack = () => {
     history.back();
 }
 
-let showAlert = (message, alertType,timeoutBool=1) => {
+let showAlert = (message, alertType, timeoutBool = 1) => {
     let alertEl;
     //set the alert type
     if (alertType == 1)
@@ -180,8 +225,8 @@ let showAlert = (message, alertType,timeoutBool=1) => {
     //remove the class
     alertEl.classList.remove('d-none');
     //clear it after 5 seconds
-    if (timeoutBool == 1 )
-        alertTimeout = setTimeout(function() {alertEl.classList.add('d-none')}, 5000);
+    if (timeoutBool == 1)
+        alertTimeout = setTimeout(function() { alertEl.classList.add('d-none') }, 5000);
 
 
 }
@@ -343,7 +388,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         }
 
         if (errorMessage != "") {
-            showAlert(errorMessage,2)
+            showAlert(errorMessage, 2)
         }
 
         //check if it was ok.
@@ -361,4 +406,3 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
 };
 
 checkLogin()
-
