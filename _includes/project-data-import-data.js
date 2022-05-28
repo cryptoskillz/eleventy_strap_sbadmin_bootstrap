@@ -105,7 +105,7 @@ whenDocumentReady(isReady = () => {
         } else {
             document.getElementById('uploadfiletext').innerHTML = "First row must contain headers.  If you import again the existing data will be overwritten."
             //todo : render the table
-            renderTable(res,4,[1])
+            renderTable(res, 0, 4, [0, 0, 0, 1], 'backpage-data-imports')
             document.getElementById('csvtable').classList.remove("d-none")
         }
         document.getElementById('uploadfile').classList.remove("d-none")

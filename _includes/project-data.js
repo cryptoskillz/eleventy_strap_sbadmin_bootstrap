@@ -36,9 +36,9 @@ let zipBackPages = () => {
                             theCode = theCode.replace(keyReplace, theData[key])
                             //check it is not blank
                             if (theData[key] != "")
-                                theName = theName.replace(keyReplace,theData[key])
+                                theName = theName.replace(keyReplace, theData[key])
                             else
-                                theName = theName.replace(keyReplace,"")
+                                theName = theName.replace(keyReplace, "")
                         }
                     }
                 }
@@ -73,79 +73,7 @@ whenDocumentReady(isReady = () => {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res)
-        backpages = res;
-        //set the results and cols arrys
-        let results = []
-        let cols = [];
-
-        for (var i = 0; i < res.data.length; ++i) {
-
-            let editbutton = `<a href="/project/data/edit/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
-            let publishbutton = `<a href="/project/data/?id=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
-            let viewbutton = `<a target="_blank" href="/project/template/view/?dataid=${res.data[i].id}&projectid=${urlParam}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
-            let deletebutton = `<a href="javascript:deleteProject(${res.data[i].id})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
-
-            //get the data
-            let obj = {}
-            obj = res.data[i].attributes.data;
-            //add the slug 
-            obj.slug = res.data[i].attributes.slug
-            //set the id for the table row
-            obj.DT_RowId = res.data[i].id
-            //add another attr to the end for the table actions
-            obj.action = `${editbutton} ${viewbutton} ${deletebutton}`
-            //console.log(obj)
-            //add it to the results array
-            results.push(obj)
-        }
-
-        //get the hets fro  the results array
-        var keys = Object.keys(results[0]);
-        //loop through  the keys
-        let hidecol = 0;
-        for (var i = 0; i < keys.length; ++i) {
-            //get the col id of the row id 
-            if (keys[i] != "DT_RowId")
-                hidecol = i - 1;
-            //{
-            //build a the daa
-            let json = `{\"data\" : \"${keys[i]}\"}`
-            json = JSON.parse(json)
-            cols.push(json)
-            //}   
-        }
-
-        //create the datatable
-        table = $('#dataTable').DataTable({
-            "data": results,
-            "columns": cols,
-
-        });
-        //fix the headers
-        /*
-        note : this is kind of hacky, you should be able to do it by using title and data with datatables. It is good enough for now I will fix it later.
-        */
-        for (var i = 0; i < keys.length; ++i) {
-            //if (keys[i] != "DT_RowId")
-            //{
-            $(table.column(i).header()).text(keys[i]);
-            //to fix : footer does not alter for some reason
-            $(table.column(i).footer()).text(keys[i]);
-            //}
-        }
-
-        if (hidecol != 0) {
-            // Get the column API object
-            var column = table.column(hidecol);
-            // Toggle the visibility
-            column.visible(!column.visible());
-        }
-
-
+        renderTable(res, 1, 0, [1, 0, 1, 1], 'backpages')
 
     }
     //build the json

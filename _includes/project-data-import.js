@@ -44,7 +44,7 @@ whenDocumentReady(isReady = () => {
             document.getElementById('importeddatatable').classList.add("d-none")
         } else {
             document.getElementById('showBody').classList.remove('d-none');
-            renderTable(res,4,[1])
+            renderTable(res, 0, 4, [0, 0, 0, 1], 'backpage-data-imports')
         }
     }
     //call the create account endpoint
