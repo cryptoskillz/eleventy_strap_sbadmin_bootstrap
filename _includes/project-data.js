@@ -91,7 +91,7 @@ whenDocumentReady(isReady = () => {
             xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
         }
     } else {
-        showAlert(`project not found add one`, 2)
+        showAlert(`project not found add one`, 2,0)
     }
 
 

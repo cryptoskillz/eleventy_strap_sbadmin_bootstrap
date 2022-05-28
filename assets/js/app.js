@@ -82,9 +82,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
         $('#confirmation-modal').modal('toggle')
         let xhrDone = (res) => {
             //parse the response
-            let success = document.getElementById('accountsSuccess');
-            success.innerHTML = "Item has been deleted"
-            success.classList.remove('d-none');
+            showAlert('Item has been deleted',1)
             table.row('#' + tableRowId).remove().draw();
 
         }
