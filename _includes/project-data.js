@@ -72,7 +72,7 @@ whenDocumentReady(isReady = () => {
             //parse the response
             res = JSON.parse(res)
             //console.log(res)
-            renderTable(res, 1, 0, [1, 0, 1, 1], 'backpages')
+            renderTable(res, 0, 0, [1, 0, 1, 1], 'backpages')
 
         }
         //build the json

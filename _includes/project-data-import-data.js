@@ -16,10 +16,6 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
 
-    let xhrDone2 = (res) => {
-
-    }
-
     //get the project id
     let urlParam = getUrlParamater('projectid')
     if (urlParam != '') {
@@ -32,6 +28,23 @@ whenDocumentReady(isReady = () => {
     function handleFileSelect(evt) {
         //get the uploaded file
         var file = evt.target.files[0];
+        //delete the existing files
+        let xhrDataGetDone = (res) => {
+            res = JSON.parse(res);
+            console.log(res);
+
+            let xhrDeleteDone = (res3) => {
+                console.log('record deleted')
+            }
+            //console.log(res2)
+            for (var i = 0; i < res.data.length; ++i) {
+                //console.log(res2.data[i].id)
+                xhrcall(3, `backpage-data-imports/${res.data[i].id}`, "", "json", "", xhrDeleteDone, token)
+            }
+        }
+        //get the data
+        xhrcall(1, `backpage-data-imports/`, "", "json", "", xhrDataGetDone, token)
+      
         //parse it with papa
         Papa.parse(file, {
             header: true,
@@ -45,16 +58,24 @@ whenDocumentReady(isReady = () => {
                 let dataresult = []
                 let columns = []
                 let data = {}
+                let schemafields = "";
+                let schemaData = {};
+                //let tmp2 = { fields: inpValue, originalfields: ofields }
+
                 //loop through and get all the fields
                 for (var p in results.meta.fields) {
                     //create a json object for datatables
                     colJson = { title: results.meta.fields[p] }
                     //add it it the columns object
                     columns.push(colJson)
+                    if (schemafields == "")
+                        schemafields = results.meta.fields[p];
+                    else
+                        schemafields = schemafields + "," + results.meta.fields[p];
                     //add it to the data array for sending to the database
                     data[results.meta.fields[p]] = "";
                 }
-    
+                schemaData = { fields: schemafields, originalfields: schemafields }
                 //loop through the data
                 for (var i = 0; i < results.data.length; i++) {
                     //get the data row
@@ -74,10 +95,14 @@ whenDocumentReady(isReady = () => {
                             data: data
                         }
                     }
+
+                    let xhrImportDone = (res) => {
+
+                    }
                     ///string it 
                     var bodyobjectjson = JSON.stringify(bodyobj);
                     //send it to strapi
-                    xhrcall(0, `backpage-data-imports/`, bodyobjectjson, "json", "", xhrDone2, token)
+                    xhrcall(0, `backpage-data-imports/`, bodyobjectjson, "json", "", xhrImportDone, token)
 
                     //check we have some data
                     if (datarow.length != 1) {
@@ -85,6 +110,23 @@ whenDocumentReady(isReady = () => {
                         dataresult.push(datarow)
                     }
                 }
+
+                //now update the schema 
+                //console.log(tmp2)
+
+                let xhrSchemaDone = (res) => {
+
+                }
+
+                let bodyobj = {
+                    data: {
+                        schema: schemaData,
+                    }
+                }
+                var bodyobjectjson = JSON.stringify(bodyobj);
+                xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrSchemaDone, token)
+
+
                 //render the tables
                 table = $('#dataTable').DataTable({
                     data: dataresult,

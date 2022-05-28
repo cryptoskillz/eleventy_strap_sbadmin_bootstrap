@@ -1,5 +1,5 @@
 let projectid;
-let importeddata;    
+let importeddata;
 let theTemplate;
 let theSchema;
 let whenDocumentReady = (f) => {
@@ -68,23 +68,19 @@ whenDocumentReady(isReady = () => {
 
 document.getElementById('confirmation-modal-import-button').addEventListener('click', function() {
 
-    //alert(deleteId)
-    //alert(deleteMethod)
+    //hide the confitmation modal
     $('#confirmation-import-modal').modal('toggle')
+    //show the import modal
     $('#import-modal').modal('toggle')
+    //get the error message element
     let message = document.getElementById('mergingmessage')
     //get schema
     message.innerHTML = "Fetching schema and template"
     let xhrDone = (res) => {
         res = JSON.parse(res)
-        //console.log(res)
         theSchema = res.data.attributes.schema;
-        //theTemplate = res.data.attributes.template;
-        //console.log(theSchema);
-
         fields = theSchema.fields.split(',')
         originalfields = theSchema.originalfields.split(',')
-        console.log(fields)
         //delete existing data
         message.innerHTML = "Deleting existing items"
         let xhrDone2 = (res2) => {
@@ -93,35 +89,33 @@ document.getElementById('confirmation-modal-import-button').addEventListener('cl
             let xhrDone3 = (res3) => {
                 //console.log('record deleted')
             }
-            //console.log(res2)
+            //delete the record so we have a clean database
             for (var i = 0; i < res2.data.length; ++i) {
                 //console.log(res2.data[i].id)
                 xhrcall(3, `backpages/${res2.data[i].id}`, "", "json", "", xhrDone3, token)
             }
             message.innerHTML = "Getting import data"
-            //for some reason the actions is being added to this do idea why
-
-            //console.log(importeddata)
+            //loop through the imported data from the CSV so we can process it. 
             for (var i = 0; i < importeddata.data.length; ++i) {
-                //console.log(importeddata.data[i].attributes.data);
+                //get the attribuates 
                 let tmpObj = importeddata.data[i].attributes.data;
-                //delete it as it added it for some reason
+                //delete actions as it added it for some reason
                 delete tmpObj.actions;
-                //console.log(tmpObj)
-                //build the object to add 
                 let xhrDone4 = (res2) => {
                     //console.log('record added')
                 }
-
+                //loop rounds the fields
                 for (var f = 0; f < fields.length; ++f) {
-                   if (fields[f] == "UNUSED")
-                    {
-                        console.log(fields[f])
-                        console.log(originalfields[f])
+                    //check for unused in the schema as this means we do not want to import it
+                    if (fields[f] == "UNUSED") {
+                        //console.log(fields[f])
+                        //console.log(originalfields[f])
+                        //delete it.
                         delete tmpObj[originalfields[f]];
                     }
 
                 }
+                //build the opbject
                 let bodyobj = {
                     user: 1,
                     data: {
@@ -129,12 +123,15 @@ document.getElementById('confirmation-modal-import-button').addEventListener('cl
                     }
                 }
                 var bodyobjectjson = JSON.stringify(bodyobj);
+                //insert it
                 xhrcall(0, `backpages/`, bodyobjectjson, "json", "", xhrDone4, token)
             }
             message.innerHTML = "Import Complete"
+            $('#import-modal').modal('toggle')
+            showAlert('Import Complete', 1)
         }
         xhrcall(1, "backpages/", "", "json", "", xhrDone2, token)
-        
+
     }
     xhrcall(1, `backpage-projects/${projectid}/`, "", "json", "", xhrDone, token)
 
