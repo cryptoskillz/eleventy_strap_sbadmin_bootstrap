@@ -15,6 +15,7 @@ permalink: /project/data/import/schema/
 <p class="mb-4" id="originalschema">
 Leave blank to remove from schema
 </p>
+<form id="inputForm" onsubmit = "event.preventDefault();">
     <div id="formInputs">
         <div class="form-group" >
             <input type="email" class="form-control form-control-user" id="inp-projectname" aria-describedby="emailHelp" placeholder="Enter a project name...">
@@ -25,7 +26,7 @@ Leave blank to remove from schema
         Update
     </button>
 </div>
-
+</form>
 {% if env.ENVIRONMENT == 'local' %}
     <script type="text/javascript">{{theJs | safe}}</script>
 {% else %}
