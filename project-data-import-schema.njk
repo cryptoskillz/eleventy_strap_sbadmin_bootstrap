@@ -12,30 +12,22 @@ permalink: /project/data/import/schema/
 	<a href="javascript:goBack();" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
 	<i class="fas fa-backward fa-sm text-white-50"></i> Back</a>
 </div>
-<p class="mb-4"></p>
-<div class="card shadow mb-4 d-none" id="csvtable">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Schema</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-             <thead>
-                   
-                </thead>
-                <tfoot>
-                    
-                </tfoot>
-                <tbody>
-                </tbody>
-            </table>
+<p class="mb-4" id="originalschema">
+Leave blank to remove from schema
+</p>
+    <div id="formInputs">
+        <div class="form-group" >
+            <input type="email" class="form-control form-control-user" id="inp-projectname" aria-describedby="emailHelp" placeholder="Enter a project name...">
+            <span class="text-danger d-none" id="error-projectname">Name </span>  
         </div>
     </div>
-</div> 
+    <button class="btn btn-primary btn-user btn-block" id="btn-edit">
+        Update
+    </button>
+</div>
 
 {% if env.ENVIRONMENT == 'local' %}
     <script type="text/javascript">{{theJs | safe}}</script>
 {% else %}
     <script type="text/javascript">{{theJs | jsmin | safe}}</script>
 {% endif %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
