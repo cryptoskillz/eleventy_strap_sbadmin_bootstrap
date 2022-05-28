@@ -1,14 +1,15 @@
 //add a ready function
 
 /*
-todo 
+todo
 
-look at import 500 error
+redraw the table in the import phase 
 
 */
 
 let keys;
 let projectid;
+let importeddata = "";
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
@@ -28,23 +29,18 @@ whenDocumentReady(isReady = () => {
     function handleFileSelect(evt) {
         //get the uploaded file
         var file = evt.target.files[0];
-        //delete the existing files
-        let xhrDataGetDone = (res) => {
-            res = JSON.parse(res);
-            console.log(res);
-
-            let xhrDeleteDone = (res3) => {
-                console.log('record deleted')
-            }
-            //console.log(res2)
-            for (var i = 0; i < res.data.length; ++i) {
-                //console.log(res2.data[i].id)
-                xhrcall(3, `backpage-data-imports/${res.data[i].id}`, "", "json", "", xhrDeleteDone, token)
+        //delete the existing files if they exist
+        if (importeddata != "") {
+            for (var i = 0; i < importeddata.data.length; ++i) {
+                //console.log(res.data[i].id)
+                let xhrDeleteDone = (res3) => {
+                    //console.log('record deleted')
+                }
+                xhrcall(3, `backpage-data-imports/${importeddata.data[i].id}`, "", "json", "", xhrDeleteDone, token)
             }
         }
-        //get the data
-        xhrcall(1, `backpage-data-imports/`, "", "json", "", xhrDataGetDone, token)
-      
+        //return;
+
         //parse it with papa
         Papa.parse(file, {
             header: true,
@@ -76,6 +72,22 @@ whenDocumentReady(isReady = () => {
                     data[results.meta.fields[p]] = "";
                 }
                 schemaData = { fields: schemafields, originalfields: schemafields }
+
+
+                //update the schema
+                let xhrSchemaDone = (res) => {
+
+                }
+
+                let bodyobj = {
+                    data: {
+                        schema: schemaData,
+                    }
+                }
+                var bodyobjectjson = JSON.stringify(bodyobj);
+                //console.log('put schema')
+                xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrSchemaDone, token)
+
                 //loop through the data
                 for (var i = 0; i < results.data.length; i++) {
                     //get the data row
@@ -91,16 +103,16 @@ whenDocumentReady(isReady = () => {
                     let bodyobj = {
                         user: 1,
                         data: {
-                            backpage_project: projectid,
                             data: data
                         }
                     }
 
                     let xhrImportDone = (res) => {
-
+                        console.log('post done')
                     }
                     ///string it 
                     var bodyobjectjson = JSON.stringify(bodyobj);
+                    //console.log(bodyobjectjson)
                     //send it to strapi
                     xhrcall(0, `backpage-data-imports/`, bodyobjectjson, "json", "", xhrImportDone, token)
 
@@ -111,29 +123,23 @@ whenDocumentReady(isReady = () => {
                     }
                 }
 
-                //now update the schema 
-                //console.log(tmp2)
-
-                let xhrSchemaDone = (res) => {
-
-                }
-
-                let bodyobj = {
-                    data: {
-                        schema: schemaData,
-                    }
-                }
-                var bodyobjectjson = JSON.stringify(bodyobj);
-                xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrSchemaDone, token)
-
-
+            
                 //render the tables
-                table = $('#dataTable').DataTable({
-                    data: dataresult,
-                    rowId: 'id',
-                    columns: columns,
+                //bug here we have to replace the data in the table
+                if (importeddata != "") {
+                    //renderTable(importeddata, 0, 4, [0, 0, 0, 1], 'backpage-data-imports')
+                    //location.reload();
 
-                });
+                }
+                else
+                {
+                  //location.reload();
+                  
+                }
+                
+                //note : this should be soft.
+                //location.reload();
+
             }
         });
 
@@ -149,6 +155,8 @@ whenDocumentReady(isReady = () => {
             //todo : render the table
             renderTable(res, 0, 4, [0, 0, 0, 1], 'backpage-data-imports')
             document.getElementById('csvtable').classList.remove("d-none")
+            importeddata = res;
+            console.log(importeddata)
         }
         document.getElementById('uploadfile').classList.remove("d-none")
     }
