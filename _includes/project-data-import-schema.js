@@ -24,18 +24,26 @@ whenDocumentReady(isReady = () => {
             //parse the response
             res = JSON.parse(res)
             fields = res.data.attributes.schema.fields.split(',')
-            originalfields = res.data.attributes.schema.originalfields;
+            originalfields = res.data.attributes.schema.originalfields.split(',')
+
             let inpHtml = "";
             document.getElementById('originalschema').innerHTML = `Leave fields blnk to remove<br>Fields in the imported data ${res.data.attributes.schema.originalfields}`
             for (var i = 0; i < fields.length; ++i) {
                 //console.log(fields[i])
                 //let theData = res.data.attributes.data[keys[i]]
+                let  tmpvalue =  ""
+                let tmpmessage= `unused field ${originalfields[i]} from  the imported data`
+                if (fields[i] != "UNUSED")
+                {
+                    tmpvalue = fields[i] 
+                    tmpmessage =  `Schema field ${i+1} (original name ${originalfields[i]})`
+                }
+
                 inpHtml = inpHtml + `    <div class="form-group" >
-            <label>Schema field ${i}</label>
-<input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="${fields[i]}">
+            <label>${tmpmessage}</label>
+<input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]} " value="${tmpvalue}">
 </div>`
             }
-
             document.getElementById('formInputs').innerHTML = inpHtml
 
 
@@ -75,21 +83,20 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     let inpValue = "";
     let json = {}
 
-    //console.log(keys)
-    for (var i = 0; i < fields.length; ++i) {
-        let tmp = document.getElementById("inp-" + fields[i]).value;
-        //console.log(inpValue);
-        //data[keys[i]] = inpValue;
-        if (tmp != "") {
-            if (inpValue == "")
-                inpValue = inpValue + tmp
+    for (var i = 0; i < originalfields.length; ++i) {
+        tmpvalue = document.getElementById("inp-"+originalfields[i]).value;
+        if (tmpvalue == "")
+            tmpvalue =  "UNUSED"
+        if (inpValue == "")
+                inpValue = inpValue + tmpvalue
             else
-                inpValue = inpValue + ',' + tmp
-        }
+                inpValue = inpValue + ',' + tmpvalue
+        //console.log(inpValue)
     }
-    //console.log(inpValue)
-    let tmp2 = { fields: inpValue,originalfields:originalfields }
-    
+   
+    let ofields=originalfields.join(",")
+    let tmp2 = { fields: inpValue, originalfields: ofields }
+
     console.log(tmp2)
 
     let bodyobj = {
