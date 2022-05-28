@@ -15,14 +15,13 @@ permalink: /project/data/import/schema/
 <p class="mb-4" id="originalschema">
 Leave blank to remove from schema
 </p>
-<form id="inputForm" onsubmit = "event.preventDefault();">
     <div id="formInputs">
     </div>
     <button class="btn btn-primary btn-user btn-block" id="btn-edit">
         Update
     </button>
-</div>
-</form>
+
+
 {% if env.ENVIRONMENT == 'local' %}
     <script type="text/javascript">{{theJs | safe}}</script>
 {% else %}

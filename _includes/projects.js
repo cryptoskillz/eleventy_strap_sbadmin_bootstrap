@@ -1,3 +1,10 @@
+/*
+todo 
+
+rationalise this to use render table function
+
+
+*/
 //add a ready function
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
@@ -11,6 +18,7 @@ whenDocumentReady(isReady = () => {
         res = JSON.parse(res)
         //get the datatable
         table = $('#dataTable').DataTable();
+        let method = "backpage-projects"
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
 
@@ -21,7 +29,7 @@ whenDocumentReady(isReady = () => {
     <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
             let editbutton = `<a href="/project/edit/?name=${res.data[i].attributes.name}&projectid=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
-            let deletebutton = `<a href="javascript:deleteProject(${res.data[i].id})" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let deletebutton = `<a href="javascript:deleteTableItem(${res.data[i].id},'${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
             //get the created date
@@ -52,9 +60,3 @@ whenDocumentReady(isReady = () => {
 
 })
 
-
-let deleteProject = (id) => {
-    deleteId = id;
-    deleteMethod = "backpage-projects";
-    $('#confirmation-modal').modal('toggle')
-}

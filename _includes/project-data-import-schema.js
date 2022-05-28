@@ -1,6 +1,6 @@
 /*
 
-
+when you update, refresh the form
 */
 let fields;
 let originalfields;
@@ -17,38 +17,34 @@ whenDocumentReady(isReady = () => {
         let xhrDone = (res) => {
             //parse the response
             res = JSON.parse(res)
-            console.log(res.data.attributes.schema)
-            if (res.data.attributes.schema == null)
-            {
-                showAlert(`No schema for this project, click here to import <a href="/project/data/import/data/?projectid=${projectid}">data</a>`,2)
-            }
-            else
-            {
-                        document.getElementById('showBody').classList.remove('d-none')
+            //console.log(res.data.attributes.schema)
+            if (res.data.attributes.schema == null) {
+                showAlert(`No schema for this project, click here to import <a href="/project/data/import/data/?projectid=${projectid}">data</a>`, 2, 0)
+            } else {
+                document.getElementById('showBody').classList.remove('d-none')
 
-            fields = res.data.attributes.schema.fields.split(',')
-            originalfields = res.data.attributes.schema.originalfields.split(',')
+                fields = res.data.attributes.schema.fields.split(',')
+                originalfields = res.data.attributes.schema.originalfields.split(',')
 
-            let inpHtml = "";
-            document.getElementById('originalschema').innerHTML = `Leave fields blnk to remove<br>Fields in the imported data ${res.data.attributes.schema.originalfields}`
-            for (var i = 0; i < fields.length; ++i) {
-                //console.log(fields[i])
-                //let theData = res.data.attributes.data[keys[i]]
-                let  tmpvalue =  ""
-                let tmpmessage= `unused field ${originalfields[i]} from  the imported data`
-                if (fields[i] != "UNUSED")
-                {
-                    tmpvalue = fields[i] 
-                    tmpmessage =  `Schema field ${i+1} (original name ${originalfields[i]})`
-                }
+                let inpHtml = "";
+                document.getElementById('originalschema').innerHTML = `Leave fields blnk to remove<br>Fields in the imported data ${res.data.attributes.schema.originalfields}`
+                for (var i = 0; i < fields.length; ++i) {
+                    //console.log(fields[i])
+                    //let theData = res.data.attributes.data[keys[i]]
+                    let tmpvalue = ""
+                    let tmpmessage = `unused field ${originalfields[i]} from  the imported data`
+                    if (fields[i] != "UNUSED") {
+                        tmpvalue = fields[i]
+                        tmpmessage = `Schema field ${i+1} (original name ${originalfields[i]})`
+                    }
 
-                inpHtml = inpHtml + `    <div class="form-group" >
+                    inpHtml = inpHtml + `    <div class="form-group" >
             <label>${tmpmessage}</label>
 <input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]} " value="${tmpvalue}">
 </div>`
+                }
+                document.getElementById('formInputs').innerHTML = inpHtml
             }
-            document.getElementById('formInputs').innerHTML = inpHtml
-        }
 
         }
 
@@ -81,26 +77,27 @@ document.getElementById('btn-edit').addEventListener('click', function() {
         let success = document.getElementById('accountsSuccess');
         success.innerHTML = "project data has been updated"
         success.classList.remove('d-none');
+        window.location.reload();
 
     }
     let inpValue = "";
     let json = {}
 
     for (var i = 0; i < originalfields.length; ++i) {
-        tmpvalue = document.getElementById("inp-"+originalfields[i]).value;
+        tmpvalue = document.getElementById("inp-" + originalfields[i]).value;
         if (tmpvalue == "")
-            tmpvalue =  "UNUSED"
+            tmpvalue = "UNUSED"
         if (inpValue == "")
-                inpValue = inpValue + tmpvalue
-            else
-                inpValue = inpValue + ',' + tmpvalue
+            inpValue = inpValue + tmpvalue
+        else
+            inpValue = inpValue + ',' + tmpvalue
         //console.log(inpValue)
     }
-   
-    let ofields=originalfields.join(",")
+
+    let ofields = originalfields.join(",")
     let tmp2 = { fields: inpValue, originalfields: ofields }
 
-    console.log(tmp2)
+    //console.log(tmp2)
 
     let bodyobj = {
         data: {
