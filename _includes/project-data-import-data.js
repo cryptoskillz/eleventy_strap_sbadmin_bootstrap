@@ -4,7 +4,6 @@
 todo 
 
 update the table render of the data import  (maybe)
-delete the records when you add more
 
 */
 
@@ -14,38 +13,6 @@ let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
-let deleteImportData = (id) => {
-    alert('belete id')
-}
-
-let renderTable = (data) => {
-    //set some array
-    let columns = []
-    let dataresult = []
-    //get the keys
-    var keys = Object.keys(data.data[0].attributes.data);
-    //loop through the keys
-    for (var i = 0; i < keys.length; ++i) {
-        //build the column
-        colJson = { title: keys[i] }
-        //add it it the columns object
-        columns.push(colJson)
-    }
-    //loop through the data
-    for (var i = 0; i < data.data.length; ++i) {
-        //pull out the values and store in the array
-        dataresult.push(Object.values(data.data[i].attributes.data))
-    }
-    //render the table
-    table = $('#dataTable').DataTable({
-        data: dataresult,
-        rowId: 'id',
-        columns: columns,
-
-    });
-
-
-}
 
 whenDocumentReady(isReady = () => {
 
@@ -138,7 +105,7 @@ whenDocumentReady(isReady = () => {
         } else {
             document.getElementById('uploadfiletext').innerHTML = "First row must contain headers.  If you import again the existing data will be overwritten."
             //todo : render the table
-            renderTable(res)
+            renderTable(res,4,[1])
             document.getElementById('csvtable').classList.remove("d-none")
         }
         document.getElementById('uploadfile').classList.remove("d-none")

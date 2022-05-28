@@ -61,6 +61,103 @@ var table // datatable
 
 })(jQuery); // End of use strict
 
+
+/*
+START OF TABLE FUNCTIONS
+
+
+*/
+
+
+let deleteId = 0;
+let tableRowId = 0;
+let deleteMethod = "";
+
+checkElement = document.getElementById("confirmation-modal-delete-button");
+
+if (typeof(checkElement) != 'undefined' && checkElement != null) {
+    document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
+        //alert(deleteId)
+        //alert(deleteMethod)
+        $('#confirmation-modal').modal('toggle')
+        let xhrDone = (res) => {
+            //parse the response
+            let success = document.getElementById('accountsSuccess');
+            success.innerHTML = "Item has been deleted"
+            success.classList.remove('d-none');
+            table.row('#' + tableRowId).remove().draw();
+
+        }
+
+        //call the create account endpoint
+        //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
+        xhrcall(3, `${deleteMethod}/${deleteId}/`, "", "json", "", xhrDone, token)
+
+    })
+}
+
+
+let deleteTableItem = (id,recordid,method) => {
+    deleteId = recordid;
+    tableRowId = id
+    deleteMethod = method;
+    $('#confirmation-modal').modal('toggle')
+}
+
+
+
+//table render
+let renderTable = (data,rowId=0,actions=[]) => {
+    /*actions
+        0 = delete button
+    */
+    
+    //set some array
+    let columns = []
+    let dataresult = []
+    //get the keys
+    var keys = Object.keys(data.data[0].attributes.data);
+    //loop through the keys
+    for (var i = 0; i < keys.length; ++i) {
+        //build the column
+        colJson = { title: keys[i] }
+        //add it it the columns object
+        columns.push(colJson)
+    }
+    if (actions.length != 0)
+    {
+        columns.push({ title: "actions" })
+    }
+    //loop through the data
+    for (var i = 0; i < data.data.length; ++i) {
+        //pull out the values and store in the array
+        let tmp = data.data[i].attributes.data;
+        let recordId = data.data[i].id
+        if (actions.length != 0)
+        {
+            let buttons;
+            if (actions[0] == 1)
+                 buttons = `<a href="javascript:deleteTableItem(${tmp.id},${recordId},'backpage-data-imports')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
+            tmp.actions = buttons;
+        }
+        dataresult.push(Object.values(tmp))
+    }
+    //render the table
+    table = $('#dataTable').DataTable({
+        data: dataresult,
+        rowId: rowId,
+        columns: columns,
+
+    });
+
+
+}
+
+/*
+END OF TABLE FUNCTIONS
+*/
+
 //this fucntion validates an email address.
 let validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -265,33 +362,3 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
 
 checkLogin()
 
-
-/* start of  modal  code */
-
-let deleteId = 0;
-let deleteMethod = "";
-
-checkElement = document.getElementById("confirmation-modal-delete-button");
-
-if (typeof(checkElement) != 'undefined' && checkElement != null) {
-    document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
-        //alert(deleteId)
-        //alert(deleteMethod)
-        $('#confirmation-modal').modal('toggle')
-        let xhrDone = (res) => {
-            //parse the response
-            let success = document.getElementById('accountsSuccess');
-            success.innerHTML = "project has been deleted"
-            success.classList.remove('d-none');
-            table.row('#' + deleteId).remove().draw();
-
-        }
-
-        //call the create account endpoint
-        //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
-        xhrcall(3, `${deleteMethod}/${deleteId}/`, "", "json", "", xhrDone, token)
-
-    })
-}
-
-/* end of  modal  code */
