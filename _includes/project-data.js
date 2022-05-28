@@ -62,40 +62,39 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-    document.getElementById('showBody').classList.remove('d-none')
 
     //get the  template id
     let urlParam = getUrlParamater('projectid')
-    if (urlParam != '')
+    if (urlParam != '') {
         projectid = urlParam;
+        //done function
+        let xhrDone = (res) => {
+            //parse the response
+            res = JSON.parse(res)
+            //console.log(res)
+            renderTable(res, 1, 0, [1, 0, 1, 1], 'backpages')
 
-    //done function
-    let xhrDone = (res) => {
-        //parse the response
-        res = JSON.parse(res)
-        renderTable(res, 1, 0, [1, 0, 1, 1], 'backpages')
+        }
+        //build the json
+        let bodyobj = {
+            user: {
+                id: 2
+            }
 
-    }
-    //build the json
-    let bodyobj = {
-        user: {
-            id: 2
         }
 
+        if (urlParam != "") {
+            //string it
+            document.getElementById("showBody").classList.remove('d-none')
+            var bodyobjectjson = JSON.stringify(bodyobj);
+            //call the create account endpoint
+            xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
+        }
+    } else {
+        showAlert(`project not found add one`, 2)
     }
 
-    if (urlParam != "") {
-        //string it
-        document.getElementById("showBody").classList.remove('d-none')
-        var bodyobjectjson = JSON.stringify(bodyobj);
-        //call the create account endpoint
-        xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
-    } else {
-        //no project id so show an error.
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = "project not found"
-        error.classList.remove('d-none');
-    }
+
 
 
 })
@@ -121,13 +120,3 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
     this.value = 0;
 
 })
-
-
-
-
-//delete a project.
-let deleteProject = (id) => {
-    deleteId = id;
-    deleteMethod = "backpages";
-    $('#confirmation-modal').modal('toggle')
-}
