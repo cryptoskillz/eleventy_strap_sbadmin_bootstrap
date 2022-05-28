@@ -18,22 +18,25 @@ let zipBackPages = () => {
             let zip = new JSZip();
             //loop through the pages
             for (var i = 0; i < backpages.data.length; ++i) {
+                let tmpCode = theCode;
                 //the keys should not be different so we could move this out of the loop
                 theKeys = Object.keys(backpages.data[i].attributes.data)
                 //get the data
                 theData = backpages.data[i].attributes.data
+                //console.log(theData)
                 //set the template
                 theName = theTemplateName
                 //loop through the data
                 for (var key in theData) {
                     //loop through the keys
                     for (var key2 in theKeys) {
+
                         //check if we have a matching key
                         if (key == theKeys[key2]) {
                             //set it up to suport liqiud
                             let keyReplace = `\{\{${key}\}\}`
                             //replace the key in the template with the data
-                            theCode = theCode.replace(keyReplace, theData[key])
+                            tmpCode = tmpCode.replace(keyReplace, theData[key])
                             //check it is not blank
                             if (theData[key] != "")
                                 theName = theName.replace(keyReplace, theData[key])
@@ -42,8 +45,9 @@ let zipBackPages = () => {
                         }
                     }
                 }
+                //console.log(tmpCode)
                 //add the zip file
-                zip.file(`backpages/${theName}/index.html`, theCode);
+                zip.file(`backpages/${theName}/index.html`, tmpCode);
             }
             //create the zip
             zip.generateAsync({
@@ -71,6 +75,7 @@ whenDocumentReady(isReady = () => {
         let xhrDone = (res) => {
             //parse the response
             res = JSON.parse(res)
+            backpages = res;
             //console.log(res)
             renderTable(res, 0, 0, [1, 0, 1, 1], 'backpages')
 

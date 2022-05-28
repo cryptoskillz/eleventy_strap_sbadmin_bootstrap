@@ -24,8 +24,8 @@ let _YEAR = todaysDate.getFullYear();
 console.log(process.env.STRAPIAPI)
 module.exports = {
     YEAR: _YEAR,
-    TITLE: "PROJECT STARTER",
+    TITLE: "BACKPAGE GENERATOR",
     APIURL: process.env.STRAPIAPI,
-    COPYRIGHT: "Your website " + _YEAR,
+    COPYRIGHT: "CRYPTOSKILLZ " + _YEAR,
     ENVIRONMENT: process.env.ELEVENTY_ENV
 }
