@@ -105,6 +105,7 @@ let deleteTableItem = (dId, tId, method) => {
 
 
 //table render
+//note : depereciate row id
 let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     /*actions
         0 = delete button
@@ -119,6 +120,8 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     //loop through the keys
     for (var i = 0; i < keys.length; ++i) {
         //build the column
+        if(keys[i] == "id")
+            idTableRow = i 
         colJson = { title: keys[i] }
         //add it it the columns object
         columns.push(colJson)
@@ -132,10 +135,14 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
         columns.push({ title: "actions" })
     }
 
+    /*
     if (rowId != "")
     {
         idTableRow = rowId
     }
+    */
+    //console.log(rowId)
+    //check if row id is still blank and look for it in the data
 
     //loop through the data
     for (var i = 0; i < data.data.length; ++i) {
