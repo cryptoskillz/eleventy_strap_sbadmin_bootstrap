@@ -43,10 +43,12 @@ whenDocumentReady(isReady = () => {
         }
 
     }
+    
+  
     //string it
     var bodyobjectjson = JSON.stringify(bodyobj);
     //call the create account endpoint
-    xhrcall(1, "backpage-projects/?user=1", bodyobj, "json", "", xhrDone, token)
+    xhrcall(1, "backpage-projects/", bodyobj, "json", "", xhrDone, token)
 
 })
 
