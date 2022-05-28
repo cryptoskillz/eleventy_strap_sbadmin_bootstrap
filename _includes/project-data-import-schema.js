@@ -1,10 +1,5 @@
 /*
 
-Remove schema item
-if schema is blank get it from the keys
-
-
-
 
 */
 let fields;
@@ -17,12 +12,20 @@ let whenDocumentReady = (f) => {
 whenDocumentReady(isReady = () => {
     let urlParam = getUrlParamater('projectid');
     if (urlParam != '') {
-        document.getElementById('showBody').classList.remove('d-none')
         projectid = urlParam;
 
         let xhrDone = (res) => {
             //parse the response
             res = JSON.parse(res)
+            console.log(res.data.attributes.schema)
+            if (res.data.attributes.schema == null)
+            {
+                showAlert(`No schema for this project, click here to import <a href="/project/data/import/data/?projectid=${projectid}">data</a>`,2)
+            }
+            else
+            {
+                        document.getElementById('showBody').classList.remove('d-none')
+
             fields = res.data.attributes.schema.fields.split(',')
             originalfields = res.data.attributes.schema.originalfields.split(',')
 
@@ -45,7 +48,7 @@ whenDocumentReady(isReady = () => {
 </div>`
             }
             document.getElementById('formInputs').innerHTML = inpHtml
-
+        }
 
         }
 

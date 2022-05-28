@@ -144,7 +144,7 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
         //pull out the values and store in the array
         //console.log(data.data[i])
         let tmp = data.data[i].attributes.data;
-
+        //console.log(tmp)
         let recordId;
         let tableDeleteId;
 
