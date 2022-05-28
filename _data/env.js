@@ -21,7 +21,7 @@ require('dotenv').config();
 
 let todaysDate = new Date();
 let _YEAR = todaysDate.getFullYear();
-//console.log(process.env.ELEVENTY_ENV)
+console.log(process.env.STRAPIAPI)
 module.exports = {
     YEAR: _YEAR,
     TITLE: "PROJECT STARTER",

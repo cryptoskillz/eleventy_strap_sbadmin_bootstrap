@@ -20,7 +20,13 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
 
-
+    //logout
+    let urlParam = getUrlParamater('logout')
+    if (urlParam != "") {
+        window.localStorage.token = "";
+        window.localStorage.user = JSON.stringify({})
+        showAlert('You are now logged out',1,0)
+    }
     //this function checks if an element exists
     let checkElement = (element) => {
         let checkedElement = document.getElementById(element);
@@ -35,28 +41,28 @@ whenDocumentReady(isReady = () => {
 
 
 
-if (checkElement("btn-profile-update") == true) {
-    document.getElementById('btn-profile-update').addEventListener('click', function() {
-        
+    if (checkElement("btn-profile-update") == true) {
+        document.getElementById('btn-profile-update').addEventListener('click', function() {
 
-        //set the valid var
-        let valid = 1;
-        let username = document.getElementById('inp-username');
-        //reset errors
-        let alert = document.getElementById('accountsAlert')
-        alert.innerHTML = ""
-        alert.classList.add('d-none')
-        document.getElementById('accountsSuccess').classList.add('d-none')
 
-        if (username.value == "") {
+            //set the valid var
+            let valid = 1;
+            let username = document.getElementById('inp-username');
+            //reset errors
+            let alert = document.getElementById('accountsAlert')
+            alert.innerHTML = ""
+            alert.classList.add('d-none')
+            document.getElementById('accountsSuccess').classList.add('d-none')
+
+            if (username.value == "") {
                 //error with the password
                 valid = 0;
                 let error = document.getElementById('error-username')
                 error.innerHTML = 'Username cannot be blank'
                 error.classList.remove('d-none')
-        }
+            }
 
-        if (valid == 1) {
+            if (valid == 1) {
                 //build the json
                 let bodyobj = {
                     username: username.value,
@@ -68,17 +74,17 @@ if (checkElement("btn-profile-update") == true) {
                     let success = document.getElementById('accountsSuccess')
                     success.innerHTML = "Update done"
                     success.classList.remove('d-none')
-                    let updateUser = { "id": user.id,"username": username.value,"email": user.email, "loggedin": 1 }
+                    let updateUser = { "id": user.id, "username": username.value, "email": user.email, "loggedin": 1 }
                     window.localStorage.user = JSON.stringify(updateUser);
                     user = updateUser;
                     document.getElementById('user-account-header').innerHTML = user.username
 
                 }
                 //call the create account endpoint
-                xhrcall(4, "users/"+user.id, bodyobjectjson, "json", "", profileUpdateDone,token)
-        }
-    })
-}
+                xhrcall(4, "users/" + user.id, bodyobjectjson, "json", "", profileUpdateDone, token)
+            }
+        })
+    }
 
     if (checkElement("btn-reset-password") == true) {
         document.getElementById('btn-reset-password').addEventListener('click', function() {
@@ -332,7 +338,7 @@ if (checkElement("btn-profile-update") == true) {
                     //get the JWT
                     let token = res.jwt
                     //set the user object
-                    let user = { "id": res.user.id,"username": res.user.username,"email": res.user.email, "loggedin": 1 }
+                    let user = { "id": res.user.id, "username": res.user.username, "email": res.user.email, "loggedin": 1 }
                     //debug
                     //console.log(res)
                     //console.log(token)
@@ -360,7 +366,7 @@ if (checkElement("btn-profile-update") == true) {
 
     //maybe this is better in profile.js
     if (window.location.pathname == "/profile/") {
-        document.getElementById('inp-username').value  = user.username;
+        document.getElementById('inp-username').value = user.username;
     }
 
 });
