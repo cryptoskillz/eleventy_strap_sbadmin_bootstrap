@@ -388,6 +388,8 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
             console.log(xhr)
             //res = JSON.parse(res)
             errorMessage = xhr.statusText
+            if (errorMessage == "")
+                errorMessage = "Server Error"
         }
         if (xhr.status == 405) {
             errorMessage = res

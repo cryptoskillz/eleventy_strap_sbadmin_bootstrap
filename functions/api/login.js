@@ -61,6 +61,7 @@ export async function onRequest(context) {
         let response = new Response(null, {
             status: 400
         });
+        response.Response = "ddd"
         response.responseText = "ddd"
         return response
     }
