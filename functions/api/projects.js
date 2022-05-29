@@ -23,13 +23,24 @@ export async function onRequest(context) {
         credentials = await request.json();
         console.log(credentials);
     }
-    
-    //get email and jwttoken
+    //set up the KV
+    const KV = context.env.backpage;
+    let user = await KV.get("username" + credentials.username);
+    user  = JSON.parse(user)
+
+    if (user.jwt == credentials.token)
+        console.log('user is good')
+    else
+        return new Response(JSON.stringify({ error: "wrong jwt" }), { status: 400 });
 
     //check for projects
-
+    let projects = await KV.get("projects" + credentials.username);
+    let projectsData;
+    if (projects == null)
+        projectsData = {data:[]}
+    
     //return projects
-    let projects = {data:[{name:"project 1",id:1,createdAt:"21/1/2020",template:"<html></html>",templatename:""},{name:"project 2",id:2,createdAt:"21/1/2020",template:"<html></html>",templatename:""}]}
+    //let projects = { data: [{ name: "project 1", id: 1, createdAt: "21/1/2020", template: "<html></html>", templatename: "" }, { name: "project 2", id: 2, createdAt: "21/1/2020", template: "<html></html>", templatename: "" }] }
     //console.log(projects)
     return new Response(JSON.stringify(projects), { status: 200 });
 

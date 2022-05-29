@@ -37,6 +37,7 @@ export async function onRequest(context) {
     //user does not exist
     if (user == null)
         return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
+
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
@@ -44,6 +45,8 @@ export async function onRequest(context) {
         // Verifing token
         const isValid = await jwt.verify(token, secret)
         if (isValid == true) {
+            let json = JSON.stringify({ "jwt":token, "user": {  "username": credentials.identifier, "email": credentials.identifier } })
+            await KV.put("username" + credentials.username, json);
             return new Response(JSON.stringify({ "jwt": token, "user": {  "username": credentials.identifier, "email": credentials.identifier } }), { status: 200 });
         }
     } 
