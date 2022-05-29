@@ -27,16 +27,16 @@ export async function onRequest(context) {
         credentials = await request.json();
         //check they are valid (may be overkill)
         if ((credentials.identifier == undefined) || (credentials.password == undefined))
-            return new Response(JSON.stringify({ error: "invalid login 1" }), { status: 400 });
+            return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
     } else
-        return new Response(JSON.stringify({ error: "invalid login 2" }), { status: 400 });
+        return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
     //set up the KV
     const KV = context.env.backpage;
     //see if the user exists
     const user = await KV.get("username" + credentials.identifier);
     //user does not exist
     if (user == null)
-        return new Response(JSON.stringify({ error: "invalid login 3" }), { status: 400 });
+        return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
