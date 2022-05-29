@@ -299,15 +299,6 @@ whenDocumentReady(isReady = () => {
             let email = document.getElementById('inp-email');
             let password1 = document.getElementById('inp-password1');
 
-            //reset errors
-            let alert = document.getElementById('accountsAlert')
-            alert.innerHTML = ""
-            alert.classList.add('d-none')
-            document.getElementById('accountsSuccess').classList.add('d-none')
-            document.getElementById('accountsAlert').classList.add('d-none')
-            document.getElementById('error-email').classList.add('d-none')
-            document.getElementById('error-password1').classList.add('d-none')
-
             //validate the email
             if (validateEmail(email.value)) {
                 //no error, not necessary but we may extend this in the future

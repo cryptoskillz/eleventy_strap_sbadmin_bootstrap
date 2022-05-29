@@ -219,6 +219,7 @@ let goBack = () => {
 }
 
 let showAlert = (message, alertType, timeoutBool = 1) => {
+    console.log(message)
     let alertEl;
     //set the alert type
     if (alertType == 1)
@@ -385,16 +386,22 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         //check for errors
         if ((xhr.status == 400) || (xhr.status == 403) || (xhr.status == 500)) {
             //process the response
-            res = JSON.parse(res)
-            errorMessage = res.error.message
+            //console.log(xhr)
+            //res = JSON.parse(res)
+            errorMessage = xhr.statusText
         }
         if (xhr.status == 405) {
+            errorMessage = res
+        }
+
+        if (xhr.status == 205) {
             errorMessage = res
         }
 
         if (errorMessage != "") {
             showAlert(errorMessage, 2)
         }
+
 
         //check if it was ok.
         if (xhr.status == 200) {

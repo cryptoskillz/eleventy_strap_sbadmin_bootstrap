@@ -34,16 +34,20 @@ export async function onRequest(context) {
     //     further more is if call wranger functions it does not pass a content type it is preflight but if id do wrangle _site it is fine
     const contentType = request.headers.get('content-type')
     let credentials;
-    if (contentType != null)
-    {
+    if (contentType != null) {
         credentials = await request.json();
         //console.log(credentials)
         if ((credentials.identifier == undefined) || (credentials.password == undefined))
             valid = 0;
-    }
-    else
+    } else
         valid = 0
 
+    const KV = context.env.backpage;
+
+    const user = await KV.get("username" + credentials.identifier);
+    if (user == null)
+        valid = 0;
+    //console.log(user)
     /*
 
     KV stuff to do.
@@ -62,17 +66,25 @@ export async function onRequest(context) {
 
         // Verifing token
         const isValid = await jwt.verify(token, secret)
-        if (isValid == true)
-        {
-            let responseJson = {"jwt":token,"user":{"id":3,"username":credentials.identifier,"email":credentials.identifier}}
+        if (isValid == true) {
+            let responseJson = { "jwt": token, "user": { "id": 3, "username": credentials.identifier, "email": credentials.identifier } }
+            responseJson = JSON.stringify(responseJson)
+            return new Response(responseJson);
+        } else {
+            let responseJson = { "error": "invalid lgoin" }
             responseJson = JSON.stringify(responseJson)
             return new Response(responseJson);
         }
-        else {
-            //note : change the repsonse to a http error code
-            return new Response("invalid login");
-        }
-    } else
-        return new Response("invalid login");
+    } else {
+        let responseJson = { "error": "invalid lgoin" }
+        //responseJson = JSON.stringify(responseJson)
+        let response = new Response(null, {
+            status: 400
+        });
+        response.responseText = "ddd"
+
+
+        return response
+    }
 
 }
