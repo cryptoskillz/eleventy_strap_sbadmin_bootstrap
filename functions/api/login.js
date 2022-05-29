@@ -27,16 +27,16 @@ export async function onRequest(context) {
         credentials = await request.json();
         //check they are valid (may be overkill)
         if ((credentials.identifier == undefined) || (credentials.password == undefined))
-            return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
+            return new Response(JSON.stringify({ error: "invalid login 1" }), { status: 400 });
     } else
-        return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
+        return new Response(JSON.stringify({ error: "invalid login 2" }), { status: 400 });
     //set up the KV
     const KV = context.env.backpage;
     //see if the user exists
     const user = await KV.get("username" + credentials.identifier);
     //user does not exist
     if (user == null)
-        return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
+        return new Response(JSON.stringify({ error: "invalid login 3" }), { status: 400 });
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
@@ -44,7 +44,7 @@ export async function onRequest(context) {
         // Verifing token
         const isValid = await jwt.verify(token, secret)
         if (isValid == true) {
-            return new Response(JSON.stringify({ "jwt": token, "user": { "id": 3, "username": credentials.identifier, "email": credentials.identifier } }), { status: 400 });
+            return new Response(JSON.stringify({ "jwt": token, "user": {  "username": credentials.identifier, "email": credentials.identifier } }), { status: 200 });
         }
     } 
 }

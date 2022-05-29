@@ -1,7 +1,8 @@
 /*
     todo:
+
 */
-export async function onRequest(context) {
+export async function onRequestPost(context) {
     const {
         request, // same as existing Worker API
         env, // same as existing Worker API
@@ -10,5 +11,34 @@ export async function onRequest(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
-    return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+
+    //set a valid boolean
+    let valid = 1;
+
+
+    const contentType = request.headers.get('content-type')
+    //console.log(request)
+    let registerData;
+    if (contentType != null) {
+        //get the login credentials
+        registerData = await request.json();
+        //console.log(registerData)
+        //set up the KV
+        const KV = context.env.backpage;
+        //see if the user exists
+        let json = JSON.stringify({ "jwt": "", "user": {  "username": registerData.username, "email": registerData.username } })
+        //console.log("username"+registerData.username)
+        //check if user exist
+        const user = await KV.get("username" + registerData.username);
+        if (user == null)
+        {
+            await KV.put("username" + registerData.username, json);
+            return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+        }
+        else
+            return new Response(JSON.stringify({ error: "email exists" }), { status: 400 });
+
+    }
+    else
+        return new Response(JSON.stringify({ error: "register error" }), { status: 400 });
 }

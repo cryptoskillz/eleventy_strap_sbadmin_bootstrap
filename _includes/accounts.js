@@ -74,7 +74,7 @@ whenDocumentReady(isReady = () => {
                     let success = document.getElementById('accountsSuccess')
                     success.innerHTML = "Update done"
                     success.classList.remove('d-none')
-                    let updateUser = { "id": user.id, "username": username.value, "email": user.email, "loggedin": 1 }
+                    let updateUser = {"username": username.value, "email": user.email, "loggedin": 1 }
                     window.localStorage.user = JSON.stringify(updateUser);
                     user = updateUser;
                     document.getElementById('user-account-header').innerHTML = user.username
@@ -220,16 +220,6 @@ whenDocumentReady(isReady = () => {
             let password1 = document.getElementById('inp-password1');
             let password2 = document.getElementById('inp-password2');
 
-            //reset errors
-            let alert = document.getElementById('accountsAlert')
-            alert.innerHTML = ""
-            alert.classList.add('d-none')
-            document.getElementById('accountsSuccess').classList.add('d-none')
-            document.getElementById('accountsAlert').classList.add('d-none')
-            document.getElementById('error-email').classList.add('d-none')
-            document.getElementById('error-password1').classList.add('d-none')
-            document.getElementById('error-password2').classList.add('d-none')
-
             //validate the email
             if (validateEmail(email.value)) {
                 //its valid we don't really have to do anything but we may extend this so no harm done leaving it.
@@ -278,7 +268,7 @@ whenDocumentReady(isReady = () => {
                     window.location = "/login/"
                 }
                 //call the create account endpoint
-                xhrcall(0, "auth/local/register", bodyobjectjson, "json", "", registerDone)
+                xhrcall(0, "api/register", bodyobjectjson, "json", "", registerDone)
 
 
 
@@ -331,7 +321,7 @@ whenDocumentReady(isReady = () => {
                     //get the JWT
                     let token = res.jwt
                     //set the user object
-                    let user = { "id": res.user.id, "username": res.user.username, "email": res.user.email, "loggedin": 1 }
+                    let user = {  "username": res.user.username, "email": res.user.email, "loggedin": 1 }
                     //debug
                     //console.log(res)
                     //console.log(token)

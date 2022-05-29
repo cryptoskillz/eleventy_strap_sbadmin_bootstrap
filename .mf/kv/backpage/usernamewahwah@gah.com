@@ -1,0 +1,1 @@
+{"jwt":"","user":{"id":3,"username":"wahwah@gah.com","email":"wahwah@gah.com"}}
