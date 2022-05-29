@@ -358,7 +358,7 @@ whenDocumentReady(isReady = () => {
                 //string it
                 var bodyobjectjson = JSON.stringify(bodyobj);
                 //call the login endpoint
-                xhrcall(0, "auth/local/", bodyobjectjson, "json", "", loginDone)
+                xhrcall(0, "api/login/", bodyobjectjson, "json", "", loginDone)
 
             }
         })
