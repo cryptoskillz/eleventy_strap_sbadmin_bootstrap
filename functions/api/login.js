@@ -7,14 +7,7 @@
 
 */
 export async function onRequest(context) {
-
-
     const jwt = require('@tsndr/cloudflare-worker-jwt')
-    //get this from an env so we can share it. 
-
-
-
-    // Contents of context object
     const {
         request, // same as existing Worker API
         env, // same as existing Worker API
@@ -25,7 +18,7 @@ export async function onRequest(context) {
     } = context;
     //store the secret
     let secret = env.SECRET
-    //set a vlaid boolean
+    //set a valid boolean
     let valid = 1;
     //get the post data
     //note we know it is application / json i am sending it up as but we could check for all the content types if
@@ -40,29 +33,15 @@ export async function onRequest(context) {
             valid = 0;
     } else
         valid = 0
-
     const KV = context.env.backpage;
-
     const user = await KV.get("username" + credentials.identifier);
     if (user == null)
         valid = 0;
-    //console.log(user)
-    /*
-
-    KV stuff to do.
-
-    const KV = context.env.backpage;
-    //put a variable in place. 
-    KV.put("foo", "bar")
-    const key = await KV.get("foo")
-    console.log(key)
-    */
 
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
         const token = await jwt.sign({ password: credentials.password, username: credentials.identifier }, secret)
-
         // Verifing token
         const isValid = await jwt.verify(token, secret)
         if (isValid == true) {
@@ -71,7 +50,6 @@ export async function onRequest(context) {
             return new Response(responseJson);
         } else {
             let responseJson = { "error": "invalid lgoin" }
-            //responseJson = JSON.stringify(responseJson)
             let response = new Response(null, {
                 status: 400
             });
@@ -80,7 +58,6 @@ export async function onRequest(context) {
         }
     } else {
         let responseJson = { "error": "invalid lgoin" }
-        //responseJson = JSON.stringify(responseJson)
         let response = new Response(null, {
             status: 400
         });
