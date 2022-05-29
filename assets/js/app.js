@@ -385,7 +385,7 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
         //check for errors
         if ((xhr.status == 400) || (xhr.status == 403) || (xhr.status == 500)) {
             //process the response
-            //console.log(xhr)
+            console.log(xhr)
             //res = JSON.parse(res)
             errorMessage = xhr.statusText
         }

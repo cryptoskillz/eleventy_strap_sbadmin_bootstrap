@@ -324,9 +324,9 @@ whenDocumentReady(isReady = () => {
                 //login done function
                 let loginDone = (response) => {
                     //get the repsonse
-                    console.log(response)
+                    //console.log(response)
                     let res = JSON.parse(response)
-                    console.log(res)
+                    //console.log(res)
                     //parse it
                     //get the JWT
                     let token = res.jwt
