@@ -15,13 +15,11 @@ export async function onRequest(context) {
     } = context;
 
     const contentType = request.headers.get('content-type')
-    console.log(contentType)
     let credentials;
     //check we have a content type
     if (contentType != null) {
         //get the login credentials
         credentials = await request.json();
-        console.log(credentials);
     }
     //set up the KV
     const KV = context.env.backpage;
@@ -38,6 +36,8 @@ export async function onRequest(context) {
     let projectsData;
     if (projects == null)
         projectsData = {data:[]}
+    else
+        projectsData = projects;
     
     //return projects
     //let projects = { data: [{ name: "project 1", id: 1, createdAt: "21/1/2020", template: "<html></html>", templatename: "" }, { name: "project 2", id: 2, createdAt: "21/1/2020", template: "<html></html>", templatename: "" }] }
