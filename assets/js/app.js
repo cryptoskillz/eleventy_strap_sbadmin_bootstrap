@@ -287,7 +287,7 @@ let checkLogin = () => {
                 }
             }
         } else {
-            window.location = '/login'
+            //window.location = '/login'
         }
 
     }
