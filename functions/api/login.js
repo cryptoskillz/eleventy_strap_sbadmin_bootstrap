@@ -1,7 +1,7 @@
 /*
     todo:
-    update the KV with their JWT secret
     trap the gets / puts etc
+
 */
 export async function onRequest(context) {
     const jwt = require('@tsndr/cloudflare-worker-jwt')
@@ -13,8 +13,6 @@ export async function onRequest(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
-    //store the secret
-    let secret = env.SECRET
     //set a valid boolean
     let valid = 1;
     //get the post data
@@ -41,9 +39,9 @@ export async function onRequest(context) {
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
-        const token = await jwt.sign({ password: credentials.password, username: credentials.identifier }, secret)
+        const token = await jwt.sign({ password: credentials.password, username: credentials.identifier }, env.SECRET)
         // Verifing token
-        const isValid = await jwt.verify(token, secret)
+        const isValid = await jwt.verify(token, env.SECRET)
         if (isValid == true) {
             let json = JSON.stringify({ "jwt":token, "user": {  "username": credentials.identifier, "email": credentials.identifier } })
             await KV.put("username" + credentials.username, json);

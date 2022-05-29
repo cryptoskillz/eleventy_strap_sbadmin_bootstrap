@@ -54,7 +54,7 @@ whenDocumentReady(isReady = () => {
     }
     var bodyobjectjson = JSON.stringify(bodyobj);
     //call the create account endpoint
-    xhrcall(0, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
+    xhrcall(1, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
 
 })
 
