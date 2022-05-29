@@ -3,7 +3,6 @@
 
     update the KV with their JWT secret
     trap the gets / puts etc
-    figure out why we cant send a message in the invalid reponses
 
 */
 export async function onRequest(context) {
@@ -49,21 +48,10 @@ export async function onRequest(context) {
             responseJson = JSON.stringify(responseJson)
             return new Response(responseJson);
         } else {
-            let responseJson = { "error": "invalid lgoin" }
-            let response = new Response(null, {
-                status: 400
-            });
-            response.responseText = "ddd"
-            return response
+            return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
         }
     } else {
-        let responseJson = { "error": "invalid lgoin" }
-        let response = new Response(null, {
-            status: 400
-        });
-        response.Response = "ddd"
-        response.responseText = "ddd"
-        return response
+        return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
     }
 
 }
