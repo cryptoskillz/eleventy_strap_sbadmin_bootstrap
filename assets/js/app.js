@@ -219,7 +219,6 @@ let goBack = () => {
 }
 
 let showAlert = (message, alertType, timeoutBool = 1) => {
-    console.log(message)
     let alertEl;
     //set the alert type
     if (alertType == 1)
