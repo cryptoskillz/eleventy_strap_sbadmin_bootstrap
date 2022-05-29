@@ -402,6 +402,9 @@ let xhrcall = (type = 1, method, bodyObj = "", setHeader = "", redirectUrl = "",
             if (redirectUrl != "") {
                 window.location = redirectUrl
             } else {
+                //console.log(res)
+                //res = JSON.parse(res)
+                //console.log(res)
                 eval(callback(res));
             }
 

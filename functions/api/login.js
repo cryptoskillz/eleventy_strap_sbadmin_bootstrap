@@ -4,7 +4,7 @@
     change the error HTTP code
     check if the user has a KV entry and return it
     update the KV with their JWT secret
-
+    trap the gets / puts etc
 
 */
 export async function onRequest(context) {
@@ -24,38 +24,50 @@ export async function onRequest(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
-    //console.log(SECRET)
+    //store the secret
     let secret = env.SECRET
-    const KV = context.env.backpage;
-    //put a variable in place. 
-    KV.put("foo", "bar")
-        const key = await KV.get("foo")
-    console.log(key)
-    
+    //set a vlaid boolean
     let valid = 1;
-
     //get the post data
     //note we know it is application / json i am sending it up as but we could check for all the content types if
     //     we wanted to make it more generic
-    let credentials = await request.json();
-    console.log(credentials)
-    if ((credentials.identifier == undefined) || (credentials.password == undefined))
-        valid = 0;
+    //     further more is if call wranger functions it does not pass a content type it is preflight but if id do wrangle _site it is fine
+    const contentType = request.headers.get('content-type')
+    let credentials;
+    if (contentType != null)
+    {
+        credentials = await request.json();
+        //console.log(credentials)
+        if ((credentials.identifier == undefined) || (credentials.password == undefined))
+            valid = 0;
+    }
+    else
+        valid = 0
 
+    /*
 
-    //get the kv store for this user
-    //get a key
+    KV stuff to do.
 
+    const KV = context.env.backpage;
+    //put a variable in place. 
+    KV.put("foo", "bar")
+    const key = await KV.get("foo")
+    console.log(key)
+    */
 
+    //check if it is valid
     if (valid == 1) {
         //make a JWT token
         const token = await jwt.sign({ password: credentials.password, username: credentials.identifier }, secret)
 
-
         // Verifing token
         const isValid = await jwt.verify(token, secret)
         if (isValid == true)
-            return new Response(token);
+        {
+            let responseJson = {"jwt":token,"user":{"id":3,"username":credentials.identifier,"email":credentials.identifier}}
+            responseJson = JSON.stringify(responseJson)
+            return new Response(responseJson);
+        }
         else {
             //note : change the repsonse to a http error code
             return new Response("invalid login");
