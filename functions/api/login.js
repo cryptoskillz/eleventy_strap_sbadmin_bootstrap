@@ -1,9 +1,7 @@
 /*
-    todo 
-
+    todo:
     update the KV with their JWT secret
     trap the gets / puts etc
-
 */
 export async function onRequest(context) {
     const jwt = require('@tsndr/cloudflare-worker-jwt')
@@ -20,23 +18,25 @@ export async function onRequest(context) {
     //set a valid boolean
     let valid = 1;
     //get the post data
-    //note we know it is application / json i am sending it up as but we could check for all the content types if
-    //     we wanted to make it more generic
-    //     further more is if call wranger functions it does not pass a content type it is preflight but if id do wrangle _site it is fine
+    //note we know it is application / json i am sending it up as but we could check for all the content types to generalise
     const contentType = request.headers.get('content-type')
     let credentials;
+    //check we have a content type
     if (contentType != null) {
+        //get the login credentials
         credentials = await request.json();
-        //console.log(credentials)
+        //check they are valid (may be overkill)
         if ((credentials.identifier == undefined) || (credentials.password == undefined))
-            valid = 0;
+            return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
     } else
-        valid = 0
+        return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
+    //set up the KV
     const KV = context.env.backpage;
+    //see if the user exists
     const user = await KV.get("username" + credentials.identifier);
+    //user does not exist
     if (user == null)
-        valid = 0;
-
+        return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
@@ -44,14 +44,7 @@ export async function onRequest(context) {
         // Verifing token
         const isValid = await jwt.verify(token, secret)
         if (isValid == true) {
-            let responseJson = { "jwt": token, "user": { "id": 3, "username": credentials.identifier, "email": credentials.identifier } }
-            responseJson = JSON.stringify(responseJson)
-            return new Response(responseJson);
-        } else {
-            return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
+            return new Response(JSON.stringify({ "jwt": token, "user": { "id": 3, "username": credentials.identifier, "email": credentials.identifier } }), { status: 400 });
         }
-    } else {
-        return new Response(JSON.stringify({ error: "invalid lgoin" }), { status: 400 });
-    }
-
+    } 
 }
