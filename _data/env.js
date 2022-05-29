@@ -21,11 +21,12 @@ require('dotenv').config();
 
 let todaysDate = new Date();
 let _YEAR = todaysDate.getFullYear();
-console.log(process.env.STRAPIAPI)
+console.log(process.env.API)
 module.exports = {
     YEAR: _YEAR,
     TITLE: "BACKPAGE GENERATOR",
-    APIURL: process.env.STRAPIAPI,
+    APIURL: process.env.API,
     COPYRIGHT: "CRYPTOSKILLZ " + _YEAR,
-    ENVIRONMENT: process.env.ELEVENTY_ENV
+    ENVIRONMENT: process.env.ELEVENTY_ENV,
+    SECRET: process.env.SECRET
 }
