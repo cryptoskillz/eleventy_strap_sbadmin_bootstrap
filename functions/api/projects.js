@@ -17,11 +17,18 @@ let projectId;
 let payLoad;
 let contentType;
 const jwt = require('@tsndr/cloudflare-worker-jwt')
+var uuid = require('uuid');
 
 
-let testIt = () => {
-    console.log('it works')
+let decodeJwt = async (req, secret) => {
+    let bearer = req.get('authorization')
+    bearer = bearer.replace("Bearer ", "");
+    let details = await jwt.decode(bearer, secret)
+    //console.log(details)
+    return (details)
 }
+
+
 
 export async function onRequestPut(context) {
     const jwt = require('@tsndr/cloudflare-worker-jwt')
@@ -39,7 +46,6 @@ export async function onRequestPut(context) {
 }
 
 export async function onRequestDelete(context) {
-    testIt()
     const {
         request, // same as existing Worker API
         env, // same as existing Worker API
@@ -55,48 +61,11 @@ export async function onRequestDelete(context) {
     if (contentType != null) {
         //get the login credentials
         payLoad = await request.json();
-        let bearer = request.headers.get('authorization')
-        bearer = bearer.replace("Bearer ", "");
-        //console.log(bearer)
-        const details = await jwt.decode(bearer, env.SECRET)
-        //console.log(projectId);
+        //console.log(payLoad)
+        let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
-
-        let projects = await KV.get("projects" + details.username);
-        //console.log(projects);
-        //console.log(projects2);
-
-        //projects = null
-        if (projects == null) {
-            //console.log('in')
-            return new Response(JSON.stringify({ error: "no projects" }), { status: 200 });
-        } else {
-            //see if it exists;   
-            projects = JSON.parse(projects);
-            let deleteIt = 0;
-            if (projects.data.length > 0) {
-                for (var i = 0; i < projects.data.length; ++i) {
-
-                    if (projects.data[i].id == payLoad.id) {
-                        deleteIt = 1;
-                        delete projects.data[i];
-                        //console.log(projects)
-                        if (projects != null)
-                            await KV.put("projects" + details.username, JSON.stringify({ data: [] }));
-                        else
-                            await KV.put("projects" + details.username, JSON.stringify(projects));
-
-                        return new Response(JSON.stringify(projects), { status: 200 });
-
-                    }
-                }
-
-                if (deleteIt == 0)
-                    return new Response(JSON.stringify({ error: "project not found" }), { status: 200 });
-            }
-        }
-
-        //return new Response(JSON.stringify({ error: "no id set" }), { status: 200 });
+        await KV.delete("projects" + details.username + "*" + payLoad.id);
+        return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
     }
 }
 export async function onRequestPost(context) {
@@ -115,47 +84,28 @@ export async function onRequestPost(context) {
     if (contentType != null) {
         //get the login credentials
         payLoad = await request.json();
-        projectName = payLoad.name;
-        //console.log(projectName)
     }
     //decode jwt
-    let bearer = request.headers.get('authorization')
-    bearer = bearer.replace("Bearer ", "");
-    //console.log(bearer)
-    const details = await jwt.decode(bearer, env.SECRET)
+    let details = await decodeJwt(request.headers, env.SECRET)
     //check for projects
     const KV = context.env.backpage;
-    let projects = await KV.get("projects" + details.username);
-    //console.log(projects.data.length)
-    //projects = null
-    if (projects == null) {
-        let projectData = JSON.stringify({ data: [{ name: projectName, id: 1, createdAt: "21/1/2020", template: "<html></html>", templatename: "" }] })
-        await KV.put("projects" + details.username, projectData);
+    //check if it exists
+    let exists = await KV.get("projects" + details.username + "|" + payLoad.name);
+    if (exists != null)
+        return new Response(JSON.stringify({ error: "Item exists" }), { status: 400 });
+    else {
+        //alternate key method
+        //let projects = await KV.list({ prefix: "projects" + details.username + "*" });
+        //console.log(projects.keys.length)
+        //let projectsData = {data: []}
+        //let id = projects.keys.length+1
 
-    } else {
-        //see if it exists;   
-
-        projects = JSON.parse(projects);
-        let addIt = 1;
-        if (projects.data.length > 0) {
-            for (var i = 0; i < projects.data.length; ++i) {
-
-                if (projects.data[i].name == projectName) {
-                    return new Response(JSON.stringify({ "error": "Project already exists" }), { status: 400 });
-                    addIt = 0;
-                }
-            }
-            
-        }
-        if (addIt == 1) {
-                projects.data.push({ name: projectName, id: projects.data.length + 1, createdAt: "21/1/2020", template: "<html></html>", templatename: "" })
-                let tmpJson = JSON.stringify(projects);
-                await KV.put("projects" + details.username, tmpJson)
-        }
+        let id = uuid.v4();
+        let projectData = { id: id, name: payLoad.name, createdAt: "21/12/2022" }
+        await KV.put("projects" + details.username + "*" + id, JSON.stringify(projectData));
+        return new Response(JSON.stringify({ message: "Item added" }), { status: 200 });
 
     }
-    return new Response(JSON.stringify(projects), { status: 200 });
-
 }
 
 export async function onRequestGet(context) {
@@ -167,20 +117,23 @@ export async function onRequestGet(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
-    let bearer = request.headers.get('authorization')
-    bearer = bearer.replace("Bearer ", "");
-    const details = await jwt.decode(bearer, env.SECRET)
+    let details = await decodeJwt(request.headers, env.SECRET)
     //set up the KV
     const KV = context.env.backpage;
-    //check for projects
-    let projects = await KV.get("projects" + details.username);
+    //get the projects based on the name
+    let projects = await KV.list({ prefix: "projects" + details.username + "*" });
     console.log(projects)
-    //let projectsData;
-     //await KV.put("projects" + details.username, JSON.stringify({ data: [] }));
-
-    if ((projects == null) || (projects == "")) {
-       // projects = {}
+    let projectsData = { data: [] }
+    if (projects.keys.length > 0) {
+        for (var i = 0; i < projects.keys.length; ++i) {
+            let tmp = projects.keys[i].name.split('*');
+            //console.log("projects" + details.username + "|" + tmp[1])
+            let pData = await KV.get("projects" + details.username + "*" + tmp[1]);
+            //console.log(pData)
+            //debug for easy clean up
+            //await KV.delete("projects-" + details.username+"*"+tmp[2]);
+            projectsData.data.push(JSON.parse(pData))
+        }
     }
-
-    return new Response(projects, { status: 200 });
+    return new Response(JSON.stringify(projectsData), { status: 200 });
 }

@@ -18,6 +18,7 @@ whenDocumentReady(isReady = () => {
         window.localStorage.projects = res;
         //parse the response
         res = JSON.parse(res)
+        //console.log(res)
         //get the datatable
         table = $('#dataTable').DataTable();
         let method = "api/projects"
@@ -30,7 +31,7 @@ whenDocumentReady(isReady = () => {
     <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
             let editbutton = `<a href="/project/edit/?name=${res.data[i].name}&projectid=${res.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
-            let deletebutton = `<a href="javascript:deleteTableItem(${res.data[i].id},'${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let deletebutton = `<a href="javascript:deleteTableItem('${res.data[i].id}','${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
             //get the created date
