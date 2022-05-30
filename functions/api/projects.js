@@ -41,6 +41,28 @@ export async function onRequestPut(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
+    contentType = request.headers.get('content-type');
+    //console.log(contentType)
+    if (contentType != null) {
+        payLoad = await request.json();
+        console.log(payLoad)
+                let details = await decodeJwt(request.headers, env.SECRET)
+
+        //let details = await decodeJwt(request.headers, env.SECRET)
+        const KV = context.env.backpage;
+        let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
+        projectData = JSON.parse(projectData)
+        if (projectData.name != undefined)
+            projectData.name = payLoad.name;
+         if (projectData.template != undefined)
+            projectData.template = payLoad.template;        
+        if (projectData.templatename != undefined)
+            projectData.templatename = payLoad.templatename;       
+        
+        await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
+
+    }
+
     return new Response({ message: "put" }, { status: 200 });
 
 }
@@ -101,7 +123,7 @@ export async function onRequestPost(context) {
         //let id = projects.keys.length+1
 
         let id = uuid.v4();
-        let projectData = { id: id, name: payLoad.name, createdAt: "21/12/2022" }
+        let projectData = { id: id, name: payLoad.name, createdAt: "21/12/2022",templatename:"",template:"" }
         await KV.put("projects" + details.username + "*" + id, JSON.stringify(projectData));
         return new Response(JSON.stringify({ message: "Item added" }), { status: 200 });
 

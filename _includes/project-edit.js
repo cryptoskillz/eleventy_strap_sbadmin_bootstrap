@@ -53,17 +53,13 @@ whenDocumentReady(isReady = () => {
             valid = 0;
             showAlert("Project name cannot be blank",2);
         }
-        if (valid == 1) {
-            //call the create account endpoint
-            //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not. 
-            let bodyobj = {
-                user: 1,
-                data: {
-                        name: projectname.value
-                }
+        if (valid == 1) {            
+             let bodyobj = {
+                    name: projectname.value,
+                    id:projectid
             }
             var bodyobjectjson = JSON.stringify(bodyobj);
-            xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrDone, token)
+            xhrcall(4, `api/projects/`, bodyobjectjson, "json", "", xhrDone, token)
         }
     })
 })
