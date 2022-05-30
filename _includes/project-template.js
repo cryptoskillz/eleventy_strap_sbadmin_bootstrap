@@ -49,99 +49,86 @@ let setKey = (theKey) => {
 }
 
 whenDocumentReady(isReady = () => {
-    //check for a paramater.
-    let urlParam = getUrlParamater('projectid')
-    //check if it is black
-    if (urlParam != "") {
-        //set the project id
-        projectid = urlParam;
-        //done function
-        let xhrDone = (res) => {
-            //parse the response
-            res = JSON.parse(res)
-            let fields = res.data[0].schema.fields
-            //debug 
-            let keys = []
-            if (fields != "")
-                keys = fields.split(",");
 
-            let elements2 = "";
-            let elements = "";
+    let project = window.localStorage.project
+    if (project == undefined)
+        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
+    else {
+        project = JSON.parse(project)
+        document.getElementById('showBody').classList.remove('d-none')
 
-            /*
-            if (keys.length == 0)
-            {
-                keys.push('var 1')
-                keys.push('var 2')
-            }
-            */
+        let fields = project.schema.fields
+        //debug 
+        let keys = []
+        if (fields != "")
+            keys = fields.split(",");
+
+        let elements2 = "";
+        let elements = "";
+
+        /*
+        if (keys.length == 0)
+        {
+            keys.push('var 1')
+            keys.push('var 2')
+        }
+        */
 
 
-            for (var i = 0; i < keys.length; ++i) {
-                //console.log(keys[i])
-                elements = elements + `\{\{${keys[i]}\}\}<br>`
-                elements2 = elements2 + `<a href="javascript:setKey('${keys[i]}')">${keys[i]}</a><br>`
-            }
-
-            //console.log(elements)
-            //console.log(elements2)
-
-            if (keys.length == 0) {
-                document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
-            } else {
-                document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
-            }
-
-            if ((res.data[0].templatename != "") && (res.data[0].templatename != null)) {
-                let templatename = document.getElementById('inp-template-name');
-                templatename.value = res.data[0].templatename;
-            }
-            let theCode = res.data[0].template;
-            if ((theCode == null) || (theCode == "")) {
-                theCode = html5layout
-                theCode = theCode.replace("[[ELEMENTS]]", elements);
-                document.getElementById("btn-template").innerHTML = "Create"
-            } else {
-                document.getElementById("btn-template").innerHTML = "Update"
-            }
-
-            let textArea = document.getElementById('inp-projectemplate');
-            document.getElementById("showBody").classList.remove("d-none")
-
-
-
-            myCodeMirror = CodeMirror.fromTextArea(textArea, {
-                mode: 'text/html',
-                theme: 'monokai'
-            });
-            myCodeMirror.setSize(null, 700);
-
-            myCodeMirror.on("change", function() {
-                clearTimeout(delay);
-                delay = setTimeout(updatePreview, 300);
-            });
-            myCodeMirror.getDoc().setValue(theCode);
-            myCodeMirror.refresh();
-
+        for (var i = 0; i < keys.length; ++i) {
+            //console.log(keys[i])
+            elements = elements + `\{\{${keys[i]}\}\}<br>`
+            elements2 = elements2 + `<a href="javascript:setKey('${keys[i]}')">${keys[i]}</a><br>`
         }
 
+        //console.log(elements)
+        //console.log(elements2)
 
-        if (urlParam != "") {
-
-            //get the data so we can get the keys for the elements
-            document.getElementById('showBody').classList.remove('d-none')
-            xhrcall(1, `api/projects/?id=${projectid}`, "", "json", "", xhrDone, token)
+        if (keys.length == 0) {
+            document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
         } else {
-            //no project id so show an error.
-            showAlert("project not found", 2, 0)
+            document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
         }
 
+        if ((project.templatename != "") && (project.templatename != null)) {
+            let templatename = document.getElementById('inp-template-name');
+            templatename.value = project.templatename;
+        }
+        let theCode = project.template;
+        if ((theCode == null) || (theCode == "")) {
+            theCode = html5layout
+            theCode = theCode.replace("[[ELEMENTS]]", elements);
+            document.getElementById("btn-template").innerHTML = "Create"
+        } else {
+            document.getElementById("btn-template").innerHTML = "Update"
+        }
 
-    } else {
-        //no project id so show an error.
-        showAlert("project not found", 2, 0)
+        let textArea = document.getElementById('inp-projectemplate');
+        document.getElementById("showBody").classList.remove("d-none")
+
+
+
+        myCodeMirror = CodeMirror.fromTextArea(textArea, {
+            mode: 'text/html',
+            theme: 'monokai'
+        });
+        myCodeMirror.setSize(null, 700);
+
+        myCodeMirror.on("change", function() {
+            clearTimeout(delay);
+            delay = setTimeout(updatePreview, 300);
+        });
+        myCodeMirror.getDoc().setValue(theCode);
+        myCodeMirror.refresh();
 
     }
+
+
+
+
+
+
+
 })
 
 function updatePreview() {

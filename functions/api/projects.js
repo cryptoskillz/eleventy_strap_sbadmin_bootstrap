@@ -1,16 +1,14 @@
 /*
     todo:
 
-    add put
 
-    rationalise the code base
-        bearer function
-        KV find
-        KV put
-        KV add
-        KV delete
-        cotent type
 
+    notes:
+
+
+    naming convertion for KV stores.
+
+    projects<username>*<projectid>
 */
 
 let projectId;

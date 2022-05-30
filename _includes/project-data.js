@@ -1,3 +1,18 @@
+/*
+
+todo 
+
+remove the data-import-data code and replace with just data import
+when we do the csv import it goes back to poject-data
+schema editing moving to project-data-schema
+
+we will store all the data from the import and then look at the fields paramater to decide if we are to use the data or not
+we can do this front or backend I think backend is best that way we can prefilter the data 
+
+add record will rely on the schema to be set
+
+
+*/
 //add a ready function
 let projectid;
 let backpages;
@@ -66,41 +81,26 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-
-    //get the  template id
-    let urlParam = getUrlParamater('projectid')
-    if (urlParam != '') {
-        projectid = urlParam;
+    let project = window.localStorage.project
+    if (project == undefined)
+        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
+    else {
         //done function
         let xhrDone = (res) => {
             //parse the response
             res = JSON.parse(res)
-            backpages = res;
-            //console.log(res)
-            renderTable(res, 0, 0, [1, 0, 1, 1], 'backpages')
+            if (res.data.length == 0)
+                showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2)
+            else {
+                document.getElementById("showBody").classList.remove('d-none')
+                renderTable(res, 0, 0, [1, 0, 1, 1], 'backpages')
 
-        }
-        //build the json
-        let bodyobj = {
-            user: {
-                id: 2
             }
 
         }
-
-        if (urlParam != "") {
-            //string it
-            document.getElementById("showBody").classList.remove('d-none')
-            var bodyobjectjson = JSON.stringify(bodyobj);
-            //call the create account endpoint
-            xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
-        }
-    } else {
-        showAlert(`project not found add one`, 2,0)
+        //call the create account endpoint
+        xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
     }
-
-
-
 
 })
 
