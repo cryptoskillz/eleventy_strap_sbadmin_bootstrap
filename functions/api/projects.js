@@ -64,6 +64,9 @@ export async function onRequestDelete(context) {
         const KV = context.env.backpage;
 
         let projects = await KV.get("projects" + details.username);
+        //console.log(projects);
+        //console.log(projects2);
+
         //projects = null
         if (projects == null) {
             //console.log('in')
@@ -71,21 +74,23 @@ export async function onRequestDelete(context) {
         } else {
             //see if it exists;   
             projects = JSON.parse(projects);
-            let deleteIt = 1;
+            let deleteIt = 0;
             if (projects.data.length > 0) {
                 for (var i = 0; i < projects.data.length; ++i) {
 
                     if (projects.data[i].id == payLoad.id) {
-                        console.log('found it')
-                        deleteIt = 0;
+                        deleteIt = 1;
+                        delete projects.data[i];
+                        console.log(projects)
+                        await KV.put("projects" + details.username,JSON.stringify(projects));
+
+                        return new Response(JSON.stringify(projects), { status: 200 });
+
                     }
                 }
-                if (deleteIt == 1) {
-                    console.log('delete it')
-                    return new Response(JSON.stringify({ message: "deleted" }), { status: 200 });
-                } else {
+
+                if (deleteIt == 0) 
                     return new Response(JSON.stringify({ error: "project not found" }), { status: 200 });
-                }
             }
         }
 
