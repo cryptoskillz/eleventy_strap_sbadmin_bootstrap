@@ -45,21 +45,24 @@ export async function onRequestPut(context) {
     //console.log(contentType)
     if (contentType != null) {
         payLoad = await request.json();
-        console.log(payLoad)
-                let details = await decodeJwt(request.headers, env.SECRET)
+        //console.log(payLoad)
+        let details = await decodeJwt(request.headers, env.SECRET)
 
         //let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
         let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
         projectData = JSON.parse(projectData)
-        if (projectData.name != undefined)
+        if (payLoad.name != undefined)
             projectData.name = payLoad.name;
-         if (projectData.template != undefined)
-            projectData.template = payLoad.template;        
-        if (projectData.templatename != undefined)
-            projectData.templatename = payLoad.templatename;       
-        
+        if (payLoad.template != undefined)
+        {
+            projectData.template = payLoad.template;
+        }
+        if (payLoad.templatename != undefined)
+            projectData.templatename = payLoad.templatename;
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
+        return new Response(JSON.stringify({ message: "Item updated" }), { status: 200 });
+
 
     }
 
@@ -123,7 +126,13 @@ export async function onRequestPost(context) {
         //let id = projects.keys.length+1
 
         let id = uuid.v4();
-        let projectData = { id: id, name: payLoad.name, createdAt: "21/12/2022",templatename:"",template:"" }
+        let schemaJson = {
+  "fields": "",
+  "originalfields": ""
+}
+
+        let projectData = { id: id, name: payLoad.name,  templatename: "", template: "" ,schema:schemaJson, createdAt: "21/12/2022"}
+
         await KV.put("projects" + details.username + "*" + id, JSON.stringify(projectData));
         return new Response(JSON.stringify({ message: "Item added" }), { status: 200 });
 
@@ -139,22 +148,33 @@ export async function onRequestGet(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
+    const { searchParams } = new URL(request.url)
+    let projectid = searchParams.get('id')
+
     let details = await decodeJwt(request.headers, env.SECRET)
     //set up the KV
     const KV = context.env.backpage;
     //get the projects based on the name
     let projects = await KV.list({ prefix: "projects" + details.username + "*" });
-    console.log(projects)
+
     let projectsData = { data: [] }
-    if (projects.keys.length > 0) {
-        for (var i = 0; i < projects.keys.length; ++i) {
-            let tmp = projects.keys[i].name.split('*');
-            //console.log("projects" + details.username + "|" + tmp[1])
-            let pData = await KV.get("projects" + details.username + "*" + tmp[1]);
-            //console.log(pData)
-            //debug for easy clean up
-            //await KV.delete("projects-" + details.username+"*"+tmp[2]);
-            projectsData.data.push(JSON.parse(pData))
+    if ((projectid != null) && (projectid != "")) {
+        let pData = await KV.get("projects" + details.username + "*" + projectid);
+        //console.log(pData)
+        //debug for easy clean up
+        //await KV.delete("projects-" + details.username+"*"+tmp[2]);
+        projectsData.data.push(JSON.parse(pData))
+    } else {
+        if (projects.keys.length > 0) {
+            for (var i = 0; i < projects.keys.length; ++i) {
+                let tmp = projects.keys[i].name.split('*');
+                //console.log("projects" + details.username + "|" + tmp[1])
+                let pData = await KV.get("projects" + details.username + "*" + tmp[1]);
+                //console.log(pData)
+                //debug for easy clean up
+                //await KV.delete("projects-" + details.username+"*"+tmp[2]);
+                projectsData.data.push(JSON.parse(pData))
+            }
         }
     }
     return new Response(JSON.stringify(projectsData), { status: 200 });

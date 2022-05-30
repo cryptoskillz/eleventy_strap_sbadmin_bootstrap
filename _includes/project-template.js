@@ -59,105 +59,87 @@ whenDocumentReady(isReady = () => {
         let xhrDone = (res) => {
             //parse the response
             res = JSON.parse(res)
-            let results = []
-            let keys;
+            let fields = res.data[0].schema.fields
+            //debug 
+            let keys = []
+            if (fields != "")
+                keys = fields.split(",");
 
-            //get the keys from the first data.
-            for (var i = 0; i < res.data.length; ++i) {
-                keys = Object.keys(res.data[i].attributes.data)
+            let elements2 = "";
+            let elements = "";
+
+            /*
+            if (keys.length == 0)
+            {
+                keys.push('var 1')
+                keys.push('var 2')
+            }
+            */
+
+
+            for (var i = 0; i < keys.length; ++i) {
+                //console.log(keys[i])
+                elements = elements + `\{\{${keys[i]}\}\}<br>`
+                elements2 = elements2 + `<a href="javascript:setKey('${keys[i]}')">${keys[i]}</a><br>`
             }
 
-            //get the template
-            let xhrDone2 = (res) => {
-                let elements = "";
-                let elements2 = ""
+            //console.log(elements)
+            //console.log(elements2)
 
-                //parse the response
-                res = JSON.parse(res)
-
-                //set the template name
-                console.log(res.data.attributes.template )
-                if ((res.data.attributes.template != "") && (res.data.attributes.template != null)) {
-                    let templatename = document.getElementById('inp-template-name');
-                    templatename.value = res.data.attributes.templatename;
-                }
-
-                //set the template
-                let theCode = res.data.attributes.template;
-                if (keys != undefined) {
-                    for (var i = 0; i < keys.length; ++i) {
-                        //console.log(keys[i])
-                        elements = elements + `\{\{${keys[i]}\}\}<br>`
-                        elements2 = elements2 + `<a href="javascript:setKey('${keys[i]}')">${keys[i]}</a><br>`
-                    }
-                }
-                //check there is a template set and if not then set the default one.
-                if ((theCode == null) || (theCode == "")) {
-                    //get the elements from the data 
-                    //set the html5
-                    theCode = html5layout
-                    //put in the data elements
-                    theCode = theCode.replace("[[ELEMENTS]]", elements);
-                    //it's default so change to add
-                    document.getElementById("btn-template").innerHTML = "Create"
-                } else {
-                    //set it to the udpate.
-                    document.getElementById("btn-template").innerHTML = "Update"
-                }
-
-                if (keys == undefined) {
-                    document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
-                } else {
-                    document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
-                }
-                //set the text area
-                let textArea = document.getElementById('inp-projectemplate');
-                document.getElementById("showBody").classList.remove("d-none")
-
-
-
-                myCodeMirror = CodeMirror.fromTextArea(textArea, {
-                    mode: 'text/html',
-                    theme: 'monokai'
-                });
-                myCodeMirror.setSize(null, 700);
-
-                myCodeMirror.on("change", function() {
-                    clearTimeout(delay);
-                    delay = setTimeout(updatePreview, 300);
-                });
-                myCodeMirror.getDoc().setValue(theCode);
-                myCodeMirror.refresh();
+            if (keys.length == 0) {
+                document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
+            } else {
+                document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
             }
 
-            //call the create account endpoint
-            xhrcall(1, `backpage-projects/${projectid}`, "", "json", "", xhrDone2, token)
+            if ((res.data[0].templatename != "") && (res.data[0].templatename != null)) {
+                let templatename = document.getElementById('inp-template-name');
+                templatename.value = res.data[0].templatename;
+            }
+            let theCode = res.data[0].template;
+            if ((theCode == null) || (theCode == "")) {
+                theCode = html5layout
+                theCode = theCode.replace("[[ELEMENTS]]", elements);
+                document.getElementById("btn-template").innerHTML = "Create"
+            } else {
+                document.getElementById("btn-template").innerHTML = "Update"
+            }
+
+            let textArea = document.getElementById('inp-projectemplate');
+            document.getElementById("showBody").classList.remove("d-none")
+
+
+
+            myCodeMirror = CodeMirror.fromTextArea(textArea, {
+                mode: 'text/html',
+                theme: 'monokai'
+            });
+            myCodeMirror.setSize(null, 700);
+
+            myCodeMirror.on("change", function() {
+                clearTimeout(delay);
+                delay = setTimeout(updatePreview, 300);
+            });
+            myCodeMirror.getDoc().setValue(theCode);
+            myCodeMirror.refresh();
 
         }
-        //build the json
-        let bodyobj = {
-            user: {
-                id: 2
-            }
 
-        }
-        //string it
 
         if (urlParam != "") {
-            var bodyobjectjson = JSON.stringify(bodyobj);
+
             //get the data so we can get the keys for the elements
             document.getElementById('showBody').classList.remove('d-none')
-
-            xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
+            xhrcall(1, `api/projects/?id=${projectid}`, "", "json", "", xhrDone, token)
         } else {
             //no project id so show an error.
-            showAlert("project not found", 2,0)
+            showAlert("project not found", 2, 0)
         }
 
 
     } else {
         //no project id so show an error.
-        showAlert("project not found", 2,0)
+        showAlert("project not found", 2, 0)
 
     }
 })
@@ -204,7 +186,7 @@ document.getElementById('btn-template').addEventListener('click', function() {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-                    showAlert("project template has been updated", 1)
+        showAlert("project template has been updated", 1)
 
     }
 
@@ -222,19 +204,16 @@ document.getElementById('btn-template').addEventListener('click', function() {
 
     if (valid == 1) {
         valid = 0;
+
         let bodyobj = {
-            user: 1,
-            data: {
-                template: template,
-                templatename: templatename.value
-            }
+            template: template,
+            templatename: templatename.value,
+            id: projectid
         }
-        
 
         var bodyobjectjson = JSON.stringify(bodyobj);
-        xhrcall(4, `backpage-projects/${projectid}/`, bodyobjectjson, "json", "", xhrDone, token)
-    }
-    else
-            showAlert(errorMesage, 2)
+        xhrcall(4, `api/projects/`, bodyobjectjson, "json", "", xhrDone, token)
+    } else
+        showAlert(errorMesage, 2)
 
 });

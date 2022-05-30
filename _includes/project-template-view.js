@@ -1,3 +1,8 @@
+/*
+when we have done the data import we have to rebuild this
+
+
+*/
 let projectid = 0;
 let dataid = 0
 
@@ -32,8 +37,34 @@ whenDocumentReady(isReady = () => {
     if (valid ==1) {
         //done function
         let xhrDone = (res) => {
+            let keys;
+            let theData = ""
             //parse the response
             res = JSON.parse(res)
+            console.log(res)
+            //get the keys from the schame
+            let fields = res.data[0].schema.fields
+            //debug 
+            let keys = []
+            if (fields != "")
+                keys = fields.split(",");
+
+             for (var i = 0; i < keys.length; ++i) {
+                //console.log(keys[i])
+                element =  `\{\{${keys[i]}\}\}<br>`
+                theCode = theCode.replace(element, theData);
+            }
+            //get the data
+
+             if (theData == "")
+                theCode= "No data added for this project"+theCode
+            document.open();
+            document.write(theCode);
+            document.close();
+
+
+
+            /*
             let results = []
             let keys;
             let theData
@@ -44,15 +75,12 @@ whenDocumentReady(isReady = () => {
                     dataid = res.data[i].id 
                 if (res.data[i].id == parseInt(dataid))
                 {
-                    theKeys = Object.keys(res.data[i].attributes.data)
-                    theData = res.data[i].attributes.data
+                    theKeys = Object.keys(res.data[i])
+                    theData = res.data[i]
                 }
             }
 
-            //get the template
-            let xhrDone2 = (res) => {
-                res = JSON.parse(res)
-                let theCode = res.data.attributes.template;
+            let theCode = res.data[.template;
                 //console.log(theCode)
                 if ((theCode == "") || (theCode == null)) {
                     //alert('No template')
@@ -79,23 +107,19 @@ whenDocumentReady(isReady = () => {
                     document.write(theCode);
                     document.close();
                 }
-            }
 
-            //call the create account endpoint
-            xhrcall(1, `backpage-projects/${projectid}`, "", "json", "", xhrDone2, token)
 
+ */
         }
+       
         //build the json
-        let bodyobj = {
-            user: {
-                id: 2
-            }
-
-        }
-        //string it
-        var bodyobjectjson = JSON.stringify(bodyobj);
-        //get the data so we can get the keys for the elements
-        xhrcall(1, "backpages/?user=1", bodyobj, "json", "", xhrDone, token)
+    let bodyobj = {
+            email : user.email,
+            token : token
+    }
+    var bodyobjectjson = JSON.stringify(bodyobj);
+    //call the create account endpoint
+    xhrcall(1, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
     }
     else
     {
