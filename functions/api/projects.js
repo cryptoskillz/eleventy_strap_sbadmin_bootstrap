@@ -2,7 +2,6 @@
     todo:
 
     add put
-    delete project
 
     rationalise the code base
         bearer function
@@ -16,7 +15,7 @@
 
 let projectId;
 let payLoad;
-let contentType;    
+let contentType;
 const jwt = require('@tsndr/cloudflare-worker-jwt')
 
 
@@ -81,15 +80,18 @@ export async function onRequestDelete(context) {
                     if (projects.data[i].id == payLoad.id) {
                         deleteIt = 1;
                         delete projects.data[i];
-                        console.log(projects)
-                        await KV.put("projects" + details.username,JSON.stringify(projects));
+                        //console.log(projects)
+                        if (projects != null)
+                            await KV.put("projects" + details.username, JSON.stringify({ data: [] }));
+                        else
+                            await KV.put("projects" + details.username, JSON.stringify(projects));
 
                         return new Response(JSON.stringify(projects), { status: 200 });
 
                     }
                 }
 
-                if (deleteIt == 0) 
+                if (deleteIt == 0)
                     return new Response(JSON.stringify({ error: "project not found" }), { status: 200 });
             }
         }
@@ -124,6 +126,7 @@ export async function onRequestPost(context) {
     //check for projects
     const KV = context.env.backpage;
     let projects = await KV.get("projects" + details.username);
+    //console.log(projects.data.length)
     //projects = null
     if (projects == null) {
         let projectData = JSON.stringify({ data: [{ name: projectName, id: 1, createdAt: "21/1/2020", template: "<html></html>", templatename: "" }] })
@@ -142,11 +145,12 @@ export async function onRequestPost(context) {
                     addIt = 0;
                 }
             }
-            if (addIt == 1) {
+            
+        }
+        if (addIt == 1) {
                 projects.data.push({ name: projectName, id: projects.data.length + 1, createdAt: "21/1/2020", template: "<html></html>", templatename: "" })
                 let tmpJson = JSON.stringify(projects);
                 await KV.put("projects" + details.username, tmpJson)
-            }
         }
 
     }
@@ -170,10 +174,13 @@ export async function onRequestGet(context) {
     const KV = context.env.backpage;
     //check for projects
     let projects = await KV.get("projects" + details.username);
-    let projectsData;
-    if (projects == null)
-        projectsData = { data: [] }
-    else
-        projectsData = projects;
-    return new Response(projectsData, { status: 200 });
+    console.log(projects)
+    //let projectsData;
+     //await KV.put("projects" + details.username, JSON.stringify({ data: [] }));
+
+    if ((projects == null) || (projects == "")) {
+       // projects = {}
+    }
+
+    return new Response(projects, { status: 200 });
 }
