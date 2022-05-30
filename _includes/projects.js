@@ -20,7 +20,7 @@ whenDocumentReady(isReady = () => {
         res = JSON.parse(res)
         //get the datatable
         table = $('#dataTable').DataTable();
-        let method = "backpage-projects"
+        let method = "api/projects"
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
             //console.log(res.data[i].attributes.template)

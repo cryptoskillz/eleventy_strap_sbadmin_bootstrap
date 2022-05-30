@@ -82,14 +82,18 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
         $('#confirmation-modal').modal('toggle')
         let xhrDone = (res) => {
             //parse the response
-            showAlert('Item has been deleted',1)
+            showAlert('Item has been deleted', 1)
             table.row('#' + tableRowId).remove().draw();
 
         }
 
+        let bodyobj = {
+            id: deleteId
+        }
+        var bodyobjectjson = JSON.stringify(bodyobj);
         //call the create account endpoint
         //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
-        xhrcall(3, `${deleteMethod}/${deleteId}/`, "", "json", "", xhrDone, token)
+        xhrcall(3, `${deleteMethod}/`, bodyobjectjson, "json", "", xhrDone, token)
 
     })
 }
@@ -120,8 +124,8 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     //loop through the keys
     for (var i = 0; i < keys.length; ++i) {
         //build the column
-        if(keys[i] == "id")
-            idTableRow = i 
+        if (keys[i] == "id")
+            idTableRow = i
         colJson = { title: keys[i] }
         //add it it the columns object
         columns.push(colJson)
@@ -157,13 +161,11 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
             recordId = data.data[i].id
             tableDeleteId = data.data[i].id
             tmp.id = recordId
-        }
-        else
-        {
+        } else {
             recordId = data.data[i].id
             //console.log(tmp)
             tableDeleteId = tmp.id
-            
+
         }
         //console.log(tmp)
         if (actions.length != 0) {
