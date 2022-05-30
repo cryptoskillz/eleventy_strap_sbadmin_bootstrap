@@ -8,7 +8,6 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-    let allowIt = 1;
     let project = window.localStorage.project    
     if (project == undefined)
         showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
