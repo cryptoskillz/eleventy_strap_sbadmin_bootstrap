@@ -43,9 +43,9 @@ export async function onRequest(context) {
         // Verifing token
         const isValid = await jwt.verify(token, env.SECRET)
         if (isValid == true) {
-            let json = JSON.stringify({ "jwt":token, "user": {  "username": credentials.identifier, "email": credentials.identifier } })
+            let json = JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier } })
             await KV.put("username" + credentials.username, json);
-            return new Response(JSON.stringify({ "jwt": token, "user": {  "username": credentials.identifier, "email": credentials.identifier } }), { status: 200 });
+            return new Response(JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier } }), { status: 200 });
         }
-    } 
+    }
 }

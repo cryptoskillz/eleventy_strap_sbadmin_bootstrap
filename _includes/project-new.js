@@ -26,13 +26,10 @@ whenDocumentReady(isReady = () => {
             //call the create account endpoint
             //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not. 
             let bodyobj = {
-                user: 1,
-                data: {
                     name: projectname.value
-                }
             }
             var bodyobjectjson = JSON.stringify(bodyobj);
-            xhrcall(0, "backpage-projects/", bodyobjectjson, "json", "", xhrDone, token)
+            xhrcall(0, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
         }
     })
 })
