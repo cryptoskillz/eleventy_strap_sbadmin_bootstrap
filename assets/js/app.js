@@ -116,6 +116,9 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     */
     //console.log(data);
     //set some array
+    let project = window.localStorage.project
+    project = JSON.parse(project)
+    console.log(project)
     let columns = []
     let dataresult = []
     let idTableRow;

@@ -85,6 +85,7 @@ whenDocumentReady(isReady = () => {
     if (project == undefined)
         showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
     else {
+        project = JSON.parse(project)
         //done function
         let xhrDone = (res) => {
             //parse the response
@@ -93,13 +94,13 @@ whenDocumentReady(isReady = () => {
                 showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2,0)
             else {
                 document.getElementById("showBody").classList.remove('d-none')
-                renderTable(res, 0, 0, [1, 0, 1, 1], 'backpages')
+                renderTable(res, 0, 0, [1, 0, 1, 1], res)
 
             }
 
         }
         //call the create account endpoint
-        xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
+        xhrcall(1, `api/projectdata/?projectid=${project.id}`, "", "json", "", xhrDone, token)
     }
 
 })
@@ -108,13 +109,13 @@ whenDocumentReady(isReady = () => {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-            window.location.href = `/project/data/import/?projectid=${projectid}`
+            window.location.href = `/project/data/import/`
             break;
         case "2":
             zipBackPages()
             break;
         case "3":
-            window.location.href = `/project/data/new/?projectid=${projectid}`
+            window.location.href = `/project/data/new/`
             break;
         case "4":
             window.location.href = `/projects/`

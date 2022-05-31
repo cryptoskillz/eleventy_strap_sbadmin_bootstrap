@@ -46,18 +46,19 @@ export async function onRequestGet(context) {
     //get the projects based on the name
     let kv = await KV.list({ prefix: "projects-data" + details.username + "*"+projectid+"*" });
 
-    let theJson = { data: [] }
+    let projectsData = { data: [] }
     if (kv.keys.length > 0) {
         for (var i = 0; i < kv.keys.length; ++i) {
             let tmp = kv.keys[i].name.split('*');
-            //console.log("projects" + details.username + "|" + tmp[1])
+            console.log(kv.keys[i])
+            console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
             let pData = await KV.get("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2]);
             //console.log(pData)
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);
-            Data.theJson.push(JSON.parse(pData))
+            projectsData.data.push(JSON.parse(pData))
         }
     }
-    return new Response(JSON.stringify(theJson), { status: 200 });
+    return new Response(JSON.stringify(projectsData), { status: 200 });
 
 }

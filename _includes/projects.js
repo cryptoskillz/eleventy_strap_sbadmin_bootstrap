@@ -1,9 +1,8 @@
 /*
 todo 
 
-rationalise this to use render table function
+update the field rendering in  render  table
 
-store the project in data store when  its a button is clocked 
 */
 //add a ready function
 let whenDocumentReady = (f) => {
