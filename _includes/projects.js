@@ -21,12 +21,16 @@ let loadURL = (theurl) => {
 whenDocumentReady(isReady = () => {
     document.getElementById('showBody').classList.remove('d-none')
 
-    let xhrDone = (res) => {
+    let xhrDone = (res,local=0) => {
         //store it in local storage
-        //window.localStorage.projects = res;
-        //parse the response
-        res = JSON.parse(res)
+        if (local == 0)
+        {
+            window.localStorage.projects = res;
+            res = JSON.parse(res)
 
+        }
+        //console.log(res)
+        //parse the response
         //console.log(res)
         //get the datatable
         table = $('#dataTable').DataTable();
@@ -65,7 +69,14 @@ whenDocumentReady(isReady = () => {
     }
     var bodyobjectjson = JSON.stringify(bodyobj);
     //call the create account endpoint
-    xhrcall(1, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
+    let projects = window.localStorage.projects    
+    if (projects == undefined)
+        xhrcall(1, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
+    else {
+        //console.log(project)
+        projects = JSON.parse(projects)
+        xhrDone(projects,1);
+    }
 
 })
 

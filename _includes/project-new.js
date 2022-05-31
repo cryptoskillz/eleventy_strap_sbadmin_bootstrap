@@ -9,8 +9,13 @@ whenDocumentReady(isReady = () => {
     document.getElementById('btn-create').addEventListener('click', function() {
         let xhrDone = (res) => {
             //parse the response
-            res = JSON.parse(res)
-            showAlert("project has been created", 1)
+            let projects = window.localStorage.projects 
+            projects = JSON.parse(projects);
+            res = JSON.parse(res);
+            let data = JSON.parse(res.data);
+            projects.data.push(data);
+            window.localStorage.projects = JSON.stringify(projects)
+            showAlert(res.message, 1)
         }
         //set the valid var
         let valid = 1;

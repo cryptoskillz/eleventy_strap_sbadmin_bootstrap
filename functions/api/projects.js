@@ -64,7 +64,7 @@ export async function onRequestPut(context) {
             projectData.schema = payLoad.schema;
         //console.log(projectData)
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
-        return new Response(JSON.stringify({ message: "Item updated" }), { status: 200 });
+        return new Response(JSON.stringify({ message: "Item updated",data:JSON.stringify(projectData) }), { status: 200 });
 
 
     }
@@ -137,7 +137,7 @@ export async function onRequestPost(context) {
         let projectData = { id: id, name: payLoad.name,  templatename: "", template: "" ,schema:schemaJson, createdAt: "21/12/2022"}
 
         await KV.put("projects" + details.username + "*" + id, JSON.stringify(projectData));
-        return new Response(JSON.stringify({ message: "Item added" }), { status: 200 });
+        return new Response(JSON.stringify({ message: "Item added",data:JSON.stringify(projectData)  }), { status: 200 });
 
     }
 }
