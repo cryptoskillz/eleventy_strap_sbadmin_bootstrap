@@ -26,6 +26,41 @@ let decodeJwt = async (req, secret) => {
     return (details)
 }
 
+export async function onRequestPost(context) {
+    const {
+        request, // same as existing Worker API
+        env, // same as existing Worker API
+        params, // if filename includes [id] or [[path]]
+        waitUntil, // same as ctx.waitUntil in existing Worker API
+        next, // used for middleware or to fetch assets
+        data, // arbitrary space for passing data between middlewares
+    } = context;
+
+    let payLoad;
+    let projectName = "";
+    const contentType = request.headers.get('content-type')
+    if (contentType != null) {
+        payLoad = await request.json();
+        //console.log(payLoad);
+
+    }
+    //decode jwt
+    let details = await decodeJwt(request.headers, env.SECRET)
+    //check for projects
+    const KV = context.env.backpage;
+    let id = uuid.v4();
+    let projectData = { data: "", id: "" }
+    projectData.id = id
+    projectData.data = payLoad.data
+    let kvname = "projects-data" + details.username + "*" + payLoad.projectid + "*" + id;
+    //console.log(kvname)
+    //check it does not already exist
+    await KV.put(kvname, JSON.stringify(projectData));
+    return new Response(JSON.stringify({ message: "Item added" }), { status: 200 });
+
+
+}
+
 export async function onRequestDelete(context) {
     const {
         request, // same as existing Worker API
@@ -45,8 +80,8 @@ export async function onRequestDelete(context) {
         //console.log(payLoad)
         let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
-        console.log("projects-data" + details.username + "*"+payLoad.projectid+"*"  + payLoad.id)
-        await KV.delete("projects-data" + details.username + "*"+payLoad.projectid+"*"  + payLoad.id);
+        console.log("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.id)
+        await KV.delete("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.id);
         return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
     }
 }
@@ -69,15 +104,15 @@ export async function onRequestGet(context) {
     //set up the KV
     const KV = context.env.backpage;
     //get the projects based on the name
-    let kv = await KV.list({ prefix: "projects-data" + details.username + "*"+projectid+"*" });
+    let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + projectid + "*" });
 
     let projectsData = { data: [] }
     if (kv.keys.length > 0) {
         for (var i = 0; i < kv.keys.length; ++i) {
             let tmp = kv.keys[i].name.split('*');
             //console.log(kv.keys[i])
-            console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
-            let pData = await KV.get("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2]);
+            console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
+            let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);
             projectsData.data.push(JSON.parse(pData))

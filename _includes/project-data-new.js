@@ -1,88 +1,78 @@
-//add a ready function
 
-let keys;
+let fields;
+let originalfields;
 let projectid;
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
 whenDocumentReady(isReady = () => {
-    document.getElementById('showBody').classList.remove('d-none')
 
-    //get the  template id
-    let urlParam = getUrlParamater('projectid')
+    let project = window.localStorage.project
+    if (project == undefined)
+        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
+    else {
+        //get the project
+        project = JSON.parse(project);
+        fields = project.schema.fields.split(",");
+        originalfields = project.schema.originalfields.split(",")
 
-    //done function
-    let xhrDone = (res) => {
-        //parse the response
-        res = JSON.parse(res)
-        //console.log(res)
+        //console.log(fields)
 
-        //get the hets fro  the results array
-        keys = Object.keys(res.data[0].attributes.data);
+        //fields = Object.keys(fields);
         //loop through  the keys
-        let inpHtml = `<div class="form-group" >
-        <label>Slug</label>
-            <input type="email" class="form-control form-control-user" id="inp-slug" aria-describedby="emailHelp" placeholder="Enter a slug...">
-            <span class="text-danger d-none" id="error-projectslug">Slug </span>  
-        </div>`
-        for (var i = 0; i < keys.length; ++i) {
-            inpHtml = inpHtml + `    <div class="form-group" >
-            <label>${keys[i]}</label>
-<input type="text" class="form-control form-control-user" id="inp-${keys[i]}" aria-describedby="emailHelp" placeholder="Enter ${keys[i]}" value="">
+        let inpHtml = "";
+        for (var i = 0; i < fields.length; ++i) {
+
+            if (fields[i] == "UNUSED") {
+                inpHtml = inpHtml + `    <div class="form-group" >
+            <label>${originalfields[i]} (note this is not used in the current schema)</label>
+<input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]}" value="">
 </div>`
+            } else {
+
+
+                inpHtml = inpHtml + `<div class="form-group" >
+            <label>${fields[i]}</label>
+<input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="">
+</div>`
+            }
             //console.log(inpHtml)
         }
         document.getElementById('formInputs').innerHTML = inpHtml
+        //show the body
+        document.getElementById('showBody').classList.remove('d-none');
 
     }
-
-
-    if (urlParam != "") {
-        projectid = urlParam
-        //string it
-        document.getElementById("showBody").classList.remove('d-none')
-        //call the create account endpoint
-        xhrcall(1, `backpages/`, "", "json", "", xhrDone, token)
-    } else {
-        //no project id so show an error.
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = "project not found"
-        error.classList.remove('d-none');
-    }
-
 
 })
 
-//        
 document.getElementById('btn-create').addEventListener('click', function() {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        let success = document.getElementById('accountsSuccess');
-        success.innerHTML = "project data has been created"
-        success.classList.remove('d-none');
+        showAlert(res.message, 1)
 
     }
     let data = {};
-    //console.log(keys)
-    for (var i = 0; i < keys.length; ++i) {
-        let inpValue = document.getElementById("inp-" + keys[i]).value;
-        //console.log(inpValue);
-        data[keys[i]] = inpValue;
-    }
-    let slug = document.getElementById("inp-slug").value;
+    for (var i = 0; i < fields.length; ++i) {
+        let inpValue = "";
+        if (fields[i] == "UNUSED") {
+            inpValue = document.getElementById("inp-" + originalfields[i]).value;
+            data[originalfields[i]] = inpValue;
 
+        } else {
+            inpValue = document.getElementById("inp-" + fields[i]).value;
+            data[fields[i]] = inpValue;
 
-    console.log(data)
-    let bodyobj = {
-        user: 1,
-        data: {
-            slug:slug,
-            data: data
         }
     }
-
+    let project = window.localStorage.project
+    project = JSON.parse(project);
+    let bodyobj = {
+        data: data,
+        projectid: project.id
+    }
     var bodyobjectjson = JSON.stringify(bodyobj);
-    xhrcall(0, `backpages/`, bodyobjectjson, "json", "", xhrDone, token)
+    xhrcall(0, `api/projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
 })

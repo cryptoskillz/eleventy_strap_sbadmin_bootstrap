@@ -15,32 +15,24 @@ add record will rely on the schema to be set
 */
 let backpages;
 
-let loadURL = (theUrl, theId) => {
+let loadURL = (theUrl, theId,blank=0) => {
     for (var i = 0; i < backpages.data.length; ++i) {
         if (backpages.data[i].id == theId) {
             window.localStorage.projectdata = JSON.stringify(backpages.data[i].data);
-            window.open(theUrl,"_bla k")
+            if (blank == 1)
+                window.open(theUrl,"_blank")
+            else
+                window.location.href = theUrl;
         }
-        //console.log(backpages.data[i])
     }
-    //console.log(backpages[theId])
-    //window.localStorage.projectdata = JSON.stringify(backpages[theId]);
-    //window.location.href = theurl;
 }
 
 //table render
 let renderTable = (data, actions = [], method = "") => {
-    /*actions
-        0 = delete button
-
-        remove the weird id rendering as we will alwasy haev an id now
-        store the table data
-    */
-    //set some array
 
     //get the project
     let project = window.localStorage.project
-    project = JSON.parse(project)
+    project = JSON.parse(project);
     //set the arrays for the table
     let columns = []
     let dataresult = []
@@ -88,7 +80,7 @@ let renderTable = (data, actions = [], method = "") => {
 
             //edit button
             if (actions[0] == 1)
-                buttons = buttons + `<a href="/project/data/edit/?id=${data.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${data.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             //publish button
             if (actions[1] == 1)
@@ -96,7 +88,7 @@ let renderTable = (data, actions = [], method = "") => {
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
             //view button
             if (actions[2] == 1)
-                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${data.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${data.data[i].id}',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             //delete button
             if (actions[3] == 1)

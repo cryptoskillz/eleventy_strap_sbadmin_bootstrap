@@ -1,90 +1,78 @@
-//add a ready function
-
-let keys;
+let fields;
+let originalfields;
 let projectid;
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
 whenDocumentReady(isReady = () => {
-    document.getElementById('showBody').classList.remove('d-none')
 
-    //get the  template id
-    let urlParam = getUrlParamater('id')
+    let project = window.localStorage.project
+    if (project == undefined)
+        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
+    else {
+        //get the project
+        project = JSON.parse(project);
+        fields = project.schema.fields.split(",");
+        originalfields = project.schema.originalfields.split(",")
+        let projectdata = window.localStorage.projectdata
+        projectdata = JSON.parse(projectdata)
+        let tmpd = Object.values(projectdata)
+        console.log(tmpd)
 
-    //done function
-    let xhrDone = (res) => {
-        //parse the response
-        res = JSON.parse(res)
-        console.log(res)
-
-        //get the hets fro  the results array
-        keys = Object.keys(res.data.attributes.data);
         //loop through  the keys
-        let inpHtml = `<div class="form-group" >
-        <label>Slug</label>
-            <input type="email" class="form-control form-control-user" id="inp-slug" aria-describedby="emailHelp" placeholder="Enter a slug..." value="${res.data.attributes.slug}">
-            <span class="text-danger d-none" id="error-projectslug">Slug </span>  
-        </div>`
-        for (var i = 0; i < keys.length; ++i) {
-            //console.log(keys[i])
-            //build a the daa
-            //let json = `{\"data\" : \"${keys[i]}\"}`
-            let theData = res.data.attributes.data[keys[i]]
-            inpHtml = inpHtml + `    <div class="form-group" >
-            <label>${keys[i]}</label>
-<input type="text" class="form-control form-control-user" id="inp-${keys[i]}" aria-describedby="emailHelp" placeholder="Enter ${keys[i]}" value="${theData}">
+        let inpHtml = "";
+        for (var i = 0; i < fields.length; ++i) {
+
+            if (fields[i] == "UNUSED") {
+                inpHtml = inpHtml + `    <div class="form-group" >
+            <label>${originalfields[i]} (note this is not used in the current schema)</label>
+<input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]}" value="${tmpd[i]}">
 </div>`
+            } else {
+
+
+                inpHtml = inpHtml + `<div class="form-group" >
+            <label>${fields[i]}</label>
+<input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="${tmpd[i]}">
+</div>`
+            }
             //console.log(inpHtml)
         }
         document.getElementById('formInputs').innerHTML = inpHtml
+        //show the body
+        document.getElementById('showBody').classList.remove('d-none');
 
     }
-
-
-    if (urlParam != "") {
-        projectid = urlParam
-        //string it
-        document.getElementById("showBody").classList.remove('d-none')
-        //call the create account endpoint
-        xhrcall(1, `backpages/${projectid}`, "", "json", "", xhrDone, token)
-    } else {
-        //no project id so show an error.
-        let error = document.getElementById('accountsAlert');
-        error.innerHTML = "project not found"
-        error.classList.remove('d-none');
-    }
-
 
 })
 
-//        
 document.getElementById('btn-edit').addEventListener('click', function() {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        let success = document.getElementById('accountsSuccess');
-        success.innerHTML = "project data has been updated"
-        success.classList.remove('d-none');
+        showAlert(res.message, 1)
 
     }
     let data = {};
-    //console.log(keys)
-    for (var i = 0; i < keys.length; ++i) {
-        let inpValue = document.getElementById("inp-" + keys[i]).value;
-        //console.log(inpValue);
-        data[keys[i]] = inpValue;
-    }
-    let slug = document.getElementById("inp-slug").value;
+    for (var i = 0; i < fields.length; ++i) {
+        let inpValue = "";
+        if (fields[i] == "UNUSED") {
+            inpValue = document.getElementById("inp-" + originalfields[i]).value;
+            data[originalfields[i]] = inpValue;
 
-    //console.log(data)
-    let bodyobj = {
-        user: 1,
-        data: {
-            slug:slug,
-            data: data
+        } else {
+            inpValue = document.getElementById("inp-" + fields[i]).value;
+            data[fields[i]] = inpValue;
+
         }
     }
+    let project = window.localStorage.project
+    project = JSON.parse(project);
+    let bodyobj = {
+        data: data,
+        projectid: project.id
+    }
     var bodyobjectjson = JSON.stringify(bodyobj);
-    xhrcall(4, `backpages/${projectid}/`, bodyobjectjson, "json", "", xhrDone, token)
+    xhrcall(0, `api/projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
 })
