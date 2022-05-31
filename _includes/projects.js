@@ -51,7 +51,7 @@ whenDocumentReady(isReady = () => {
             */
             //add the records
             var rowNode = table
-                .row.add([res.data[i].id, res.data[i].name, res.data[i].createdAt, `${databutton} ${editbutton} ${templatebutton} ${deletebutton} `])
+                .row.add([res.data[i].id, res.data[i].name, res.data[i].createdAt, `${databutton} ${editbutton} ${deletebutton} `])
                 .draw()
                 .node().id = res.data[i].id;
         }
