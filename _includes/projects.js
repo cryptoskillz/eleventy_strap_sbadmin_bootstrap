@@ -10,12 +10,22 @@ let whenDocumentReady = (f) => {
 }
 
 
-let theProject = "";
-
-let loadURL = (theurl) => {
+let loadURL = (theUrl,theId,blank=0) => {
     //note this does not loop through the projects only store data from the first fix bug
-    window.localStorage.project = JSON.stringify(theProject);
-    window.location.href = theurl;
+    let backpages = window.localStorage.projects;
+    backpages = JSON.parse(backpages)
+    //console.log(backpages)
+    for (var i = 0; i < backpages.data.length; ++i) {
+        if (backpages.data[i].id == theId) {
+            window.localStorage.project = JSON.stringify(backpages.data[i]);
+            
+            if (blank == 1)
+                window.open(theUrl,"_blank")
+            else
+                window.location.href = theUrl;
+            
+        }
+    }
 }
 
 whenDocumentReady(isReady = () => {
@@ -27,7 +37,6 @@ whenDocumentReady(isReady = () => {
         {
             window.localStorage.projects = res;
             res = JSON.parse(res)
-
         }
         //console.log(res)
         //parse the response
@@ -38,8 +47,8 @@ whenDocumentReady(isReady = () => {
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
             //console.log(res.data[i].attributes.template)
-            theProject = res.data[i]
-            let databutton = `<a href="javascript:loadURL('/project/data/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            //theProject = res.data[i]
+            let databutton = `<a href="javascript:loadURL('/project/data/','${res.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50"></i> Data</a>`
           //  let templatebutton = `<a href="javascript:loadURL('/project/template/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
    // <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`

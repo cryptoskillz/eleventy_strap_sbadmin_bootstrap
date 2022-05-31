@@ -53,12 +53,13 @@ whenDocumentReady(isReady = () => {
 
                     let xhrDone = (res) => {
                         res = JSON.parse(res)
-                        //console.log(res)
-                        let tmp;
-                        tmp = results.meta.fields.toString();
+                        console.log(res)
+                        let data = JSON.parse(res.data);
+                        //let tmp;
+                        ///tmp = results.meta.fields.toString();
 
-                        project.schema.originalfields = tmp
-                        project.schema.fields = tmp
+                        project.schema.originalfields = data.schema.originalfields
+                        project.schema.fields = data.schema.fields
                         //console.log(project)
                         window.localStorage.project = JSON.stringify(project);
                         document.getElementById('uploadfile').classList.add('d-none')
