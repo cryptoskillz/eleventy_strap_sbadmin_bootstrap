@@ -222,7 +222,7 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 
             break;
         case "2":
-            window.location.href = `/projects/`
+            window.location.href = `/projects/data/`
             break;
         
         default:

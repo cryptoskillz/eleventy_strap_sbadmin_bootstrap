@@ -13,6 +13,7 @@ let whenDocumentReady = (f) => {
 let theProject = "";
 
 let loadURL = (theurl) => {
+    //note this does not loop through the projects only store data from the first fix bug
     window.localStorage.project = JSON.stringify(theProject);
     window.location.href = theurl;
 }

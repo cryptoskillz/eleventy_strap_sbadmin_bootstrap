@@ -25,15 +25,17 @@ whenDocumentReady(isReady = () => {
         let theData;
         //get the project data
         let projectdata = window.localStorage.projectdata
+
         projectdata = JSON.parse(projectdata);
+        console.log(projectdata)
         //get the project
         project = JSON.parse(project);
         //set the template
         theTemplate = project.template;
         //get the fields
-        theFields = Object.keys(projectdata.data)
+        theFields = Object.keys(projectdata)
         //get the data
-        theData = Object.values(projectdata.data)
+        theData = Object.values(projectdata)
         //loop through the data
         for (var i = 0; i < theFields.length; ++i) {
             element = `\{\{${theFields[i]}\}\}`
