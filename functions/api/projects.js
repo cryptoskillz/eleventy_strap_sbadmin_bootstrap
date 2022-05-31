@@ -1,7 +1,7 @@
 /*
     todo:
 
-
+    
 
     notes:
 
@@ -49,7 +49,9 @@ export async function onRequestPut(context) {
         //let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
         let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
+        //console.log("projects" + details.username + "*" + payLoad.id)
         projectData = JSON.parse(projectData)
+        //console.log(projectData)
         if (payLoad.name != undefined)
             projectData.name = payLoad.name;
         if (payLoad.template != undefined)
@@ -58,6 +60,9 @@ export async function onRequestPut(context) {
         }
         if (payLoad.templatename != undefined)
             projectData.templatename = payLoad.templatename;
+        if (payLoad.schema != undefined)
+            projectData.schema = payLoad.schema;
+        //console.log(projectData)
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
         return new Response(JSON.stringify({ message: "Item updated" }), { status: 200 });
 

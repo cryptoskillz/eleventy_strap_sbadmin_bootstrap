@@ -77,8 +77,6 @@ checkElement = document.getElementById("confirmation-modal-delete-button");
 
 if (typeof(checkElement) != 'undefined' && checkElement != null) {
     document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
-        //alert(deleteId)
-        //alert(deleteMethod)
         $('#confirmation-modal').modal('toggle')
         let xhrDone = (res) => {
             //parse the response
@@ -86,13 +84,14 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
             table.row('#' + tableRowId).remove().draw();
 
         }
-
+        let project = window.localStorage.project
+        project = JSON.parse(project)
         let bodyobj = {
-            id: deleteId
+            id: deleteId,
+            projectid: project.id
         }
         var bodyobjectjson = JSON.stringify(bodyobj);
         //call the create account endpoint
-        //todo : Pass in the user object, you would think Strapi would pick this up from the token but for reason the do not.     var bodyobjectjson = JSON.stringify(bodyobj);
         xhrcall(3, `${deleteMethod}/`, bodyobjectjson, "json", "", xhrDone, token)
 
     })
@@ -110,7 +109,6 @@ let deleteTableItem = (dId, tId, method) => {
 
 
 //table render
-//note : depereciate row id
 let renderTable = (data, actions = [], method = "") => {
     /*actions
         0 = delete button
@@ -118,92 +116,49 @@ let renderTable = (data, actions = [], method = "") => {
         remove the weird id rendering as we will alwasy haev an id now
         store the table data
     */
-    //console.log(data);
     //set some array
+
+    //get the project
     let project = window.localStorage.project
     project = JSON.parse(project)
-    //console.log(project.schema)
+    //set the arrays for the table
     let columns = []
     let dataresult = []
-    let idTableRow;
-    //get the keys
+    //get the keys from the schema and move into an array
     var keys = project.schema.fields.split(",")
 
-    //loop through the keys
+    //loop through the keys and build the columns
     for (var i = 0; i < keys.length; ++i) {
-        //build the column
-        /*
-        if (keys[i] == "id")
-            idTableRow = i
-        */
         colJson = { title: keys[i] }
         //add it it the columns object
         columns.push(colJson)
     }
-    /*
-    if (addId == 1) {
-        columns.push({ title: "id" })
-        idTableRow = columns.length - 1
 
-    }
-    */
+    //add the actions column
     if (actions.length != 0) {
         columns.push({ title: "actions" })
     }
 
-    /*
-    if (rowId != "")
-    {
-        idTableRow = rowId
-    }
-    */
-    //console.log(rowId)
-    //check if row id is still blank and look for it in the data
 
-    //loop through the data
-    let tableRowData = 0;
     let tableRowCount = 0;
 
+    //check for the first column with a number to set as the ids for row deletion in the table
     let foundIt = 0
-    let tmpd  = Object.values(data.data[i].data)
+    let tmpd = Object.values(data.data[0].data)
     for (var i = 0; i < tmpd.length; ++i) {
-        if ((!isNaN(tmpd[i]) && foundIt == 0)) 
-        {
-            foundIt=1;
-            tableRowCount=i
-            console.log(i)
-            console.log(tmpd)
+        if ((!isNaN(tmpd[i]) && foundIt == 0)) {
+            foundIt = 1;
+            tableRowCount = i
         }
 
     }
+    //loop through the data
     for (var i = 0; i < data.data.length; ++i) {
-        let delField = "";
-        //if (i == 0)
 
         //pull out the values and store in the array
-        //console.log(data.data[i])
         let tmp = data.data[i].data;
-        //note : ge tthe 
+        //the field values
         let tableId;
-        /*
-        if (foundIt == 0) {
-            tableId = Object.values(tmp)
-            for (var i2 = 0; i2 < tableId.length; ++i2) {
-                if ((!isNaN(tableId[i2]) && foundIt == 0)) {
-                    console.log(tableId[i2])
-                    console.log(i2)
-                    foundIt = 1;
-                    tableRowData = tableId[i2];
-                    tableRowCount=i2
-                }
-            }
-        }
-        else
-        {
-            tableId = Object.values(tmp)
-            tableRowData = tableId[tableRowCount];
-        }
-        */
         tableId = Object.values(tmp)
 
 
@@ -227,13 +182,9 @@ let renderTable = (data, actions = [], method = "") => {
             if (actions[3] == 1)
                 buttons = buttons + `<a href="javascript:deleteTableItem('${data.data[i].id}','${tableId[tableRowCount]}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
-
-
-
             tmp.actions = buttons;
         }
         //console.log(tmp)
-
         dataresult.push(Object.values(tmp))
     }
     //render the table

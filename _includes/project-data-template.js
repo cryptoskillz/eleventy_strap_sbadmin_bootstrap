@@ -1,3 +1,8 @@
+/*
+    todo : render the unused fields better
+
+*/
+
 let html5layout = `<DOCTYPE! html>
 <html lang="en">
 <head>
@@ -167,6 +172,8 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 
 
 document.getElementById('btn-template').addEventListener('click', function() {
+    let project = window.localStorage.project
+    project = JSON.parse(project)
     let template = myCodeMirror.getValue()
     let templatename = document.getElementById('inp-template-name');
     let valid = 1;
@@ -174,7 +181,9 @@ document.getElementById('btn-template').addEventListener('click', function() {
         //parse the response
         res = JSON.parse(res);
         showAlert("project template has been updated", 1)
-
+        project.templatename = templatename.value;
+        project.template = template;
+        window.localStorage.project = JSON.stringify(project);
     }
 
     let errorMesage;
@@ -195,7 +204,7 @@ document.getElementById('btn-template').addEventListener('click', function() {
         let bodyobj = {
             template: template,
             templatename: templatename.value,
-            id: projectid
+            id: project.id
         }
 
         var bodyobjectjson = JSON.stringify(bodyobj);
@@ -204,3 +213,21 @@ document.getElementById('btn-template').addEventListener('click', function() {
         showAlert(errorMesage, 2)
 
 });
+
+//process the action drop down
+document.getElementById('pageActionSelect').addEventListener('change', function() {
+    switch (this.value) {
+        case "1":
+        window.open(`/project/template/view/`,'_blank');
+
+            break;
+        case "2":
+            window.location.href = `/projects/`
+            break;
+        
+        default:
+            // code block
+    }
+    this.value = 0;
+
+})

@@ -45,7 +45,8 @@ export async function onRequestDelete(context) {
         //console.log(payLoad)
         let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
-        //await KV.delete("projects" + details.username + "*" + payLoad.id);
+        console.log("projects-data" + details.username + "*"+payLoad.projectid+"*"  + payLoad.id)
+        await KV.delete("projects-data" + details.username + "*"+payLoad.projectid+"*"  + payLoad.id);
         return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
     }
 }
@@ -75,7 +76,7 @@ export async function onRequestGet(context) {
         for (var i = 0; i < kv.keys.length; ++i) {
             let tmp = kv.keys[i].name.split('*');
             //console.log(kv.keys[i])
-            //console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
+            console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
             let pData = await KV.get("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2]);
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);

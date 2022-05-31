@@ -36,8 +36,8 @@ whenDocumentReady(isReady = () => {
             theProject = res.data[i]
             let databutton = `<a href="javascript:loadURL('/project/data/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50"></i> Data</a>`
-            let templatebutton = `<a href="javascript:loadURL('/project/template/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
+          //  let templatebutton = `<a href="javascript:loadURL('/project/template/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+   // <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
             let editbutton = `<a href="javascript:loadURL('/project/edit/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             let deletebutton = `<a href="javascript:deleteTableItem('${res.data[i].id}','${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
