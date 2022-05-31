@@ -96,11 +96,11 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
             }
 
         }
-        let project = window.localStorage.project
-        project = JSON.parse(project)
+        //let project = window.localStorage.project
+        //project = JSON.parse(project)
         let bodyobj = {
-            id: deleteId,
-            projectid: project.id
+            id: deleteId
+            //projectid: project.id
         }
         var bodyobjectjson = JSON.stringify(bodyobj);
         //call the create account endpoint
