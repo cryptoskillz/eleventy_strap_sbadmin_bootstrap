@@ -26,6 +26,30 @@ let decodeJwt = async (req, secret) => {
     return (details)
 }
 
+export async function onRequestDelete(context) {
+    const {
+        request, // same as existing Worker API
+        env, // same as existing Worker API
+        params, // if filename includes [id] or [[path]]
+        waitUntil, // same as ctx.waitUntil in existing Worker API
+        next, // used for middleware or to fetch assets
+        data, // arbitrary space for passing data between middlewares
+    } = context;
+
+    //return new Response({message:"delete"}, { status: 200 });
+    contentType = request.headers.get('content-type');
+    //console.log(contentType)
+    if (contentType != null) {
+        //get the login credentials
+        payLoad = await request.json();
+        //console.log(payLoad)
+        let details = await decodeJwt(request.headers, env.SECRET)
+        const KV = context.env.backpage;
+        //await KV.delete("projects" + details.username + "*" + payLoad.id);
+        return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
+    }
+}
+
 
 export async function onRequestGet(context) {
     const {
@@ -53,8 +77,6 @@ export async function onRequestGet(context) {
             //console.log(kv.keys[i])
             //console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
             let pData = await KV.get("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2]);
-            if(pData.pid=="a4761104-ea38-4d65-b6a2-308c14aaa994")
-                console.log(pData)
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);
             projectsData.data.push(JSON.parse(pData))

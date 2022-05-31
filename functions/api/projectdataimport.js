@@ -50,8 +50,6 @@ export async function onRequestPost(context) {
 
     //delete the data
     let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + payLoad.id + "*" });
-    //console.log("projects-data" + details.username + "*" + payLoad.id + "*")
-    //console.log(kv.keys.length);
     //delte old records
     if (kv.keys.length > 0) {
         for (var i = 0; i < kv.keys.length; ++i) {
@@ -64,12 +62,9 @@ export async function onRequestPost(context) {
     if (payLoad.data.length > 0) {
         for (var i = 1; i < payLoad.data.length; ++i) {
             let id = uuid.v4();
-            let projectData =  {data:"",id:""}
-            projectData.pid = id
+            let projectData = { data: "", id: "" }
+            projectData.id = id
             projectData.data = payLoad.data[i]
-        console.log(projectData)
-            //projectsData.data.push(JSON.parse(pData))
-            //projectData.id = id;
             let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + id;
             //check it does not already exist
             await KV.put(kvname, JSON.stringify(projectData));
@@ -80,10 +75,6 @@ export async function onRequestPost(context) {
     //update the schema
     let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
     projectData = JSON.parse(projectData)
-    //console.log(payLoad)
-    //console.log(payLoad.fields)
-
-
     let tmp = payLoad.fields.originalfields.toString();
 
     let schemaJson = {
@@ -91,11 +82,7 @@ export async function onRequestPost(context) {
         "originalfields": tmp
     }
     projectData.schema = schemaJson
-
-    //console.log(projectData)
-
     await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
-
     return new Response(JSON.stringify({ message: `${kv.keys.length} records imported` }), { status: 200 });
 
 }

@@ -102,6 +102,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
 let deleteTableItem = (dId, tId, method) => {
     deleteId = dId;
     tableRowId = tId;
+    console.log(tableRowId);
     deleteMethod = method;
     $('#confirmation-modal').modal('toggle')
 }
@@ -110,7 +111,7 @@ let deleteTableItem = (dId, tId, method) => {
 
 //table render
 //note : depereciate row id
-let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
+let renderTable = (data, actions = [], method = "") => {
     /*actions
         0 = delete button
 
@@ -127,7 +128,7 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     let idTableRow;
     //get the keys
     var keys = project.schema.fields.split(",")
-    
+
     //loop through the keys
     for (var i = 0; i < keys.length; ++i) {
         //build the column
@@ -160,17 +161,52 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     //check if row id is still blank and look for it in the data
 
     //loop through the data
+    let tableRowData = 0;
+    let tableRowCount = 0;
+
+    let foundIt = 0
+    let tmpd  = Object.values(data.data[i].data)
+    for (var i = 0; i < tmpd.length; ++i) {
+        if ((!isNaN(tmpd[i]) && foundIt == 0)) 
+        {
+            foundIt=1;
+            tableRowCount=i
+            console.log(i)
+            console.log(tmpd)
+        }
+
+    }
     for (var i = 0; i < data.data.length; ++i) {
+        let delField = "";
+        //if (i == 0)
+
         //pull out the values and store in the array
         //console.log(data.data[i])
         let tmp = data.data[i].data;
-        //if (tmp.bpid =="a4761104-ea38-4d65-b6a2-308c14aaa994")
-            //console.log(tmp)
+        //note : ge tthe 
+        let tableId;
+        /*
+        if (foundIt == 0) {
+            tableId = Object.values(tmp)
+            for (var i2 = 0; i2 < tableId.length; ++i2) {
+                if ((!isNaN(tableId[i2]) && foundIt == 0)) {
+                    console.log(tableId[i2])
+                    console.log(i2)
+                    foundIt = 1;
+                    tableRowData = tableId[i2];
+                    tableRowCount=i2
+                }
+            }
+        }
+        else
+        {
+            tableId = Object.values(tmp)
+            tableRowData = tableId[tableRowCount];
+        }
+        */
+        tableId = Object.values(tmp)
 
 
-        let recordId;
-        let tableDeleteId;
-        
         //tableDeleteId =data.data[i].bpid
         if (actions.length != 0) {
             let buttons = "";
@@ -189,22 +225,22 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             //delete button
             if (actions[3] == 1)
-                buttons = buttons + `<a href="javascript:deleteTableItem(${data.data[i].id},'${tableDeleteId}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:deleteTableItem('${data.data[i].id}','${tableId[tableRowCount]}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
 
 
             tmp.actions = buttons;
         }
-            console.log(tmp)
+        //console.log(tmp)
 
         dataresult.push(Object.values(tmp))
     }
     //render the table
-    console.log(dataresult)
+    //console.log(dataresult)
     table = $('#dataTable').DataTable({
         data: dataresult,
-        rowId: 0,
+        rowId: tableRowCount,
         columns: columns,
 
     });

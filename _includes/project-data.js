@@ -94,7 +94,7 @@ whenDocumentReady(isReady = () => {
                 showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2,0)
             else {
                 document.getElementById("showBody").classList.remove('d-none')
-                renderTable(res, 0, 0, [1, 0, 1, 1], res)
+                renderTable(res,[1, 0, 1, 1], "api/projectdata")
 
             }
 
