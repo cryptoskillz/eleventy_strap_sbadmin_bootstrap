@@ -9,7 +9,6 @@ let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
-
 let loadURL = (theUrl,theId,blank=0) => {
     //note this does not loop through the projects only store data from the first fix bug
     let backpages = window.localStorage.projects;
