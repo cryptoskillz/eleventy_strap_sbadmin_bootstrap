@@ -82,6 +82,18 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
             //parse the response
             showAlert('Item has been deleted', 1)
             table.row('#' + tableRowId).remove().draw();
+            if (deleteMethod == "api/projects") {
+                //remove it from the projects api
+                let projects = window.localStorage.projects
+                projects = JSON.parse(projects);
+                for (var i = 0; i < projects.data.length; ++i) {
+                    if (projects.data[i].id == deleteId)
+                        projects.data.splice(i, 1); ;
+
+                }
+                window.localStorage.projects = JSON.stringify(projects)
+
+            }
 
         }
         let project = window.localStorage.project
