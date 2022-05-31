@@ -113,31 +113,39 @@ let deleteTableItem = (dId, tId, method) => {
 let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     /*actions
         0 = delete button
+
+        remove the weird id rendering as we will alwasy haev an id now
+        store the table data
     */
     //console.log(data);
     //set some array
     let project = window.localStorage.project
     project = JSON.parse(project)
-    console.log(project)
+    //console.log(project.schema)
     let columns = []
     let dataresult = []
     let idTableRow;
     //get the keys
-    var keys = Object.keys(data.data[0].attributes.data);
+    var keys = project.schema.fields.split(",")
+    
     //loop through the keys
     for (var i = 0; i < keys.length; ++i) {
         //build the column
+        /*
         if (keys[i] == "id")
             idTableRow = i
+        */
         colJson = { title: keys[i] }
         //add it it the columns object
         columns.push(colJson)
     }
+    /*
     if (addId == 1) {
         columns.push({ title: "id" })
         idTableRow = columns.length - 1
 
     }
+    */
     if (actions.length != 0) {
         columns.push({ title: "actions" })
     }
@@ -155,53 +163,48 @@ let renderTable = (data, addId = 0, rowId = "", actions = [], method = "") => {
     for (var i = 0; i < data.data.length; ++i) {
         //pull out the values and store in the array
         //console.log(data.data[i])
-        let tmp = data.data[i].attributes.data;
-        //console.log(tmp)
+        let tmp = data.data[i].data;
+        //if (tmp.bpid =="a4761104-ea38-4d65-b6a2-308c14aaa994")
+            //console.log(tmp)
+
+
         let recordId;
         let tableDeleteId;
-
-        if (addId == 1) {
-            recordId = data.data[i].id
-            tableDeleteId = data.data[i].id
-            tmp.id = recordId
-        } else {
-            recordId = data.data[i].id
-            //console.log(tmp)
-            tableDeleteId = tmp.id
-
-        }
-        //console.log(tmp)
+        
+        //tableDeleteId =data.data[i].bpid
         if (actions.length != 0) {
             let buttons = "";
 
             //edit button
             if (actions[0] == 1)
-                buttons = buttons + `<a href="/project/data/edit/?id=${recordId}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="/project/data/edit/?id=${data.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             //publish button
             if (actions[1] == 1)
-                buttons = buttons + `<a href="/project/data/?id=${recordId}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="/project/data/?id=${data.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
             //view button
             if (actions[2] == 1)
-                buttons = buttons + `<a target="_blank" href="/project/template/view/?dataid=${recordId}&projectid=${projectid}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a target="_blank" href="/project/template/view/?dataid=${data.data[i].id}&projectid=${project.id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             //delete button
             if (actions[3] == 1)
-                buttons = buttons + `<a href="javascript:deleteTableItem(${recordId},'${tableDeleteId}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:deleteTableItem(${data.data[i].id},'${tableDeleteId}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
 
 
             tmp.actions = buttons;
         }
-        //console.log(tmp)
+            console.log(tmp)
+
         dataresult.push(Object.values(tmp))
     }
     //render the table
+    console.log(dataresult)
     table = $('#dataTable').DataTable({
         data: dataresult,
-        rowId: idTableRow,
+        rowId: 0,
         columns: columns,
 
     });

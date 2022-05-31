@@ -30,8 +30,18 @@ whenDocumentReady(isReady = () => {
             Papa.parse(file, {
                 header: true,
                 dynamicTyping: true,
+                skipEmptyLines: true,
                 complete: function(results) {
                     console.log(results)
+                    /*
+                    if (results.errors.length > 0) {
+                        for (var i = 0; i < results.errors.length; ++i) {
+                            console.log(results.errors[i].row)
+                            delete results.data[results.errors[i].row]
+                        }
+
+                    }
+                    */
                     let fields = { fields: results.meta.fields, originalfields: results.meta.fields }
                     let bodyobj = {
                         id: project.id,

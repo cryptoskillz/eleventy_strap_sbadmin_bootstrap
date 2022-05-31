@@ -62,11 +62,15 @@ export async function onRequestPost(context) {
 
     //add new records
     if (payLoad.data.length > 0) {
-        for (var i = 0; i < payLoad.data.length; ++i) {
-            let projectData = payLoad.data[i]
-            //projectsData.data.push(JSON.parse(pData))
+        for (var i = 1; i < payLoad.data.length; ++i) {
             let id = uuid.v4();
-            let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + uuid.v4();
+            let projectData =  {data:"",id:""}
+            projectData.pid = id
+            projectData.data = payLoad.data[i]
+        console.log(projectData)
+            //projectsData.data.push(JSON.parse(pData))
+            //projectData.id = id;
+            let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + id;
             //check it does not already exist
             await KV.put(kvname, JSON.stringify(projectData));
             //console.log(kvname)

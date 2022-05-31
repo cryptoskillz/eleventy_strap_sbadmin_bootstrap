@@ -50,10 +50,11 @@ export async function onRequestGet(context) {
     if (kv.keys.length > 0) {
         for (var i = 0; i < kv.keys.length; ++i) {
             let tmp = kv.keys[i].name.split('*');
-            console.log(kv.keys[i])
-            console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
+            //console.log(kv.keys[i])
+            //console.log("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2])
             let pData = await KV.get("projects-data" + details.username + "*" + tmp[1]+"*"+tmp[2]);
-            //console.log(pData)
+            if(pData.pid=="a4761104-ea38-4d65-b6a2-308c14aaa994")
+                console.log(pData)
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);
             projectsData.data.push(JSON.parse(pData))
