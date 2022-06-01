@@ -13,31 +13,25 @@ whenDocumentReady(isReady = () => {
     else {
         //get the project
         project = JSON.parse(project);
-        fields = project.schema.fields.split(",");
-        originalfields = project.schema.originalfields.split(",")
+        
         let projectdata = window.localStorage.projectdata
         projectdata = JSON.parse(projectdata)
         let tmpd = Object.values(projectdata)
-        console.log(tmpd)
+        let fields = Object.keys(projectdata)
+
+        //console.log(projectdata)
 
         //loop through  the keys
         let inpHtml = "";
         for (var i = 0; i < fields.length; ++i) {
-
-            if (fields[i] == "UNUSED") {
-                inpHtml = inpHtml + `    <div class="form-group" >
-            <label>${originalfields[i]} (note this is not used in the current schema)</label>
-<input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]}" value="${tmpd[i]}">
-</div>`
-            } else {
-
+            //console.log(fields[i])
+            if (fields[i] != "UNUSED") {
 
                 inpHtml = inpHtml + `<div class="form-group" >
             <label>${fields[i]}</label>
 <input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="${tmpd[i]}">
 </div>`
             }
-            //console.log(inpHtml)
         }
         document.getElementById('formInputs').innerHTML = inpHtml
         //show the body
@@ -52,23 +46,30 @@ document.getElementById('btn-edit').addEventListener('click', function() {
         //parse the response
         res = JSON.parse(res);
         showAlert(res.message, 1)
+                console.log(res)
+
+        console.log(res.data)
+        window.localStorage.projectdata = res.data;
 
     }
     let data = {};
-    for (var i = 0; i < fields.length; ++i) {
+
+    //project = JSON.parse(project);
+    let project = window.localStorage.project
+    project = JSON.parse(project);
+    let projectfields = project.schema.fields.split(",");
+    let projectoriginalfields = project.schema.originalfields.split(",")
+    for (var i = 0; i < projectfields.length; ++i) {
         let inpValue = "";
-        if (fields[i] == "UNUSED") {
-            inpValue = document.getElementById("inp-" + originalfields[i]).value;
-            data[originalfields[i]] = inpValue;
+        if (projectfields[i] == "UNUSED") {
+            data[projectoriginalfields[i]] = inpValue;
 
         } else {
-            inpValue = document.getElementById("inp-" + fields[i]).value;
-            data[fields[i]] = inpValue;
+            inpValue = document.getElementById("inp-" + projectfields[i]).value;
+            data[projectfields[i]] = inpValue;
 
         }
     }
-    let project = window.localStorage.project
-    project = JSON.parse(project);
     let bodyobj = {
         data: data,
         projectid: project.id

@@ -55,8 +55,10 @@ export async function onRequestPost(context) {
     let kvname = "projects-data" + details.username + "*" + payLoad.projectid + "*" + id;
     //console.log(kvname)
     //check it does not already exist
-    await KV.put(kvname, JSON.stringify(projectData));
-    return new Response(JSON.stringify({ message: "Item added" }), { status: 200 });
+    projectData = JSON.stringify(projectData)
+    //await KV.delete(kvname);
+    await KV.put(kvname, projectData);
+    return new Response(JSON.stringify({ message: "Item added",data:JSON.stringify(payLoad.data) }), { status: 200 });
 
 
 }
@@ -128,7 +130,7 @@ export async function onRequestGet(context) {
                 if (fields[i2] == "UNUSED")
                 {
                     delete pData.data[keyFields[i2]]
-                    console.log(pData.data)
+                    //console.log(pData.data)
                 }
 
             }

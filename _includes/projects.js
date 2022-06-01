@@ -9,32 +9,22 @@ let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
-let loadURL = (theUrl,theId,blank=0) => {
-    //note this does not loop through the projects only store data from the first fix bug
-    let backpages = window.localStorage.projects;
-    backpages = JSON.parse(backpages)
-    console.log(backpages)
-    for (var i = 0; i < backpages.data.length; ++i) {
-        if (backpages.data[i].id == theId) {
-            window.localStorage.project = JSON.stringify(backpages.data[i]);
-            
-            if (blank == 1)
-                window.open(theUrl,"_blank")
-            else
-                window.location.href = theUrl;
-            
-        }
-    }
+let loadURL = (theUrl, theId, blank = 0) => {
+    let theProject = getCacheProjects(theId)
+    if (blank == 1)
+        window.open(theUrl, "_blank")
+    else
+        window.location.href = theUrl;
 }
 
 whenDocumentReady(isReady = () => {
     document.getElementById('showBody').classList.remove('d-none')
 
-    let xhrDone = (res,local=0) => {
+    let xhrDone = (res, local = 0) => {
         //store it in local storage
-        if (local == 0)
-        {
-            window.localStorage.projects = res;
+
+        if (local == 0) {
+            storeCacheProjects(res);
             res = JSON.parse(res)
         }
         //console.log(res)
@@ -49,8 +39,8 @@ whenDocumentReady(isReady = () => {
             //theProject = res.data[i]
             let databutton = `<a href="javascript:loadURL('/project/data/','${res.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50"></i> Data</a>`
-          //  let templatebutton = `<a href="javascript:loadURL('/project/template/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-   // <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
+            //  let templatebutton = `<a href="javascript:loadURL('/project/template/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            // <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
             let editbutton = `<a href="javascript:loadURL('/project/edit/','${res.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             let deletebutton = `<a href="javascript:deleteTableItem('${res.data[i].id}','${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
@@ -70,21 +60,17 @@ whenDocumentReady(isReady = () => {
         }
         table.columns.adjust();
     }
-    //build the json
-    let bodyobj = {
-            email : user.email,
-            token : token
-    }
-    var bodyobjectjson = JSON.stringify(bodyobj);
-    //call the create account endpoint
-    let projects = window.localStorage.projects    
-    if (projects == undefined)
+    projects = getCacheProjects();
+    if (projects != false) {
+        xhrDone(projects, 1);
+    } else {
+        //build the json
+        let bodyobj = {
+            email: user.email,
+        }
+        var bodyobjectjson = JSON.stringify(bodyobj);
         xhrcall(1, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
-    else {
-        //console.log(project)
-        projects = JSON.parse(projects)
-        xhrDone(projects,1);
+
     }
 
 })
-

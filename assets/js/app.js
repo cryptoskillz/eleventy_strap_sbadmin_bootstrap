@@ -61,11 +61,94 @@ var table // datatable
 
 })(jQuery); // End of use strict
 
+/*
+START OF LOCAL CACHE FUNCTIONS
+*/
+
+let removeCachedProject = (theId, debug = 0) => {
+    let theItems = window.localStorage.projects
+    theItems = JSON.parse(theItems);
+    for (var i = 0; i < theItems.data.length; ++i) {
+        if (theItems.data[i].id == theId) {
+            if (debug == 1) {
+                console.log(theItems.data[i])
+            }
+            //delete theItems.data[i];
+            theItems.data.splice(i, 1);
+            //update the data
+            window.localStorage.projects = JSON.stringify(theItems);
+            return (true);
+
+        }
+    }
+    return (false)
+
+}
+
+let AddCachedProject = (theData, debug = 0) => {
+    //parse the response
+    let projects = window.localStorage.projects
+    projects = JSON.parse(projects);
+    //parse the data
+    theData = JSON.parse(theData);
+    if (debug == 1) {
+        console.log(theData)
+        console.log(theData.data)
+
+    }
+    //add it to projects
+    let tmp = JSON.parse(theData.data)
+    projects.data.push(tmp);
+    window.localStorage.projects = JSON.stringify(projects)
+    showAlert(theData.message, 1)
+}
+
+let storeCacheProjects = (theData, debug = 0) => {
+    //show debug info
+    if (debug == 1) {
+        console.log(theData)
+    }
+    window.localStorage.projects = theData;
+
+}
+
+let getCacheProjects = (theId = "", debug = 0) => {
+    let theItems = window.localStorage.projects;
+    if (theItems == undefined) {
+        if (debug == 1)
+            consolel.log("no items");
+        return (false)
+    } else {
+        theItems = JSON.parse(theItems)
+        if (debug == 1) {
+            console.log(theItems)
+        }
+        //console.log(data)
+        if (theId != "") {
+            for (var i = 0; i < theItems.data.length; ++i) {
+                if (theItems.data[i].id == theId) {
+                    if (debug == 1) {
+                        console.log(theItems.data[i])
+                    }
+                    //update the data
+                    window.localStorage.project = JSON.stringify(theItems.data[i]);
+                    return (theItems.data[i]);
+                }
+            }
+        } else {
+            return (theItems)
+        }
+    }
+}
+//getCacheProjects("1defd828-d637-44bd-9329-0d703de4b4a4")
+///getCacheProjects("fe9264c4-c20b-4498-b835-08784567f3f6")
+//getCacheProjects();
+/*
+END OF LOCAL CACHE FUNCTIONS
+*/
 
 /*
 START OF TABLE FUNCTIONS
-
-
 */
 
 
@@ -83,15 +166,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
             showAlert('Item has been deleted', 1)
             table.row('#' + tableRowId).remove().draw();
             if (deleteMethod == "api/projects") {
-                //remove it from the projects api
-                let projects = window.localStorage.projects
-                projects = JSON.parse(projects);
-                for (var i = 0; i < projects.data.length; ++i) {
-                    if (projects.data[i].id == deleteId)
-                        projects.data.splice(i, 1); ;
-
-                }
-                window.localStorage.projects = JSON.stringify(projects)
+                removeCachedProject(deleteId)
 
             }
 

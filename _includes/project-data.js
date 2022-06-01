@@ -16,13 +16,19 @@ add record will rely on the schema to be set
 let backpages;
 
 let loadURL = (theUrl, theId, blank = 0) => {
+    //console.log(backpages)
     for (var i = 0; i < backpages.data.length; ++i) {
         if (backpages.data[i].id == theId) {
+            //note : find out why actions is being added locally and remore, this is a quick fix
+            delete backpages.data[i].data.actions
+            //console.log(backpages.data[i])
             window.localStorage.projectdata = JSON.stringify(backpages.data[i].data);
+            
             if (blank == 1)
                 window.open(theUrl, "_blank")
             else
                 window.location.href = theUrl;
+            
         }
     }
 }
