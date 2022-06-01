@@ -8,36 +8,19 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-    let project = window.localStorage.project
-    if (project == undefined)
-        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
-    else {
-        //console.log(project)
-        project = JSON.parse(project)
-
-
-        document.getElementById('inp-projectname').value = project.name;
-        document.getElementById('project-header').innerHTML = `Edit ${project.name}`;
-        document.getElementById('showBody').classList.remove('d-none')
-    }
-
+    let projectid = getProjectId();
+    let project = getCacheProjects(projectid)
+    //console.log(project)
+    document.getElementById('inp-projectname').value = project.name;
+    document.getElementById('project-header').innerHTML = `Edit ${project.name}`;
+    document.getElementById('showBody').classList.remove('d-none')
+    
     document.getElementById('btn-edit').addEventListener('click', function() {
         let xhrDone = (res) => {
-            showAlert(`${projectname.value} has been updated`, 1)
-
-            let backpages = window.localStorage.projects;
-            backpages = JSON.parse(backpages)
             res = JSON.parse(res)
-            tData = JSON.parse(res.data)
-            for (var i = 0; i < backpages.data.length; ++i) {
-                if (backpages.data[i].id == tData.id) {
-                    backpages.data[i] = tData
-                    window.localStorage.projects = JSON.stringify(backpages);
-                    window.localStorage.project = JSON.stringify(tData);
-                }
-            }
-            
+            updateCacheProjects(project)            
             showAlert(res.message, 1)
+            document.getElementById('project-header').innerHTML = `Edit ${project.name}`;
         }
         //set the valid var
         let valid = 1;
@@ -52,8 +35,9 @@ whenDocumentReady(isReady = () => {
                 name: projectname.value,
                 id: project.id
             }
+            project.name = projectname.value
             var bodyobjectjson = JSON.stringify(bodyobj);
             xhrcall(4, `api/projects/`, bodyobjectjson, "json", "", xhrDone, token)
         }
-    })
+    });
 })

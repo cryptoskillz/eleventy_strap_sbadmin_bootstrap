@@ -68,18 +68,18 @@ START OF LOCAL CACHE FUNCTIONS
 
 //project data
 
-let addCachedProjectData = (res,debug = 0) => {
+let addCachedProjectData = (res, debug = 0) => {
 
 }
 
-let storeProjectAlldata = (theData,debug = 0) => {
+let storeProjectAlldata = (theData, debug = 0) => {
     //show debug info
     theData = JSON.parse(theData);
     if (debug == 1) {
         console.log(theData.data)
     }
     //let tmp = theData.data
-    
+
     window.localStorage.projectAlldata = JSON.stringify(theData.data);
     //store the first project for demo
     window.localStorage.projectdata = JSON.stringify(theData.data[0])
@@ -184,6 +184,33 @@ let storeCacheProjects = (theData, debug = 0) => {
 
 }
 
+let updateCacheProjects = (theProject = "", debug = 0) => {
+    let theItems = window.localStorage.projects;
+    if (theItems == undefined) {
+        if (debug == 1)
+            consolel.log("no items");
+        return (false)
+    } else {
+        theItems = JSON.parse(theItems)
+        if (debug == 1) {
+            console.log(theItems)
+        }
+        for (var i = 0; i < theItems.data.length; ++i) {
+            if (theItems.data[i].id == theProject.id) {
+                if (debug == 1) {
+                    console.log(theItems.data[i])
+                }
+                //update the project
+                theItems.data[i] = theProject;
+                //update the data
+                window.localStorage.project = JSON.stringify(theProject);
+                window.localStorage.projects = JSON.stringify(theItems);
+                //return (theItems.data[i]);
+            }
+        }
+    }
+}
+
 let getCacheProjects = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projects;
     if (theItems == undefined) {
@@ -217,7 +244,7 @@ let getProjectId = (debug = 0) => {
     if (debug == 1)
         console.log(window.localStorage.project);
     let project = JSON.parse(window.localStorage.project)
-    return(project.id)
+    return (project.id)
 
 }
 //getCacheProjects("1defd828-d637-44bd-9329-0d703de4b4a4")
