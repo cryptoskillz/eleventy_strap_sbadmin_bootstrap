@@ -15,12 +15,12 @@ add record will rely on the schema to be set
 */
 let backpages;
 
-let loadURL = (theUrl, theId,blank=0) => {
+let loadURL = (theUrl, theId, blank = 0) => {
     for (var i = 0; i < backpages.data.length; ++i) {
         if (backpages.data[i].id == theId) {
             window.localStorage.projectdata = JSON.stringify(backpages.data[i].data);
             if (blank == 1)
-                window.open(theUrl,"_blank")
+                window.open(theUrl, "_blank")
             else
                 window.location.href = theUrl;
         }
@@ -41,9 +41,11 @@ let renderTable = (data, actions = [], method = "") => {
 
     //loop through the keys and build the columns
     for (var i = 0; i < keys.length; ++i) {
-        colJson = { title: keys[i] }
-        //add it it the columns object
-        columns.push(colJson)
+        if (keys[i] != "UNUSED") {
+            colJson = { title: keys[i] }
+            //add it it the columns object
+            columns.push(colJson)
+        }
     }
 
     //add the actions column
@@ -69,6 +71,7 @@ let renderTable = (data, actions = [], method = "") => {
 
         //pull out the values and store in the array
         let tmp = data.data[i].data;
+        //console.log(tmp)
         //the field values
         let tableId;
         tableId = Object.values(tmp)

@@ -100,9 +100,14 @@ export async function onRequestGet(context) {
     const { searchParams } = new URL(request.url)
     let projectid = searchParams.get('projectid')
 
+//console.log("projects" + details.username + "|" + tmp[1])
+
     let details = await decodeJwt(request.headers, env.SECRET)
     //set up the KV
     const KV = context.env.backpage;
+    //get the project
+    let project = await KV.get("projects" + details.username + "*" +projectid );
+    project = JSON.parse(project)
     //get the projects based on the name
     let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + projectid + "*" });
 
@@ -111,11 +116,29 @@ export async function onRequestGet(context) {
         for (var i = 0; i < kv.keys.length; ++i) {
             let tmp = kv.keys[i].name.split('*');
             //console.log(kv.keys[i])
-            console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
+            //console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
             let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
+            pData = JSON.parse(pData)
+            let fields = project.schema.fields.split(",")
+            fields = Object.values(fields)
+            let keyFields = Object.keys(pData.data)
+
+            for (var i2 = 0; i2 < fields.length; ++i2) {
+                //console.log(dataFields[i2])
+                if (fields[i2] == "UNUSED")
+                {
+                    delete pData.data[keyFields[i2]]
+                    console.log(pData.data)
+                }
+
+            }
+
+            //console.log(pData)
+            //loop through the keys and build the columns
+
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);
-            projectsData.data.push(JSON.parse(pData))
+            projectsData.data.push(pData)
         }
     }
     return new Response(JSON.stringify(projectsData), { status: 200 });

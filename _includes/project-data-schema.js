@@ -53,11 +53,9 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        //console.log(newfields)
         showAlert(res.message,1);
         let project = JSON.parse(window.localStorage.project)
         project.schema =newfields;
-        console.log(project)
         window.localStorage.project = JSON.stringify(project)
     }
         let project = window.localStorage.project

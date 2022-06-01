@@ -158,6 +158,7 @@ export async function onRequestGet(context) {
     //set up the KV
     const KV = context.env.backpage;
     //get the projects based on the name
+    //console.log("projects" + details.username + "*")
     let projects = await KV.list({ prefix: "projects" + details.username + "*" });
 
     let projectsData = { data: [] }
@@ -173,10 +174,11 @@ export async function onRequestGet(context) {
                 let tmp = projects.keys[i].name.split('*');
                 //console.log("projects" + details.username + "|" + tmp[1])
                 let pData = await KV.get("projects" + details.username + "*" + tmp[1]);
+                pData =JSON.parse(pData)
                 //console.log(pData)
                 //debug for easy clean up
                 //await KV.delete("projects-" + details.username+"*"+tmp[2]);
-                projectsData.data.push(JSON.parse(pData))
+                projectsData.data.push(pData)
             }
         }
     }
