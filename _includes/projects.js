@@ -13,7 +13,7 @@ let loadURL = (theUrl,theId,blank=0) => {
     //note this does not loop through the projects only store data from the first fix bug
     let backpages = window.localStorage.projects;
     backpages = JSON.parse(backpages)
-    //console.log(backpages)
+    console.log(backpages)
     for (var i = 0; i < backpages.data.length; ++i) {
         if (backpages.data[i].id == theId) {
             window.localStorage.project = JSON.stringify(backpages.data[i]);
@@ -51,7 +51,7 @@ whenDocumentReady(isReady = () => {
     <i class="fas fa-eye fa-sm text-white-50"></i> Data</a>`
           //  let templatebutton = `<a href="javascript:loadURL('/project/template/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
    // <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
-            let editbutton = `<a href="javascript:loadURL('/project/edit/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let editbutton = `<a href="javascript:loadURL('/project/edit/','${res.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             let deletebutton = `<a href="javascript:deleteTableItem('${res.data[i].id}','${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
