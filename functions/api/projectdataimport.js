@@ -69,8 +69,10 @@ export async function onRequestPost(context) {
             //check it does not already exist
             await KV.put(kvname, JSON.stringify(projectData));
             //console.log(kvname)
+
         }
     }
+
 
     //update the schema
     let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
@@ -83,6 +85,6 @@ export async function onRequestPost(context) {
     }
     projectData.schema = schemaJson
     await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
-    return new Response(JSON.stringify({ message: `${kv.keys.length} records imported`, data:JSON.stringify(projectData)}), { status: 200 });
+    return new Response(JSON.stringify({ message: `${kv.keys.length} records imported`}), { status: 200 });
 
 }

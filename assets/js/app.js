@@ -68,8 +68,12 @@ START OF LOCAL CACHE FUNCTIONS
 
 //project data
 
-let addCachedProjectData = (res, debug = 0) => {
+let deleteProjectAlldata = (debug =0) => {
+    window.localStorage.projectAlldata = ""
 
+}
+
+let addCachedProjectData = (res, debug = 0) => {
 }
 
 let storeProjectAlldata = (theData, debug = 0) => {
@@ -88,7 +92,8 @@ let storeProjectAlldata = (theData, debug = 0) => {
 
 let getProjectAlldata = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projectAlldata;
-    if (theItems == undefined) {
+    console.log(theItems)
+    if ((theItems == undefined) || (theItems == "")) {
         if (debug == 1)
             consolel.log("no items");
         return (false)
@@ -238,6 +243,14 @@ let getCacheProjects = (theId = "", debug = 0) => {
             return (theItems)
         }
     }
+}
+
+let getProject = (debug = 0) => {
+    if (debug == 1)
+        console.log(window.localStorage.project);
+    let project = JSON.parse(window.localStorage.project)
+    return (project)
+
 }
 
 let getProjectId = (debug = 0) => {

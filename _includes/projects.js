@@ -10,6 +10,7 @@ let whenDocumentReady = (f) => {
 }
 
 let loadURL = (theUrl, theId, blank = 0) => {
+    deleteProjectAlldata()
     let theProject = getCacheProjects(theId)
     if (blank == 1)
         window.open(theUrl, "_blank")

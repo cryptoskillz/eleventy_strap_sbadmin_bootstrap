@@ -16,7 +16,9 @@ add record will rely on the schema to be set
 let backpages;
 
 let loadURL = (theUrl, theId, blank = 0) => {
+    //update this to use generic finctions
     //console.log(backpages)
+    
     for (var i = 0; i < backpages.data.length; ++i) {
         if (backpages.data[i].id == theId) {
             //note : find out why actions is being added locally and remore, this is a quick fix
