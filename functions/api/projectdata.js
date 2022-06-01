@@ -143,6 +143,7 @@ export async function onRequestGet(context) {
             projectsData.data.push(pData)
         }
     }
+    //console.log(projectsData)
     return new Response(JSON.stringify(projectsData), { status: 200 });
 
 }

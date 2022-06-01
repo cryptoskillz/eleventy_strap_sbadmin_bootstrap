@@ -23,12 +23,12 @@ let loadURL = (theUrl, theId, blank = 0) => {
             delete backpages.data[i].data.actions
             //console.log(backpages.data[i])
             window.localStorage.projectdata = JSON.stringify(backpages.data[i].data);
-            
+
             if (blank == 1)
                 window.open(theUrl, "_blank")
             else
                 window.location.href = theUrl;
-            
+
         }
     }
 }
@@ -64,7 +64,10 @@ let renderTable = (data, actions = [], method = "") => {
 
     //check for the first column with a number to set as the ids for row deletion in the table
     let foundIt = 0
-    let tmpd = Object.values(data.data[0].data)
+    console.log(data[0].data)
+        //console.log(data.data)
+
+    let tmpd = Object.values(data[0].data)
     for (var i = 0; i < tmpd.length; ++i) {
         if ((!isNaN(tmpd[i]) && foundIt == 0)) {
             foundIt = 1;
@@ -73,10 +76,10 @@ let renderTable = (data, actions = [], method = "") => {
 
     }
     //loop through the data
-    for (var i = 0; i < data.data.length; ++i) {
+    for (var i = 0; i < data.length; ++i) {
 
         //pull out the values and store in the array
-        let tmp = data.data[i].data;
+        let tmp = data[i].data;
         //console.log(tmp)
         //the field values
         let tableId;
@@ -89,19 +92,19 @@ let renderTable = (data, actions = [], method = "") => {
 
             //edit button
             if (actions[0] == 1)
-                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${data.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             //publish button
             if (actions[1] == 1)
-                buttons = buttons + `<a href="/project/data/?id=${data.data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="/project/data/?id=${data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
             //view button
             if (actions[2] == 1)
-                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${data.data[i].id}',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${data[i].id}',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             //delete button
             if (actions[3] == 1)
-                buttons = buttons + `<a href="javascript:deleteTableItem('${data.data[i].id}','${tableId[tableRowCount]}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:deleteTableItem('${data[i].id}','${tableId[tableRowCount]}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
             tmp.actions = buttons;
         }
@@ -189,30 +192,31 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-    let project = window.localStorage.project
-    if (project == undefined)
-        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
-    else {
-        project = JSON.parse(project)
-        //done function
-        let xhrDone = (res) => {
-            //parse the response
-            backpages = JSON.parse(res)
-            if (backpages.data.length == 0)
-                showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
-            else {
-                //store the first project for demo
-                window.localStorage.projectdata = JSON.stringify(backpages.data[0])
-                document.getElementById("showBody").classList.remove('d-none')
-                renderTable(backpages, [1, 0, 1, 1], "api/projectdata")
-
-            }
-
+    let xhrDone = (res, local = 0) => {
+        //if 0 its live not from the cache so we have to save it.        
+        if (local == 0) {
+            //res = JSON.parse(res)
+            storeProjectAlldata(res);
+            res = JSON.parse(res)
+            res = res.data
         }
-        //call the create account endpoint
-        xhrcall(1, `api/projectdata/?projectid=${project.id}`, "", "json", "", xhrDone, token)
-    }
+        if (res.length == 0)
+            showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
+        else {
+            document.getElementById("showBody").classList.remove('d-none')
+            renderTable(res, [1, 0, 1, 1], "api/projectdata")
+        }
 
+    }
+    //get all the data
+    projectAllData = getProjectAlldata();
+    //check if it is false
+    if (projectAllData != false) {
+        xhrDone(projectAllData,1);
+    } else {
+        let projectid = getProjectId()
+        xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
+    }
 })
 
 //process the action drop down

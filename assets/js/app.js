@@ -65,6 +65,78 @@ var table // datatable
 START OF LOCAL CACHE FUNCTIONS
 */
 
+
+//project data
+
+let addCachedProjectData = (res,debug = 0) => {
+
+}
+
+let storeProjectAlldata = (theData,debug = 0) => {
+    //show debug info
+    theData = JSON.parse(theData);
+    if (debug == 1) {
+        console.log(theData.data)
+    }
+    //let tmp = theData.data
+    
+    window.localStorage.projectAlldata = JSON.stringify(theData.data);
+    //store the first project for demo
+    window.localStorage.projectdata = JSON.stringify(theData.data[0])
+}
+
+
+let getProjectAlldata = (theId = "", debug = 0) => {
+    let theItems = window.localStorage.projectAlldata;
+    if (theItems == undefined) {
+        if (debug == 1)
+            consolel.log("no items");
+        return (false)
+    } else {
+        theItems = JSON.parse(theItems)
+        if (debug == 1) {
+            console.log(theItems)
+        }
+        //console.log(data)
+        if (theId != "") {
+            for (var i = 0; i < theItems.data.length; ++i) {
+                if (theItems.data[i].id == theId) {
+                    if (debug == 1) {
+                        console.log(theItems.data[i])
+                    }
+                    //update the data
+                    window.localStorage.projectdata = JSON.stringify(theItems.data[i]);
+                    return (theItems.data[i]);
+                }
+            }
+        } else {
+            return (theItems)
+        }
+    }
+}
+
+let removeCachedProjectData = (theId, debug = 0) => {
+    let theItems = window.localStorage.projects
+    theItems = JSON.parse(theItems);
+    for (var i = 0; i < theItems.data.length; ++i) {
+        if (theItems.data[i].id == theId) {
+            if (debug == 1) {
+                console.log(theItems.data[i])
+            }
+            //delete theItems.data[i];
+            theItems.data.splice(i, 1);
+            //update the data
+            window.localStorage.projects = JSON.stringify(theItems);
+            return (true);
+
+        }
+    }
+    return (false)
+
+}
+
+//projects
+
 let removeCachedProject = (theId, debug = 0) => {
     let theItems = window.localStorage.projects
     theItems = JSON.parse(theItems);
@@ -85,7 +157,7 @@ let removeCachedProject = (theId, debug = 0) => {
 
 }
 
-let AddCachedProject = (theData, debug = 0) => {
+let addCachedProject = (theData, debug = 0) => {
     //parse the response
     let projects = window.localStorage.projects
     projects = JSON.parse(projects);
@@ -139,6 +211,14 @@ let getCacheProjects = (theId = "", debug = 0) => {
             return (theItems)
         }
     }
+}
+
+let getProjectId = (debug = 0) => {
+    if (debug == 1)
+        console.log(window.localStorage.project);
+    let project = JSON.parse(window.localStorage.project)
+    return(project.id)
+
 }
 //getCacheProjects("1defd828-d637-44bd-9329-0d703de4b4a4")
 ///getCacheProjects("fe9264c4-c20b-4498-b835-08784567f3f6")

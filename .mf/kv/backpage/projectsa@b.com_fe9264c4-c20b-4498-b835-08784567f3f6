@@ -1,0 +1,1 @@
+{"id":"fe9264c4-c20b-4498-b835-08784567f3f6","name":"first3445","templatename":"","template":"","schema":{"fields":"auction_bids,highest_bid,auction_link,total_bids,id,title,reserve_met,won_by__username","originalfields":"auction_bids,highest_bid,auction_link,total_bids,id,title,reserve_met,won_by__username"},"createdAt":"21/12/2022"}

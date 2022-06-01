@@ -1,0 +1,1 @@
+{"id":"1defd828-d637-44bd-9329-0d703de4b4a4","name":"first2","templatename":"","template":"","schema":{"fields":"auction_bids,highest_bid,auction_link,total_bids,id,title,reserve_met,won_by__username","originalfields":"auction_bids,highest_bid,auction_link,total_bids,id,title,reserve_met,won_by__username"},"createdAt":"21/12/2022"}

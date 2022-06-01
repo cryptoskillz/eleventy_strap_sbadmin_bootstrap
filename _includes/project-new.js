@@ -8,21 +8,7 @@ whenDocumentReady(isReady = () => {
 
     document.getElementById('btn-create').addEventListener('click', function() {
         let xhrDone = (res) => {
-            /*
-            //parse the response
-            let projects = window.localStorage.projects 
-            projects = JSON.parse(projects);
-            res = JSON.parse(res);
-            let data = JSON.parse(res.data);
-            projects.data.push(data);
-            window.localStorage.projects = JSON.stringify(projects)
-            showAlert(res.message, 1)
-            res = JSON.parse(res);
-
-
-            */
             AddCachedProject(res,1);
-
         }
         //set the valid var
         let valid = 1;
