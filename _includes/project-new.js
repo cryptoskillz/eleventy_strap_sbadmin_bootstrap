@@ -8,7 +8,7 @@ whenDocumentReady(isReady = () => {
 
     document.getElementById('btn-create').addEventListener('click', function() {
         let xhrDone = (res) => {
-            AddCachedProject(res,1);
+            addCachedProject(res,1);
         }
         //set the valid var
         let valid = 1;
