@@ -48,10 +48,13 @@ whenDocumentReady(isReady = () => {
 })
 
 document.getElementById('btn-create').addEventListener('click', function() {
+    let project;
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        showAlert(res.message, 1)
+        showAlert(res.message, 1);
+        addCachedProjectData(res,1);
+
 
     }
     let data = {};
@@ -67,8 +70,8 @@ document.getElementById('btn-create').addEventListener('click', function() {
 
         }
     }
-    let project = window.localStorage.project
-    project = JSON.parse(project);
+    //let project = window.localStorage.project
+    //project = JSON.parse(project);
     let bodyobj = {
         data: data,
         projectid: project.id

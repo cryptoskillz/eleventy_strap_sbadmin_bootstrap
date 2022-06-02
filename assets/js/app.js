@@ -73,7 +73,19 @@ let deleteProjectAlldata = (debug = 0) => {
 
 }
 
-let addCachedProjectData = (res, debug = 0) => {}
+let addCachedProjectData = (theData, debug = 0) => {
+    //parse the response
+    let projectdata = window.localStorage.projectAlldata
+    projectdata = JSON.parse(projectdata);
+    if (debug == 1) {
+        console.log(theData)
+        console.log(projectdata)
+
+    }
+    projectdata.push(JSON.parse(theData.data));
+    window.localStorage.projectAlldata = JSON.stringify(projectdata)
+    showAlert(theData.message, 1)
+}
 
 let storeProjectAlldata = (theData, debug = 0) => {
     //show debug info

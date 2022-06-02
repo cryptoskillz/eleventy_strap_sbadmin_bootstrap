@@ -58,7 +58,7 @@ export async function onRequestPost(context) {
     projectData = JSON.stringify(projectData)
     //await KV.delete(kvname);
     await KV.put(kvname, projectData);
-    return new Response(JSON.stringify({ message: "Item added",data:JSON.stringify(payLoad.data) }), { status: 200 });
+    return new Response(JSON.stringify({ message: "Item added",data:JSON.stringify(payLoad) }), { status: 200 });
 
 
 }
