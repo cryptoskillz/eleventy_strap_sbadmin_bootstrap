@@ -91,7 +91,7 @@ let grrr = ""
         //console.log(projectData)
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
         
-        return new Response(JSON.stringify({ message: `${kv.keys.length} records importedd` }), { status: 200 });
+        return new Response(JSON.stringify({ message: `${kv.keys.length} records imported` }), { status: 200 });
     } catch (error) {
         return new Response(grrr, { status: 200 });
     }

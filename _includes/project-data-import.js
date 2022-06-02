@@ -26,10 +26,17 @@ whenDocumentReady(isReady = () => {
                     res = JSON.parse(res)
                     deleteProjectAlldata()
                     document.getElementById('uploadfile').classList.add('d-none')
-                    showAlert(res.message, 2, 0)
+                    showAlert(res.message, 2, 0);
+                    //update local schema 
+                    let project = getCurrentProject()
+                    project.schema.fields = results.meta.fields.toString()
+                    project.schema.originalfields = results.meta.fields.toString();
+                    updateCacheProjects(project)
+                    //update local all data
+
                 }
                 let project = getCurrentProject();
-                let fields = { fields: results.meta.fields, originalfields: results.meta.fields }
+                let fields = { fields: results.meta.fields.toString(), originalfields: results.meta.fields.toString() }
                 let bodyobj = {
                     id: project.id,
                     fields: fields,
