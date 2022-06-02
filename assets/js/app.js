@@ -92,7 +92,6 @@ let storeProjectAlldata = (theData, debug = 0) => {
 
 let getProjectAlldata = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projectAlldata;
-    console.log(theItems)
     if ((theItems == undefined) || (theItems == "")) {
         if (debug == 1)
             consolel.log("no items");

@@ -125,6 +125,7 @@ export async function onRequestGet(context) {
             fields = Object.values(fields)
             let keyFields = Object.keys(pData.data)
 
+            /*
             for (var i2 = 0; i2 < fields.length; ++i2) {
                 //console.log(dataFields[i2])
                 if (fields[i2] == "UNUSED")
@@ -134,9 +135,7 @@ export async function onRequestGet(context) {
                 }
 
             }
-
-            //console.log(pData)
-            //loop through the keys and build the columns
+            */
 
             //debug for easy clean up
             //await KV.delete("projects-" + details.username+"*"+tmp[2]);

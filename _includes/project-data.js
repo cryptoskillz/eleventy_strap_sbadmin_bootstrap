@@ -46,6 +46,7 @@ let renderTable = (data, actions = [], method = "") => {
     let dataresult = []
     //get the keys from the schema and move into an array
     var keys = project.schema.fields.split(",")
+    let unusedFields = []
 
     //loop through the keys and build the columns
     for (var i = 0; i < keys.length; ++i) {
@@ -53,8 +54,12 @@ let renderTable = (data, actions = [], method = "") => {
             colJson = { title: keys[i] }
             //add it it the columns object
             columns.push(colJson)
+
         }
+        else
+             unusedFields.push(i)
     }
+    //console.log(unusedFields)
 
     //add the actions column
     if (actions.length != 0) {
@@ -66,10 +71,11 @@ let renderTable = (data, actions = [], method = "") => {
 
     //check for the first column with a number to set as the ids for row deletion in the table
     let foundIt = 0
-    console.log(data[0].data)
+    //console.log(data[0].data)
         //console.log(data.data)
 
     let tmpd = Object.values(data[0].data)
+
     for (var i = 0; i < tmpd.length; ++i) {
         if ((!isNaN(tmpd[i]) && foundIt == 0)) {
             foundIt = 1;
@@ -82,10 +88,28 @@ let renderTable = (data, actions = [], method = "") => {
 
         //pull out the values and store in the array
         let tmp = data[i].data;
-        //console.log(tmp)
+
+        //remove unused fields
+        for (var i2 =0; i2 < unusedFields.length;  ++i2)
+        {
+            //tmp.splice(unusedFields[i2], 1 )
+
+            console.log(unusedFields[i2])
+            //console.log(tmp[i2])
+           delete tmp[Object.keys(tmp)[unusedFields[i2]]]
+        }
+                console.log("tmp")
+
+
+        console.log(tmp)
+
+    
+        
         //the field values
         let tableId;
         tableId = Object.values(tmp)
+
+
 
 
         //tableDeleteId =data.data[i].bpid
