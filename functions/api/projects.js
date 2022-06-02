@@ -177,7 +177,7 @@ export async function onRequestGet(context) {
                 pData =JSON.parse(pData)
                 //console.log(pData)
                 //debug for easy clean up
-                await KV.delete("projects-" + details.username+"*"+tmp[2]);
+                //await KV.delete("projects-" + details.username+"*"+tmp[2]);
                 projectsData.data.push(pData)
             }
         }
