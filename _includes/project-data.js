@@ -263,7 +263,7 @@ whenDocumentReady(isReady = () => {
         //if 0 its live not from the cache so we have to save it.        
         if (local == 0) {
             //res = JSON.parse(res)
-            storeProjectAlldata(res);
+            storeProjectAlldata(res,1);
             res = JSON.parse(res)
             res = res.data
         }

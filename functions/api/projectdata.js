@@ -158,11 +158,15 @@ export async function onRequestGet(context) {
                 //console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
                 let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
                 pData = JSON.parse(pData)
-                let fields = project.schema.fields.split(",")
-                fields = Object.values(fields)
-                let keyFields = Object.keys(pData.data)
-
                 /*
+                if ( project.schema.fields != '')
+                {
+                    let fields = project.schema.fields.split(",")
+                    fields = Object.values(fields)
+                    let keyFields = Object.keys(pData.data)
+                }
+
+                
                 for (var i2 = 0; i2 < fields.length; ++i2) {
                     //console.log(dataFields[i2])
                     if (fields[i2] == "UNUSED")

@@ -88,10 +88,13 @@ let addCachedProjectData = (theData, debug = 0) => {
 }
 
 let storeProjectAlldata = (theData, debug = 0) => {
+    if (debug == 1) {
+            console.log(theData)
+    }
     //check we have data to store
-    if (theData != '{"data":[]}') {
+    if ((theData != '{"data":[]}') && (theData != '')){
         //parse it
-        theData = JSON.parse(theData.data);
+        theData = JSON.parse(theData);
         //debug
         if (debug == 1) {
             console.log(theData)
