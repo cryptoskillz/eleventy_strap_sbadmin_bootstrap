@@ -89,15 +89,41 @@ let addCachedProjectData = (theData, debug = 0) => {
 
 let storeProjectAlldata = (theData, debug = 0) => {
     //show debug info
-    theData = JSON.parse(theData);
-    if (debug == 1) {
-        console.log(theData.data)
-    }
-    //let tmp = theData.data
+    let res = Array.isArray(theData)
+    console.log(res)
+    if (res == false) {
+        theData = JSON.parse(theData);
+        if (debug == 1) {
+            console.log(theData.data)
+        }
+        //let tmp = theData.data
 
-    window.localStorage.projectAlldata = JSON.stringify(theData.data);
-    //store the first project for demo
-    window.localStorage.projectdata = JSON.stringify(theData.data[0])
+        window.localStorage.projectAlldata = JSON.stringify(theData.data);
+        //store the first project for demo
+        window.localStorage.projectdata = JSON.stringify(theData.data[0])
+
+    } else {
+        if (debug == 1) {
+            console.log(theData)
+        }
+    let tmp = []
+        for (var i = 0; i < theData.length; ++i) {
+            let projectData = { data: "", id: "" }
+            projectData.data = theData[i];
+            projectData.id = "ddsd"
+            tmp.push(projectData)
+        }
+
+        if (debug == 1) {
+            console.log(tmp)
+        }
+
+        window.localStorage.projectAlldata = JSON.stringify(tmp);
+        //store the first project for demo
+        window.localStorage.projectdata = JSON.stringify(tmp[0])
+    }
+
+
 }
 
 let getCurrentProjectData = (debug = 0) => {
@@ -182,7 +208,7 @@ let getProjectAlldata = (theId = "", debug = 0) => {
 let removeCachedProjectData = (theId, debug = 0) => {
 
     //note could not really get this working so just delete the whole thing
-    window.localStorage.projectAlldata='';
+    window.localStorage.projectAlldata = '';
 
     /*
     let theItems = window.localStorage.projectAlldata
