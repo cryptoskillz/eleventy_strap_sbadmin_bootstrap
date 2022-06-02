@@ -68,13 +68,12 @@ START OF LOCAL CACHE FUNCTIONS
 
 //project data
 
-let deleteProjectAlldata = (debug =0) => {
+let deleteProjectAlldata = (debug = 0) => {
     window.localStorage.projectAlldata = ""
 
 }
 
-let addCachedProjectData = (res, debug = 0) => {
-}
+let addCachedProjectData = (res, debug = 0) => {}
 
 let storeProjectAlldata = (theData, debug = 0) => {
     //show debug info
@@ -89,6 +88,14 @@ let storeProjectAlldata = (theData, debug = 0) => {
     window.localStorage.projectdata = JSON.stringify(theData.data[0])
 }
 
+let getProjectFirstData = (debug = 0) => {
+    if (debug == 1)
+        console.log(window.localStorage.projectdata);
+    let project = JSON.parse(window.localStorage.projectdata)
+    return (project)
+
+}
+
 
 let getProjectAlldata = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projectAlldata;
@@ -98,22 +105,26 @@ let getProjectAlldata = (theId = "", debug = 0) => {
         return (false)
     } else {
         theItems = JSON.parse(theItems)
-        if (debug == 1) {
-            console.log(theItems)
-        }
         //console.log(data)
         if (theId != "") {
-            for (var i = 0; i < theItems.data.length; ++i) {
-                if (theItems.data[i].id == theId) {
+            for (var i = 0; i < theItems.length; ++i) {
+                if (debug == 1) {
+                    console.log(theItems[i].id + " : " + theId)
+                }
+                if (theItems[i].id == theId) {
                     if (debug == 1) {
-                        console.log(theItems.data[i])
+                        console.log('found it')
+                        console.log(theItems[i])
                     }
                     //update the data
-                    window.localStorage.projectdata = JSON.stringify(theItems.data[i]);
-                    return (theItems.data[i]);
+                    window.localStorage.projectdata = JSON.stringify(theItems[i]);
+                    return (theItems[i]);
                 }
             }
         } else {
+            if (debug == 1) {
+                console.log(theItems)
+            }
             return (theItems)
         }
     }
@@ -201,12 +212,12 @@ let updateCacheProjects = (theProject = "", debug = 0) => {
         }
         for (var i = 0; i < theItems.data.length; ++i) {
             if (debug == 1) {
-                    console.log("checking "+theItems.data[i].id+" : "+theProject.id)
-                    console.log(theItems.data[i])
-                }
+                console.log("checking " + theItems.data[i].id + " : " + theProject.id)
+                console.log(theItems.data[i])
+            }
             if (theItems.data[i].id == theProject.id) {
                 if (debug == 1) {
-                    console.log("Found the id "+theProject.id)
+                    console.log("Found the id " + theProject.id)
                     console.log(theItems.data[i])
                 }
                 //update the project

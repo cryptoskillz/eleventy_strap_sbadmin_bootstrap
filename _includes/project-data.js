@@ -92,16 +92,10 @@ let renderTable = (data, actions = [], method = "") => {
         //remove unused fields
         for (var i2 =0; i2 < unusedFields.length;  ++i2)
         {
-            //tmp.splice(unusedFields[i2], 1 )
-
-            console.log(unusedFields[i2])
-            //console.log(tmp[i2])
            delete tmp[Object.keys(tmp)[unusedFields[i2]]]
         }
-                console.log("tmp")
 
-
-        console.log(tmp)
+       // console.log(tmp)
 
     
         
