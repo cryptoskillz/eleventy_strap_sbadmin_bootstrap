@@ -35,59 +35,59 @@ export async function onRequestPost(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
-try {
-    let payLoad;
-    let projectName = "";
-    const contentType = request.headers.get('content-type')
-    if (contentType != null) {
-        //get the login credentials
-        payLoad = await request.json();
-    }
-    //decode jwt
-    let details = await decodeJwt(request.headers, env.SECRET)
-    //check for projects
-    const KV = context.env.backpage;
-
-
-    //delete the data
-    let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + payLoad.id + "*" });
-    //delte old records
-    if (kv.keys.length > 0) {
-        for (var i = 0; i < kv.keys.length; ++i) {
-            await KV.delete(kv.keys[i].name);
-            //console.log('deleted '+kv.keys[i].name)
+    try {
+        let payLoad;
+        let projectName = "";
+        const contentType = request.headers.get('content-type')
+        if (contentType != null) {
+            //get the login credentials
+            payLoad = await request.json();
         }
-    }
+        //decode jwt
+        let details = await decodeJwt(request.headers, env.SECRET)
+        //check for projects
+        const KV = context.env.backpage;
 
-    //add new records
-    if (payLoad.data.length > 0) {
-        for (var i = 1; i < payLoad.data.length; ++i) {
-            let id = uuid.v4();
-            let projectData = { data: "", id: "" }
-            projectData.id = id
-            projectData.data = payLoad.data[i]
-            let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + id;
-            //check it does not already exist
-            await KV.put(kvname, JSON.stringify(projectData));
-            //console.log(kvname)
 
+        //delete the data
+        let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + payLoad.id + "*" });
+        //delte old records
+        if (kv.keys.length > 0) {
+            for (var i = 0; i < kv.keys.length; ++i) {
+                await KV.delete(kv.keys[i].name);
+                //console.log('deleted '+kv.keys[i].name)
+            }
         }
-    }
+
+        //add new records
+        if (payLoad.data.length > 0) {
+            for (var i = 1; i < payLoad.data.length; ++i) {
+                let id = uuid.v4();
+                let projectData = { data: "", id: "" }
+                projectData.id = id
+                projectData.data = payLoad.data[i]
+                let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + id;
+                //check it does not already exist
+                await KV.put(kvname, JSON.stringify(projectData));
+                //console.log(kvname)
+
+            }
+        }
 
 
-    //update the schema
-    let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
-    projectData = JSON.parse(projectData)
-    let tmp = payLoad.fields.originalfields.toString();
+        //update the schema
+        let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
+        projectData = JSON.parse(projectData)
+        //let tmp = payLoad.fields.originalfields.toString();
 
-    let schemaJson = {
-        "fields": tmp,
-        "originalfields": tmp
-    }
-    projectData.schema = schemaJson
-    await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
-    return new Response(JSON.stringify({ message: `${kv.keys.length} records imported`}), { status: 200 });
- } catch (error) {
+        let schemaJson = {
+            "fields": "",
+            "originalfields": ""
+        }
+        projectData.schema = schemaJson
+        await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
+        return new Response(JSON.stringify({ message: `${kv.keys.length} records imported` }), { status: 200 });
+    } catch (error) {
         return new Response(error, { status: 200 });
         // expected output: ReferenceError: nonExistentFunction is not defined
         // Note - error messages will vary depending on browser
