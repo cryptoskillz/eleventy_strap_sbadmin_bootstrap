@@ -18,9 +18,15 @@ let backpages;
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
     //console.log(backpages)
-
-    for (var i = 0; i < backpages.data.length; ++i) {
-        if (backpages.data[i].id == theId) {
+    getProjectAlldata(theId,1)
+    if (blank == 1)
+        window.open(theUrl, "_blank")
+    else
+        window.location.href = theUrl;
+    /*       
+    let projectdata = getProjectAlldata("",1)
+    for (var i = 0; i < projectdata.data.length; ++i) {
+        if (projectdata.data[i].id == theId) {
             //note : find out why actions is being added locally and remore, this is a quick fix
             delete backpages.data[i].data.actions
             //console.log(backpages.data[i])
@@ -33,6 +39,7 @@ let loadURL = (theUrl, theId, blank = 0) => {
 
         }
     }
+    */
 }
 
 //table render
