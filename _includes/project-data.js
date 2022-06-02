@@ -18,7 +18,7 @@ let backpages;
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
     //console.log(backpages)
-    
+
     for (var i = 0; i < backpages.data.length; ++i) {
         if (backpages.data[i].id == theId) {
             //note : find out why actions is being added locally and remore, this is a quick fix
@@ -55,9 +55,8 @@ let renderTable = (data, actions = [], method = "") => {
             //add it it the columns object
             columns.push(colJson)
 
-        }
-        else
-             unusedFields.push(i)
+        } else
+            unusedFields.push(i)
     }
     //console.log(unusedFields)
 
@@ -72,7 +71,7 @@ let renderTable = (data, actions = [], method = "") => {
     //check for the first column with a number to set as the ids for row deletion in the table
     let foundIt = 0
     //console.log(data[0].data)
-        //console.log(data.data)
+    //console.log(data.data)
 
     let tmpd = Object.values(data[0].data)
 
@@ -90,15 +89,14 @@ let renderTable = (data, actions = [], method = "") => {
         let tmp = data[i].data;
 
         //remove unused fields
-        for (var i2 =0; i2 < unusedFields.length;  ++i2)
-        {
-           delete tmp[Object.keys(tmp)[unusedFields[i2]]]
+        for (var i2 = 0; i2 < unusedFields.length; ++i2) {
+            delete tmp[Object.keys(tmp)[unusedFields[i2]]]
         }
 
-       // console.log(tmp)
+        // console.log(tmp)
 
-    
-        
+
+
         //the field values
         let tableId;
         tableId = Object.values(tmp)
@@ -144,6 +142,62 @@ let renderTable = (data, actions = [], method = "") => {
 }
 
 let zipBackPages = () => {
+    let projectdata = getProjectAlldata()
+    let project = getProject();
+    let theCode = project.template;
+    let theTemplateName = project.templatename;
+    if ((theCode == "") || (theCode == null)) {
+        alert('No template')
+    } else {
+        //process the data
+        let keys;
+        let theData;
+        let theName
+        //init the zipper
+        let zip = new JSZip();
+        //loop through the pages
+        for (var i = 0; i < projectdata.length; ++i) {
+            let tmpCode = theCode;
+            //the keys should not be different so we could move this out of the loop
+            theKeys = Object.keys(projectdata[i].data)
+            //console.log(theKeys)
+            //get the data
+            theData = projectdata[i].data
+            //console.log(theData)
+            //set the template
+            theName = theTemplateName
+            //loop through the data
+            for (var key in theData) {
+                //loop through the keys
+                for (var key2 in theKeys) {
+
+                    //check if we have a matching key
+                    if (key == theKeys[key2]) {
+                        //set it up to suport liqiud
+                        let keyReplace = `\{\{${key}\}\}`
+                        //replace the key in the template with the data
+                        tmpCode = tmpCode.replace(keyReplace, theData[key])
+                        //check it is not blank
+                        if (theData[key] != "")
+                            theName = theName.replace(keyReplace, theData[key])
+                        else
+                            theName = theName.replace(keyReplace, "")
+                    }
+                }
+            }
+            //console.log(tmpCode)
+            //add the zip file
+            zip.file(`backpages/${theName}/index.html`, tmpCode);
+        }
+        //create the zip
+        zip.generateAsync({
+            type: "base64"
+        }).then(function(content) {
+            window.location.href = "data:application/zip;base64," + content;
+        });
+    }
+
+    /*
     let project = window.localStorage.project
     if (project == undefined)
         showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
@@ -203,7 +257,7 @@ let zipBackPages = () => {
         }
     }
 
-
+*/
 
 }
 
@@ -232,7 +286,7 @@ whenDocumentReady(isReady = () => {
     projectAllData = getProjectAlldata();
     //check if it is false
     if (projectAllData != false) {
-        xhrDone(projectAllData,1);
+        xhrDone(projectAllData, 1);
     } else {
         let projectid = getProjectId()
         xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
