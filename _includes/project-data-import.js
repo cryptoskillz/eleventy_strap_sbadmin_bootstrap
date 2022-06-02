@@ -34,7 +34,7 @@ whenDocumentReady(isReady = () => {
                     project.schema.originalfields = results.meta.fields.toString();
                     updateCacheProjects(project)
                     //update local all data
-                    storeProjectAlldata(res,1)
+                    storeProjectAlldata(res,0)
 
                 }
                 let project = getCurrentProject();
