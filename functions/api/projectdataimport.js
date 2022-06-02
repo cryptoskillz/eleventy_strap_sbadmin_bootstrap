@@ -80,19 +80,16 @@ let grrr = ""
         let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
         projectData = JSON.parse(projectData)
         let tmp = payLoad.fields.originalfields.toString();
-        
         let schemaJson = {
-            "fields": "",
-            "originalfields": ""
+            "fields": tmp,
+            "originalfields": tmp
         }
-        projectData.schema.fields = tmp
-        projectData.schema.originalfields =tmp
-
-        grrr = projectData
+        projectData.schemas.fields = tmp
+        projectData.schemas.originalfields =tmp
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
         return new Response(JSON.stringify({ message: `${kv.keys.length} records imported` }), { status: 200 });
     } catch (error) {
-        return new Response(JSON.stringify(grr), { status: 200 });
+        return new Response(error, { status: 200 });
         // expected output: ReferenceError: nonExistentFunction is not defined
         // Note - error messages will vary depending on browser
     }
