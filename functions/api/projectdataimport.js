@@ -61,6 +61,8 @@ let grrr = ""
         }
 
         //add new records
+            let projectsData = { data: [] }
+        let pData;
         if (payLoad.data.length > 0) {
             for (var i = 1; i < payLoad.data.length; ++i) {
                 let id = uuid.v4();
@@ -69,7 +71,12 @@ let grrr = ""
                 projectData.data = payLoad.data[i]
                 let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + id;
                 //check it does not already exist
+                //pData=projectData
+                //pData = JSON.parse(pData)
+                projectsData.data.push(projectData)
                 await KV.put(kvname, JSON.stringify(projectData));
+                
+
                 //console.log(kvname)
 
             }
@@ -89,10 +96,10 @@ let grrr = ""
         let grrr = JSON.stringify(projectData);
 
         //console.log(projectData)
-        await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
+        await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectsData));
         
-        return new Response(JSON.stringify({ message: `${kv.keys.length} records imported` }), { status: 200 });
+        return new Response(JSON.stringify({ message: `${kv.keys.length} records imported`,data: JSON.stringify(projectData)}), { status: 200 });
     } catch (error) {
-        return new Response(grrr, { status: 200 });
+        return new Response(error, { status: 200 });
     }
 }

@@ -89,12 +89,13 @@ let addCachedProjectData = (theData, debug = 0) => {
 
 let storeProjectAlldata = (theData, debug = 0) => {
     //show debug info
-    let res = Array.isArray(theData)
-    console.log(res)
-    if (res == false) {
-        theData = JSON.parse(theData);
+    //let res = Array.isArray(theData)
+    //console.log(res)
+    //if (res == false) {
+
+        theData = JSON.parse(theData.data);
         if (debug == 1) {
-            console.log(theData.data)
+            console.log(theData)
         }
         //let tmp = theData.data
 
@@ -102,6 +103,7 @@ let storeProjectAlldata = (theData, debug = 0) => {
         //store the first project for demo
         window.localStorage.projectdata = JSON.stringify(theData.data[0])
 
+/*
     } else {
         if (debug == 1) {
             console.log(theData)
@@ -122,7 +124,7 @@ let storeProjectAlldata = (theData, debug = 0) => {
         //store the first project for demo
         window.localStorage.projectdata = JSON.stringify(tmp[0])
     }
-
+*/
 
 }
 

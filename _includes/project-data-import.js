@@ -24,6 +24,7 @@ whenDocumentReady(isReady = () => {
                 //update the fields
                 let xhrDone = (res) => {
                     res = JSON.parse(res)
+                    console.log(res);
                     deleteProjectAlldata()
                     document.getElementById('uploadfile').classList.add('d-none')
                     showAlert(res.message, 2, 0);
@@ -33,7 +34,7 @@ whenDocumentReady(isReady = () => {
                     project.schema.originalfields = results.meta.fields.toString();
                     updateCacheProjects(project)
                     //update local all data
-                    storeProjectAlldata(results.data,0)
+                    storeProjectAlldata(res,1)
 
                 }
                 let project = getCurrentProject();
