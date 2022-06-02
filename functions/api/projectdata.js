@@ -53,11 +53,11 @@ export async function onRequestPut(context) {
     let projectData = { data: "", id: "" }
     projectData.id = payLoad.dataid
     projectData.data = payLoad.data
-     projectData = JSON.stringify(projectData)
+    projectData = JSON.stringify(projectData)
     //await KV.delete(kvname);
     await KV.put(kvname, projectData);
     console.log(projectData)
-    return new Response(JSON.stringify({ message: "Item updated",data:projectData }), { status: 200 });
+    return new Response(JSON.stringify({ message: "Item updated", data: projectData }), { status: 200 });
 
 
 }
@@ -94,7 +94,7 @@ export async function onRequestPost(context) {
     //await KV.delete(kvname);
     await KV.put(kvname, projectData);
     console.log(projectData)
-    return new Response(JSON.stringify({ message: "Item added",data:projectData }), { status: 200 });
+    return new Response(JSON.stringify({ message: "Item added", data: projectData }), { status: 200 });
 
 
 }
@@ -134,51 +134,56 @@ export async function onRequestGet(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
+    try {
 
-    const { searchParams } = new URL(request.url)
-    let projectid = searchParams.get('projectid')
+        const { searchParams } = new URL(request.url)
+        let projectid = searchParams.get('projectid')
 
-//console.log("projects" + details.username + "|" + tmp[1])
+        //console.log("projects" + details.username + "|" + tmp[1])
 
-    let details = await decodeJwt(request.headers, env.SECRET)
-    //set up the KV
-    const KV = context.env.backpage;
-    //get the project
-    let project = await KV.get("projects" + details.username + "*" +projectid );
-    project = JSON.parse(project)
-    //get the projects based on the name
-    let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + projectid + "*" });
+        let details = await decodeJwt(request.headers, env.SECRET)
+        //set up the KV
+        const KV = context.env.backpage;
+        //get the project
+        let project = await KV.get("projects" + details.username + "*" + projectid);
+        project = JSON.parse(project)
+        //get the projects based on the name
+        let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + projectid + "*" });
 
-    let projectsData = { data: [] }
-    if (kv.keys.length > 0) {
-        for (var i = 0; i < kv.keys.length; ++i) {
-            let tmp = kv.keys[i].name.split('*');
-            //console.log(kv.keys[i])
-            //console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
-            let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
-            pData = JSON.parse(pData)
-            let fields = project.schema.fields.split(",")
-            fields = Object.values(fields)
-            let keyFields = Object.keys(pData.data)
+        let projectsData = { data: [] }
+        if (kv.keys.length > 0) {
+            for (var i = 0; i < kv.keys.length; ++i) {
+                let tmp = kv.keys[i].name.split('*');
+                //console.log(kv.keys[i])
+                //console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
+                let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
+                pData = JSON.parse(pData)
+                let fields = project.schema.fields.split(",")
+                fields = Object.values(fields)
+                let keyFields = Object.keys(pData.data)
 
-            /*
-            for (var i2 = 0; i2 < fields.length; ++i2) {
-                //console.log(dataFields[i2])
-                if (fields[i2] == "UNUSED")
-                {
-                    delete pData.data[keyFields[i2]]
-                    //console.log(pData.data)
+                /*
+                for (var i2 = 0; i2 < fields.length; ++i2) {
+                    //console.log(dataFields[i2])
+                    if (fields[i2] == "UNUSED")
+                    {
+                        delete pData.data[keyFields[i2]]
+                        //console.log(pData.data)
+                    }
+
                 }
+                */
 
+                //debug for easy clean up
+                //await KV.delete("projects-" + details.username+"*"+tmp[2]);
+                projectsData.data.push(pData)
             }
-            */
-
-            //debug for easy clean up
-            //await KV.delete("projects-" + details.username+"*"+tmp[2]);
-            projectsData.data.push(pData)
         }
+        //console.log(projectsData)
+        return new Response(JSON.stringify(projectsData), { status: 200 });
+    } catch (error) {
+        return new Response(JSON.stringify(error), { status: 200 });
+        // expected output: ReferenceError: nonExistentFunction is not defined
+        // Note - error messages will vary depending on browser
     }
-    //console.log(projectsData)
-    return new Response(JSON.stringify(projectsData), { status: 200 });
-
 }

@@ -1,1 +1,1 @@
-{"id":"e40247da-c8f2-446b-b27b-e131695c5782","name":"czxczxcd","templatename":"","template":"","schema":{"fields":"","originalfields":""},"createdAt":"21/12/2022"}
+{"id":"e40247da-c8f2-446b-b27b-e131695c5782","name":"czxczxcd","templatename":"","template":"","schema":{"fields":"auction_bids,highest_bid,auction_link,total_bids,id,title,reserve_met,won_by__username","originalfields":"auction_bids,highest_bid,auction_link,total_bids,id,title,reserve_met,won_by__username"},"createdAt":"21/12/2022"}
