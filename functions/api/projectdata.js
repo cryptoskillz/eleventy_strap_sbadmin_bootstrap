@@ -182,7 +182,7 @@ export async function onRequestGet(context) {
         //console.log(projectsData)
         return new Response(JSON.stringify(projectsData), { status: 200 });
     } catch (error) {
-        return new Response(JSON.stringify(error), { status: 200 });
+        return new Response(error, { status: 200 });
         // expected output: ReferenceError: nonExistentFunction is not defined
         // Note - error messages will vary depending on browser
     }

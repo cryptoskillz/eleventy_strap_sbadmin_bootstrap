@@ -35,6 +35,7 @@ export async function onRequestPost(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
+try {
     let payLoad;
     let projectName = "";
     const contentType = request.headers.get('content-type')
@@ -86,5 +87,9 @@ export async function onRequestPost(context) {
     projectData.schema = schemaJson
     await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
     return new Response(JSON.stringify({ message: `${kv.keys.length} records imported`}), { status: 200 });
-
+ } catch (error) {
+        return new Response(error, { status: 200 });
+        // expected output: ReferenceError: nonExistentFunction is not defined
+        // Note - error messages will vary depending on browser
+    }
 }
