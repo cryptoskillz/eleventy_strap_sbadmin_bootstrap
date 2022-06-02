@@ -29,7 +29,6 @@ let html5layout = `<DOCTYPE! html>
 </body>
 </html>`
 
-let projectid = 0;
 
 var myCodeMirror;
 var delay;
@@ -54,8 +53,7 @@ let setKey = (theKey) => {
 }
 
 whenDocumentReady(isReady = () => {
-    projectid = getProjectId()
-    let project = getProject(projectid)
+    let project = getCurrentProject()
 
     //let project = window.localStorage.project
     //if (project == undefined)
@@ -159,8 +157,8 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
     switch (this.value) {
         case "1":
             //check if it is black
-            if (projectid != "") {
-                let href = `/project/template/view/?projectid=${projectid}`
+            if (project.id != "") {
+                let href = `/project/template/view/?projectid=${project.id}`
                 window.open(
                     href,
                     '_blank' // <- This is what makes it open in a new window.
@@ -184,9 +182,8 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 document.getElementById('btn-template').addEventListener('click', function() {
     //replace with new functions
     //update  local storage
-    projectid = getProjectId()
    
-    let project = getProject()
+    let project = getCurrentProject()
     let template = myCodeMirror.getValue()
     let templatename = document.getElementById('inp-template-name');
     let valid = 1;

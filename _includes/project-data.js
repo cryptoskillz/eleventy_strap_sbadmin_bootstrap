@@ -136,7 +136,7 @@ let renderTable = (data, actions = [], method = "") => {
 
 let zipBackPages = () => {
     let projectdata = getProjectAlldata()
-    let project = getProject();
+    let project = getCurrentProject();
     let theCode = project.template;
     let theTemplateName = project.templatename;
     if ((theCode == "") || (theCode == null)) {

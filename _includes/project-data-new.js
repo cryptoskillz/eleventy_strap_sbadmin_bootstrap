@@ -48,12 +48,12 @@ whenDocumentReady(isReady = () => {
 })
 
 document.getElementById('btn-create').addEventListener('click', function() {
-    let project;
+    let project=  getCurrentProject()
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
         showAlert(res.message, 1);
-        addCachedProjectData(res,1);
+        addCachedProjectData(res,0);
 
 
     }

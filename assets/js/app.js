@@ -111,7 +111,6 @@ let getCurrentProjectData = (debug = 0) => {
 let updateProjectAllData = (theProjectData = "", debug = 0) => {
     let theItems = window.localStorage.projectAlldata;
     let newData = []
-    console.log(theProjectData)
 
     theProjectData = JSON.parse(theProjectData)
     if (debug == 1) {
