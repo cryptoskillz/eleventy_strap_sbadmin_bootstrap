@@ -26,6 +26,41 @@ let decodeJwt = async (req, secret) => {
     return (details)
 }
 
+export async function onRequestPut(context) {
+    const jwt = require('@tsndr/cloudflare-worker-jwt')
+    const {
+        request, // same as existing Worker API
+        env, // same as existing Worker API
+        params, // if filename includes [id] or [[path]]
+        waitUntil, // same as ctx.waitUntil in existing Worker API
+        next, // used for middleware or to fetch assets
+        data, // arbitrary space for passing data between middlewares
+    } = context;
+    let payLoad;
+    let projectName = "";
+    const contentType = request.headers.get('content-type')
+    if (contentType != null) {
+        payLoad = await request.json();
+        console.log(payLoad);
+
+    }
+    //decode jwt
+    let details = await decodeJwt(request.headers, env.SECRET)
+    //check for projects
+    const KV = context.env.backpage;
+    let kvname = "projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.dataid;
+
+    let projectData = { data: "", id: "" }
+    projectData.id = payLoad.dataid
+    projectData.data = payLoad.data
+     projectData = JSON.stringify(projectData)
+    //await KV.delete(kvname);
+    await KV.put(kvname, projectData);
+    console.log(projectData)
+    return new Response(JSON.stringify({ message: "Item updated",data:projectData }), { status: 200 });
+
+
+}
 export async function onRequestPost(context) {
     const {
         request, // same as existing Worker API
@@ -58,7 +93,8 @@ export async function onRequestPost(context) {
     projectData = JSON.stringify(projectData)
     //await KV.delete(kvname);
     await KV.put(kvname, projectData);
-    return new Response(JSON.stringify({ message: "Item added",data:JSON.stringify(payLoad) }), { status: 200 });
+    console.log(projectData)
+    return new Response(JSON.stringify({ message: "Item added",data:projectData }), { status: 200 });
 
 
 }

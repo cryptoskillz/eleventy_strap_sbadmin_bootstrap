@@ -28,7 +28,7 @@ whenDocumentReady(isReady = () => {
                     document.getElementById('uploadfile').classList.add('d-none')
                     showAlert(res.message, 2, 0)
                 }
-                let project = getProject();
+                let project = getCurrentProject();
                 let fields = { fields: results.meta.fields, originalfields: results.meta.fields }
                 let bodyobj = {
                     id: project.id,

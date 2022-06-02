@@ -7,37 +7,24 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
 
-    let project = window.localStorage.project
-    if (project == undefined)
-        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
-    else {
-        //get the project
-        project = JSON.parse(project);
-        
-        let projectdata = window.localStorage.projectdata
-        projectdata = JSON.parse(projectdata)
-        let tmpd = Object.values(projectdata)
-        let fields = Object.keys(projectdata)
+    let projectdata = getCurrentProjectData();
+    let tmpd = Object.values(projectdata.data)
+    let fields = Object.keys(projectdata.data)
+    //loop through  the keys
+    let inpHtml = "";
+    for (var i = 0; i < fields.length; ++i) {
+        //console.log(fields[i])
+        if (fields[i] != "UNUSED") {
 
-        //console.log(projectdata)
-
-        //loop through  the keys
-        let inpHtml = "";
-        for (var i = 0; i < fields.length; ++i) {
-            //console.log(fields[i])
-            if (fields[i] != "UNUSED") {
-
-                inpHtml = inpHtml + `<div class="form-group" >
+            inpHtml = inpHtml + `<div class="form-group" >
             <label>${fields[i]}</label>
 <input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="${tmpd[i]}">
 </div>`
-            }
         }
-        document.getElementById('formInputs').innerHTML = inpHtml
-        //show the body
-        document.getElementById('showBody').classList.remove('d-none');
-
     }
+    document.getElementById('formInputs').innerHTML = inpHtml
+    //show the body
+    document.getElementById('showBody').classList.remove('d-none');
 
 })
 
@@ -45,20 +32,16 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        showAlert(res.message, 1)
-                console.log(res)
-
-        console.log(res.data)
-        window.localStorage.projectdata = res.data;
-
+        showAlert(res.message, 1);
+        updateProjectAllData(res.data);
     }
     let data = {};
 
-    //project = JSON.parse(project);
-    let project = window.localStorage.project
-    project = JSON.parse(project);
-    let projectfields = project.schema.fields.split(",");
-    let projectoriginalfields = project.schema.originalfields.split(",")
+    let currentproject = getCurrentProject();
+        let currentprojectdata = getCurrentProjectData();
+
+    let projectfields = currentproject.schema.fields.split(",");
+    let projectoriginalfields = currentproject.schema.originalfields.split(",")
     for (var i = 0; i < projectfields.length; ++i) {
         let inpValue = "";
         if (projectfields[i] == "UNUSED") {
@@ -72,8 +55,9 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     }
     let bodyobj = {
         data: data,
-        projectid: project.id
+        projectid: currentproject.id,
+        dataid: currentprojectdata.id
     }
     var bodyobjectjson = JSON.stringify(bodyobj);
-    xhrcall(0, `api/projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
+    xhrcall(4, `api/projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
 })

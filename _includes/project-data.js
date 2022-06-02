@@ -23,23 +23,7 @@ let loadURL = (theUrl, theId, blank = 0) => {
         window.open(theUrl, "_blank")
     else
         window.location.href = theUrl;
-    /*       
-    let projectdata = getProjectAlldata("",1)
-    for (var i = 0; i < projectdata.data.length; ++i) {
-        if (projectdata.data[i].id == theId) {
-            //note : find out why actions is being added locally and remore, this is a quick fix
-            delete backpages.data[i].data.actions
-            //console.log(backpages.data[i])
-            window.localStorage.projectdata = JSON.stringify(backpages.data[i].data);
 
-            if (blank == 1)
-                window.open(theUrl, "_blank")
-            else
-                window.location.href = theUrl;
-
-        }
-    }
-    */
 }
 
 //table render
@@ -92,8 +76,10 @@ let renderTable = (data, actions = [], method = "") => {
     //loop through the data
     for (var i = 0; i < data.length; ++i) {
 
+
         //pull out the values and store in the array
         let tmp = data[i].data;
+
 
         //remove unused fields
         for (var i2 = 0; i2 < unusedFields.length; ++i2) {

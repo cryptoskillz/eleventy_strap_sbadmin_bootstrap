@@ -100,13 +100,51 @@ let storeProjectAlldata = (theData, debug = 0) => {
     window.localStorage.projectdata = JSON.stringify(theData.data[0])
 }
 
-let getProjectFirstData = (debug = 0) => {
+let getCurrentProjectData = (debug = 0) => {
     if (debug == 1)
         console.log(window.localStorage.projectdata);
     let project = JSON.parse(window.localStorage.projectdata)
     return (project)
 
 }
+
+let updateProjectAllData = (theProjectData = "", debug = 0) => {
+    let theItems = window.localStorage.projectAlldata;
+    let newData = []
+    console.log(theProjectData)
+
+    theProjectData = JSON.parse(theProjectData)
+    if (debug == 1) {
+        //theProjectData = JSON.parse(theProjectData)
+        console.log("theProjectData")
+        console.log(theProjectData)
+
+    }
+    if (theItems == undefined) {
+        if (debug == 1)
+            consolel.log("no items");
+        return (false)
+    } else {
+        theItems = JSON.parse(theItems)
+        if (debug == 1) {
+            console.log(theItems)
+        }
+        for (var i = 0; i < theItems.length; ++i) {
+            if (theItems[i].id == theProjectData.id) {
+                if (debug == 1) {
+                    console.log("Found it" + theProjectData.id)
+                    console.log(theItems[i])
+                }
+                //update the project
+                theItems[i].data = theProjectData.data;
+                window.localStorage.projectdata = JSON.stringify(theProjectData);
+                window.localStorage.projectAlldata = JSON.stringify(theItems);
+            }
+
+        }
+    }
+}
+
 
 
 let getProjectAlldata = (theId = "", debug = 0) => {
@@ -143,23 +181,46 @@ let getProjectAlldata = (theId = "", debug = 0) => {
 }
 
 let removeCachedProjectData = (theId, debug = 0) => {
-    let theItems = window.localStorage.projects
+
+    //note could not really get this working so just delete the whole thing
+    window.localStorage.projectAlldata='';
+
+    /*
+    let theItems = window.localStorage.projectAlldata
     theItems = JSON.parse(theItems);
-    for (var i = 0; i < theItems.data.length; ++i) {
-        if (theItems.data[i].id == theId) {
-            if (debug == 1) {
-                console.log(theItems.data[i])
-            }
+    let  newItems={};
+    if (debug == 1) {
+        console.log(theItems)
+    }
+    for (var i = 0; i < theItems.length; ++i) {
+        if (debug == 1) {
+            console.log("checking " + theItems[i].id + " : " + theId)
+            console.log(theItems[i])
+        }
+        if (theItems[i].id == theId) {
+
             //delete theItems.data[i];
-            theItems.data.splice(i, 1);
+            if (debug == 1) {
+                console.log("Found the id " + theId)
+                console.log(theItems[i].data)
+            }
+            //note this creates a null fix it
+            //delete theItems[Object.keys(theItems)[i]]
+            //theItems[i].data.splice(i, 1);
             //update the data
-            window.localStorage.projects = JSON.stringify(theItems);
-            return (true);
+            //window.localStorage.projectAlldata = JSON.stringify(theItems);
+            //return (true);
 
         }
-    }
-    return (false)
+        else
+        {
+            newItems.push(theItems[i].data)
+        }
 
+    }
+    window.localStorage.projectAlldata = JSON.stringify(newItems);
+    //return (true)
+    */
 }
 
 //projects
@@ -272,7 +333,7 @@ let getCacheProjects = (theId = "", debug = 0) => {
     }
 }
 
-let getProject = (debug = 0) => {
+let getCurrentProject = (debug = 0) => {
     if (debug == 1)
         console.log(window.localStorage.project);
     let project = JSON.parse(window.localStorage.project)
@@ -316,13 +377,18 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
                 removeCachedProject(deleteId)
 
             }
+            if (deleteMethod == "api/projectdata") {
+                removeCachedProjectData(deleteId, 1)
+
+            }
 
         }
         //let project = window.localStorage.project
         //project = JSON.parse(project)
+        let project = getCurrentProject();
         let bodyobj = {
-            id: deleteId
-            //projectid: project.id
+            id: deleteId,
+            projectid: project.id
         }
         var bodyobjectjson = JSON.stringify(bodyobj);
         //call the create account endpoint
@@ -335,7 +401,6 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
 let deleteTableItem = (dId, tId, method) => {
     deleteId = dId;
     tableRowId = tId;
-    console.log(tableRowId);
     deleteMethod = method;
     $('#confirmation-modal').modal('toggle')
 }

@@ -13,10 +13,10 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
     //get the project
-    let project = getProject();
+    let project = getCurrentProject();
         //get he prpject data
         //note could add a flag to the get all that just returns first
-        projectdata = getProjectFirstData(0)
+        projectdata = getCurrentProjectData(0)
         //hold the fields
         let theFields;
         ////hold the template
