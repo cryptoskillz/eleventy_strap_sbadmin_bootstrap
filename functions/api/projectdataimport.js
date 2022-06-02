@@ -89,10 +89,8 @@ let grrr = ""
 
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
         
-        return new Response(JSON.stringify({ message: `${kv.keys.length} records imported` }), { status: 200 });
+        return new Response(JSON.stringify({ message: `${kv.keys.length} records importedd` }), { status: 200 });
     } catch (error) {
         return new Response(kvname2, { status: 200 });
-        // expected output: ReferenceError: nonExistentFunction is not defined
-        // Note - error messages will vary depending on browser
     }
 }
