@@ -79,7 +79,7 @@ let grrr = ""
         //update the schema
         let kvname2 = "projects" + details.username + "*" + payLoad.id
         let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
-        projectData = JSON.parse(projectData)
+        //projectData = JSON.parse(projectData)
         let tmp = payLoad.fields.originalfields.toString();
         let schemaJson = {
             "fields": tmp,
