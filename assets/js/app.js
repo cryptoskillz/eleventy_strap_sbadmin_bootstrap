@@ -88,43 +88,17 @@ let addCachedProjectData = (theData, debug = 0) => {
 }
 
 let storeProjectAlldata = (theData, debug = 0) => {
-    //show debug info
-    //let res = Array.isArray(theData)
-    //console.log(res)
-    //if (res == false) {
-        //console.log(theData)
+    //check we have data to store
+    if (theData != '{"data":[]}') {
+        //parse it
         theData = JSON.parse(theData.data);
+        //debug
         if (debug == 1) {
             console.log(theData)
         }
-        //let tmp = theData.data
-
+        //store it.
         window.localStorage.projectAlldata = JSON.stringify(theData.data);
-        //store the first project for demo
-        //window.localStorage.projectdata = JSON.stringify(theData.data[0])
-
-/*
-    } else {
-        if (debug == 1) {
-            console.log(theData)
-        }
-    let tmp = []
-        for (var i = 0; i < theData.length; ++i) {
-            let projectData = { data: "", id: "" }
-            projectData.data = theData[i];
-            projectData.id = "ddsd"
-            tmp.push(projectData)
-        }
-
-        if (debug == 1) {
-            console.log(tmp)
-        }
-
-        window.localStorage.projectAlldata = JSON.stringify(tmp);
-        //store the first project for demo
-        window.localStorage.projectdata = JSON.stringify(tmp[0])
     }
-*/
 
 }
 
