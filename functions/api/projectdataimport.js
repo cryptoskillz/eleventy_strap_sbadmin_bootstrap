@@ -77,20 +77,22 @@ let grrr = ""
 
 
         //update the schema
-        let kvname2 = "projects" + details.username + "*" + payLoad.id
         let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
-        //projectData = JSON.parse(projectData)
+        projectData = JSON.parse(projectData)
         let tmp = payLoad.fields.originalfields.toString();
         let schemaJson = {
             "fields": tmp,
             "originalfields": tmp
         }
-        projectData.schema = schemaJson
 
+        projectData.schema = schemaJson
+        let grrr = JSON.stringify(projectData);
+
+        //console.log(projectData)
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
         
         return new Response(JSON.stringify({ message: `${kv.keys.length} records importedd` }), { status: 200 });
     } catch (error) {
-        return new Response(kvname2, { status: 200 });
+        return new Response(grrr, { status: 200 });
     }
 }
