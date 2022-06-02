@@ -92,7 +92,7 @@ let storeProjectAlldata = (theData, debug = 0) => {
     //let res = Array.isArray(theData)
     //console.log(res)
     //if (res == false) {
-
+        //console.log(theData)
         theData = JSON.parse(theData.data);
         if (debug == 1) {
             console.log(theData)
@@ -101,7 +101,7 @@ let storeProjectAlldata = (theData, debug = 0) => {
 
         window.localStorage.projectAlldata = JSON.stringify(theData.data);
         //store the first project for demo
-        window.localStorage.projectdata = JSON.stringify(theData.data[0])
+        //window.localStorage.projectdata = JSON.stringify(theData.data[0])
 
 /*
     } else {

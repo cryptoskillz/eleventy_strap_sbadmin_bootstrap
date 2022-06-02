@@ -279,7 +279,7 @@ whenDocumentReady(isReady = () => {
     projectAllData = getProjectAlldata();
     //check if it is false
     if (projectAllData != false) {
-        xhrDone(projectAllData, 1);
+        xhrDone(projectAllData, 0);
     } else {
         let projectid = getProjectId()
         xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
