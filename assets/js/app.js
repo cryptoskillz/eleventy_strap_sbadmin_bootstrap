@@ -201,8 +201,13 @@ let updateCacheProjects = (theProject = "", debug = 0) => {
             console.log(theItems)
         }
         for (var i = 0; i < theItems.data.length; ++i) {
+            if (debug == 1) {
+                    console.log("checking "+theItems.data[i].id+" : "+theProject.id)
+                    console.log(theItems.data[i])
+                }
             if (theItems.data[i].id == theProject.id) {
                 if (debug == 1) {
+                    console.log("Found the id "+theProject.id)
                     console.log(theItems.data[i])
                 }
                 //update the project

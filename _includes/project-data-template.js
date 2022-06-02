@@ -54,79 +54,89 @@ let setKey = (theKey) => {
 }
 
 whenDocumentReady(isReady = () => {
+    projectid = getProjectId()
+    let project = getProject(projectid)
 
-    let project = window.localStorage.project
-    if (project == undefined)
-        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
-    else {
-        project = JSON.parse(project)
-        document.getElementById('showBody').classList.remove('d-none')
+    //let project = window.localStorage.project
+    //if (project == undefined)
+    //    showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
+    //else {
+    document.getElementById('showBody').classList.remove('d-none')
 
-        let fields = project.schema.fields
-        //debug 
-        let keys = []
-        if (fields != "")
-            keys = fields.split(",");
+    let fields = project.schema.fields
+    let originalfields = project.schema.originalfields
 
-        let elements2 = "";
-        let elements = "";
+    //debug 
+    let keys = []
+    if (fields != "")
+        keys = fields.split(",");
 
-        /*
-        if (keys.length == 0)
-        {
-            keys.push('var 1')
-            keys.push('var 2')
-        }
-        */
+    let originalkeys = []
+    if (originalfields != "")
+        originalkeys = originalfields.split(",")
+
+    let elements2 = "";
+    let elements = "";
+
+    /*
+    if (keys.length == 0)
+    {
+        keys.push('var 1')
+        keys.push('var 2')
+    }
+    */
 
 
-        for (var i = 0; i < keys.length; ++i) {
-            //console.log(keys[i])
+    for (var i = 0; i < keys.length; ++i) {
+        //console.log(keys[i])
+
+        if (keys[i] == "UNUSED")
+
+            elements2 = elements2 + `<a href="javascript:setKey('${originalkeys[i]}')">${originalkeys[i]}</a> (not used in template)<br>`
+        else {
             elements = elements + `\{\{${keys[i]}\}\}<br>`
             elements2 = elements2 + `<a href="javascript:setKey('${keys[i]}')">${keys[i]}</a><br>`
         }
-
-        //console.log(elements)
-        //console.log(elements2)
-
-        if (keys.length == 0) {
-            document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
-        } else {
-            document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
-        }
-
-        if ((project.templatename != "") && (project.templatename != null)) {
-            let templatename = document.getElementById('inp-template-name');
-            templatename.value = project.templatename;
-        }
-        let theCode = project.template;
-        if ((theCode == null) || (theCode == "")) {
-            theCode = html5layout
-            theCode = theCode.replace("[[ELEMENTS]]", elements);
-            document.getElementById("btn-template").innerHTML = "Create"
-        } else {
-            document.getElementById("btn-template").innerHTML = "Update"
-        }
-
-        let textArea = document.getElementById('inp-projectemplate');
-        document.getElementById("showBody").classList.remove("d-none")
-
-
-
-        myCodeMirror = CodeMirror.fromTextArea(textArea, {
-            mode: 'text/html',
-            theme: 'monokai'
-        });
-        myCodeMirror.setSize(null, 700);
-
-        myCodeMirror.on("change", function() {
-            clearTimeout(delay);
-            delay = setTimeout(updatePreview, 300);
-        });
-        myCodeMirror.getDoc().setValue(theCode);
-        myCodeMirror.refresh();
-
     }
+
+    //console.log(elements)
+    //console.log(elements2)
+
+    if (keys.length == 0) {
+        document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
+    } else {
+        document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
+    }
+
+    if ((project.templatename != "") && (project.templatename != null)) {
+        let templatename = document.getElementById('inp-template-name');
+        templatename.value = project.templatename;
+    }
+    let theCode = project.template;
+    if ((theCode == null) || (theCode == "")) {
+        theCode = html5layout
+        theCode = theCode.replace("[[ELEMENTS]]", elements);
+        document.getElementById("btn-template").innerHTML = "Create"
+    } else {
+        document.getElementById("btn-template").innerHTML = "Update"
+    }
+
+    let textArea = document.getElementById('inp-projectemplate');
+
+    myCodeMirror = CodeMirror.fromTextArea(textArea, {
+        mode: 'text/html',
+        theme: 'monokai'
+    });
+    myCodeMirror.setSize(null, 700);
+
+    myCodeMirror.on("change", function() {
+        clearTimeout(delay);
+        delay = setTimeout(updatePreview, 300);
+    });
+    myCodeMirror.getDoc().setValue(theCode);
+    myCodeMirror.refresh();
+
+    // }
 
 
 
@@ -172,18 +182,22 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 
 
 document.getElementById('btn-template').addEventListener('click', function() {
-    let project = window.localStorage.project
-    project = JSON.parse(project)
+    //replace with new functions
+    //update  local storage
+    projectid = getProjectId()
+   
+    let project = getProject()
     let template = myCodeMirror.getValue()
     let templatename = document.getElementById('inp-template-name');
     let valid = 1;
     let xhrDone = (res) => {
+        //console.log(project)
         //parse the response
         res = JSON.parse(res);
-        showAlert("project template has been updated", 1)
+        showAlert(res.message, 1)
         project.templatename = templatename.value;
         project.template = template;
-        window.localStorage.project = JSON.stringify(project);
+        updateCacheProjects(project,0)
     }
 
     let errorMesage;
@@ -218,13 +232,13 @@ document.getElementById('btn-template').addEventListener('click', function() {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-        window.open(`/project/template/view/`,'_blank');
+            window.open(`/project/template/view/`, '_blank');
 
             break;
         case "2":
-            window.location.href = `/projects/data/`
+            window.location.href = `/project/data/`
             break;
-        
+
         default:
             // code block
     }

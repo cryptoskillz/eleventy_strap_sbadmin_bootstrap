@@ -42,42 +42,6 @@ whenDocumentReady(isReady = () => {
         document.getElementById('showBody').classList.remove('d-none')
     }
 
-    /*
-    let project = window.localStorage.project
-    if (project == undefined)
-        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
-    else {
-        project = JSON.parse(project)
-        if (project.schema.fields == "") {
-            showAlert(`No schema for this project, click here to import <a href="/project/data/import/data/?projectid=${projectid}">data</a>`, 2, 0)
-
-        } else {
-            let fields = project.schema.fields.split(",")
-            let originalfields = project.schema.originalfields.split(",")
-            console.log(fields);
-            let inpHtml = "";
-            document.getElementById('originalschema').innerHTML = `Leave fields blank to remove<br>Fields in the imported data ${project.schema.originalfields}`
-            for (var i = 0; i < fields.length; ++i) {
-                //console.log(fields[i])
-                //let theData = res.data.attributes.data[keys[i]]
-                let tmpvalue = ""
-                let tmpmessage = `unused field ${originalfields[i]} from  the imported data`
-                if (fields[i] != "UNUSED") {
-                    tmpvalue = fields[i]
-                    tmpmessage = `Schema field ${i+1} (original name ${originalfields[i]})`
-                }
-
-                inpHtml = inpHtml + `    <div class="form-group" >
-            <label>${tmpmessage}</label>
-<input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]} " value="${tmpvalue}">
-</div>`
-            }
-            document.getElementById('formInputs').innerHTML = inpHtml
-            document.getElementById('showBody').classList.remove('d-none')
-        }
-    }
-    */
-
 })
 
 document.getElementById('btn-edit').addEventListener('click', function() {
