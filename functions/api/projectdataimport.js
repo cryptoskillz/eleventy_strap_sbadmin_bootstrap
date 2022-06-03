@@ -83,13 +83,17 @@ export async function onRequestPost(context) {
         project = JSON.parse(project)
         /*
         note check the schemas are updating
-
-        let tmp = payLoad.fields.originalfields.toString();
+        */
+        let tmp = "";
+        if (payLoad.fields.originalfields != "")
+            tmp = payLoad.fields.originalfields.toString();
         let schemaJson = {
             "fields": tmp,
             "originalfields": tmp
         }
-        */
+        project.schema = schemaJson
+        
+        
         await KV.put("projects" + details.username + "*" + payLoad.projectid, JSON.stringify(project));
 
         return new Response(JSON.stringify({ message: `${dataArray.length} records imported`, data: JSON.stringify(dataArray) }), { status: 200 });

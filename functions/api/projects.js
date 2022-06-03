@@ -160,11 +160,14 @@ export async function onRequestGet(context) {
     //get the projects based on the name
     //console.log("projects" + details.username + "*")
     let projects = await KV.list({ prefix: "projects" + details.username + "*" });
+    console.log(projects)
 
     let projectsData = { data: [] }
+    console.log(projectid)
     if ((projectid != null) && (projectid != "")) {
         let pData = await KV.get("projects" + details.username + "*" + projectid);
-        //console.log(pData)
+        console.log("projects" + details.username + "*" + projectid)
+        console.log(pData)
         //debug for easy clean up
         //await KV.delete("projects-" + details.username+"*"+tmp[2]);
         projectsData.data.push(JSON.parse(pData))
@@ -177,7 +180,9 @@ export async function onRequestGet(context) {
                 pData =JSON.parse(pData)
                 //console.log(pData)
                 //debug for easy clean up
-                //await KV.delete("projects-" + details.username+"*"+tmp[2]);
+                console.log("projects" + details.username+"*"+tmp[1]);
+
+                await KV.delete("projects" + details.username+"*"+tmp[1]);
                 projectsData.data.push(pData)
             }
         }
