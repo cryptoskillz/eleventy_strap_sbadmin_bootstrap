@@ -89,18 +89,23 @@ let addCachedProjectData = (theData, debug = 0) => {
 
 let storeProjectAlldata = (theData, debug = 0) => {
     if (debug == 1) {
-            console.log(theData)
+        console.log("theData")
+        console.log(theData)
     }
     //check we have data to store
     if ((theData != '{"data":[]}') && (theData != '')){
         //parse it
-        theData = JSON.parse(theData);
+        //note we are storing this dumb as it never renders once its is stored
+        theData = JSON.parse(theData.data);
         //debug
         if (debug == 1) {
             console.log(theData)
         }
         //store it.
-        window.localStorage.projectAlldata = JSON.stringify(theData.data);
+        //let tmp = { data: [] };
+        //tmp.data.push(theData.data)
+        //console.log(tmp)
+        window.localStorage.projectAlldata = JSON.stringify(theData);
     }
 
 }
@@ -153,9 +158,10 @@ let updateProjectAllData = (theProjectData = "", debug = 0) => {
 
 let getProjectAlldata = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projectAlldata;
+
     if ((theItems == undefined) || (theItems == "")) {
         if (debug == 1)
-            consolel.log("no items");
+            console.log("no items");
         return (false)
     } else {
         theItems = JSON.parse(theItems)

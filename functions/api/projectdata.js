@@ -18,6 +18,21 @@ let contentType;
 const jwt = require('@tsndr/cloudflare-worker-jwt')
 var uuid = require('uuid');
 
+let dataArray = [];
+let buildDataArray = (theData,theId="") => {
+    //console.log("theData");
+    let id;
+    if (theId == "")
+        id = uuid.v4();
+    else
+        id = theId
+    //console.log(theData);
+    let projectData = { id: id, data: theData, createdAt: "21/12/2022"}
+    //console.log(projectData)
+    dataArray.push(projectData)
+    return(projectData)
+}
+
 let decodeJwt = async (req, secret) => {
     let bearer = req.get('authorization')
     bearer = bearer.replace("Bearer ", "");
@@ -56,7 +71,7 @@ export async function onRequestPut(context) {
     projectData = JSON.stringify(projectData)
     //await KV.delete(kvname);
     await KV.put(kvname, projectData);
-    console.log(projectData)
+    //console.log(projectData)
     return new Response(JSON.stringify({ message: "Item updated", data: projectData }), { status: 200 });
 
 
@@ -149,16 +164,19 @@ export async function onRequestGet(context) {
         project = JSON.parse(project)
         //get the projects based on the name
         let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + projectid + "*" });
-
-        let projectsData = { data: [] }
+        //console.log("kv" )
+        //console.log(kv.keys.length )
+        //let projectsData = []
         if (kv.keys.length > 0) {
             for (var i = 0; i < kv.keys.length; ++i) {
                 let tmp = kv.keys[i].name.split('*');
                 //console.log(kv.keys[i])
                 //console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
                 let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
+                //console.log(pData)
                 pData = JSON.parse(pData)
                 /*
+                note check the schema code is working
                 if ( project.schema.fields != '')
                 {
                     let fields = project.schema.fields.split(",")
@@ -179,15 +197,19 @@ export async function onRequestGet(context) {
                 */
 
                 //debug for easy clean up
-                //await KV.delete("projects-" + details.username+"*"+tmp[2]);
-                projectsData.data.push(pData)
+                //await KV.delete("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
+
+               // console.log(pData)
+                //projectsData.push(pData)
+                let pData2 = buildDataArray(pData.data,pData.id)
+
             }
         }
-        //console.log(projectsData)
-        return new Response(JSON.stringify(projectsData), { status: 200 });
+        //console.log(dataArray)
+
+        return new Response(JSON.stringify({ message: "ok",data: JSON.stringify(dataArray)}), { status: 200 });
     } catch (error) {
+        console.log(error)
         return new Response(error, { status: 200 });
-        // expected output: ReferenceError: nonExistentFunction is not defined
-        // Note - error messages will vary depending on browser
     }
 }

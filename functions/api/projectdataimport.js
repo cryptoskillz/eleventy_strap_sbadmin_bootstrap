@@ -24,6 +24,17 @@ let decodeJwt = async (req, secret) => {
     return (details)
 }
 
+let dataArray = [];
+let buildDataArray = (theData) => {
+    let id = uuid.v4();
+    let projectData = { id: id, data: theData, createdAt: "21/12/2022" }
+    //debug
+    //console.log("theData");
+    //console.log(theData);
+    //console.log(projectData)
+    dataArray.push(projectData)
+    return (projectData)
+}
 
 export async function onRequestPost(context) {
     const {
@@ -35,70 +46,53 @@ export async function onRequestPost(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
-let grrr = ""
-    try {
+        try {
         let payLoad;
         let projectName = "";
         const contentType = request.headers.get('content-type')
         if (contentType != null) {
             //get the login credentials
             payLoad = await request.json();
+            console.log(payLoad)
         }
         //decode jwt
         let details = await decodeJwt(request.headers, env.SECRET)
         //check for projects
         const KV = context.env.backpage;
-
-
         //delete the data
-        let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + payLoad.id + "*" });
+        let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + payLoad.projectid + "*" });
         //delte old records
         if (kv.keys.length > 0) {
             for (var i = 0; i < kv.keys.length; ++i) {
                 await KV.delete(kv.keys[i].name);
-                //console.log('deleted '+kv.keys[i].name)
             }
         }
-
         //add new records
-            let projectsData = { data: [] }
+        let projectsData = { data: [] }
         let pData;
         if (payLoad.data.length > 0) {
+            dataArray = [];
             for (var i = 1; i < payLoad.data.length; ++i) {
-                let id = uuid.v4();
-                let projectData = { data: "", id: "" }
-                projectData.id = id
-                projectData.data = payLoad.data[i]
-                let kvname = "projects-data" + details.username + "*" + payLoad.id + "*" + id;
-                //check it does not already exist
-                //pData=projectData
-                //pData = JSON.parse(pData)
-                projectsData.data.push(projectData)
-                await KV.put(kvname, JSON.stringify(projectData));
-                
-
-                //console.log(kvname)
-
+                let pData = buildDataArray(payLoad.data[i])
+                let kvname = "projects-data" + details.username + "*" + payLoad.projectid + "*" + pData.id;
+                await KV.put(kvname, JSON.stringify(pData));
             }
         }
-
-
         //update the schema
-        let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
-        projectData = JSON.parse(projectData)
+        let project = await KV.get("projects" + details.username + "*" + payLoad.projectid);
+        project = JSON.parse(project)
+        /*
+        note check the schemas are updating
+
         let tmp = payLoad.fields.originalfields.toString();
         let schemaJson = {
             "fields": tmp,
             "originalfields": tmp
         }
+        */
+        await KV.put("projects" + details.username + "*" + payLoad.projectid, JSON.stringify(project));
 
-        projectData.schema = schemaJson
-        let grrr = JSON.stringify(projectData);
-
-        //console.log(projectData)
-        await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectsData));
-        
-        return new Response(JSON.stringify({ message: `${kv.keys.length} records imported`,data: JSON.stringify(projectData)}), { status: 200 });
+        return new Response(JSON.stringify({ message: `${dataArray.length} records imported`, data: JSON.stringify(dataArray) }), { status: 200 });
     } catch (error) {
         return new Response(error, { status: 200 });
     }
