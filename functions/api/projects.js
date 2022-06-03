@@ -182,7 +182,7 @@ export async function onRequestGet(context) {
                 //debug for easy clean up
                 console.log("projects" + details.username+"*"+tmp[1]);
 
-                await KV.delete("projects" + details.username+"*"+tmp[1]);
+                //await KV.delete("projects" + details.username+"*"+tmp[1]);
                 projectsData.data.push(pData)
             }
         }
