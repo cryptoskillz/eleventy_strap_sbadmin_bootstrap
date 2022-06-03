@@ -32,7 +32,7 @@ whenDocumentReady(isReady = () => {
                     let project = getCurrentProject()
                     project.schema.fields = results.meta.fields.toString()
                     project.schema.originalfields = results.meta.fields.toString();
-                    //updateCacheProjects(project)
+                    updateCacheProjects(project)
                     //update local all data
                     storeProjectAlldata(res,1)
                     //deleteProjectAlldata()

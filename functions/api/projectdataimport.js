@@ -81,9 +81,6 @@ export async function onRequestPost(context) {
         //update the schema
         let project = await KV.get("projects" + details.username + "*" + payLoad.projectid);
         project = JSON.parse(project)
-        /*
-        note check the schemas are updating
-        */
         let tmp = "";
         if (payLoad.fields.originalfields != "")
             tmp = payLoad.fields.originalfields.toString();
@@ -92,6 +89,7 @@ export async function onRequestPost(context) {
             "originalfields": tmp
         }
         project.schema = schemaJson
+        console.log(project)
         
         
         await KV.put("projects" + details.username + "*" + payLoad.projectid, JSON.stringify(project));
