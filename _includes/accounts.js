@@ -334,7 +334,7 @@ whenDocumentReady(isReady = () => {
                     window.localStorage.token = token;
                     window.localStorage.user = JSON.stringify(user);
                     //direct the redirect URL
-                   window.location.href = "/"
+                    window.location.href = "/"
                 }
 
                 //build the json
