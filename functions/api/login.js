@@ -32,10 +32,10 @@ export async function onRequest(context) {
     const KV = context.env.backpage;
     //see if the user exists
     const user = await KV.get("username" + credentials.identifier);
+    let tUser = JSON.parse(user);
     //user does not exist
     if (user == null)
         return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
-
     //check if it is valid
     if (valid == 1) {
         //make a JWT token
@@ -43,9 +43,9 @@ export async function onRequest(context) {
         // Verifing token
         const isValid = await jwt.verify(token, env.SECRET)
         if (isValid == true) {
-            let json = JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier } })
+            let json = JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier,"secret":tUser.user.secret } })
             await KV.put("username" + credentials.username, json);
-            return new Response(JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier } }), { status: 200 });
+            return new Response(JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier,"secret":tUser.user.secret } }), { status: 200 });
         }
     }
 }

@@ -321,7 +321,11 @@ whenDocumentReady(isReady = () => {
                     //get the JWT
                     let token = res.jwt
                     //set the user object
-                    let user = {  "username": res.user.username, "email": res.user.email, "loggedin": 1 }
+                    console.log(res)
+                    let user = {  "username": res.user.username, "email": res.user.email, "loggedin": 1, "secret": res.user.secret }
+                    //console.log(user)
+                    //clear the caches 
+                    clearCache();
                     //debug
                     //console.log(res)
                     //console.log(token)
@@ -330,7 +334,7 @@ whenDocumentReady(isReady = () => {
                     window.localStorage.token = token;
                     window.localStorage.user = JSON.stringify(user);
                     //direct the redirect URL
-                    window.location.href = "/"
+                   // window.location.href = "/"
                 }
 
                 //build the json

@@ -2,6 +2,7 @@
     todo:
 
 */
+var uuid = require('uuid');
 export async function onRequestPost(context) {
     const {
         request, // same as existing Worker API
@@ -11,11 +12,8 @@ export async function onRequestPost(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
-
     //set a valid boolean
     let valid = 1;
-
-
     const contentType = request.headers.get('content-type')
     //console.log(request)
     let registerData;
@@ -26,7 +24,9 @@ export async function onRequestPost(context) {
         //set up the KV
         const KV = context.env.backpage;
         //see if the user exists
-        let json = JSON.stringify({ "jwt": "", "user": {  "username": registerData.username, "email": registerData.username } })
+        let secretid = uuid.v4();
+        let json = JSON.stringify({ "jwt": "", "user": {  "username": registerData.username, "email": registerData.username,"secret":secretid } })
+        console.log(json)
         //console.log("username"+registerData.username)
         //check if user exist
         const user = await KV.get("username" + registerData.username);

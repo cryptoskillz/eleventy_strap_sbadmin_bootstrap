@@ -65,10 +65,15 @@ var table // datatable
 START OF LOCAL CACHE FUNCTIONS
 */
 
-
+let clearCache = () => {
+    window.localStorage.projectAlldata = ""
+    window.localStorage.projectdata = ""
+    window.localStorage.projects = ""
+    window.localStorage.project = ""
+}
 //project data
 let deleteProjectAlldata = () => {
-   window.localStorage.projectAlldata ="" 
+    window.localStorage.projectAlldata = ""
 }
 
 
@@ -92,7 +97,7 @@ let storeProjectAlldata = (theData, debug = 0) => {
         console.log(theData)
     }
     //check we have data to store
-    if ((theData != '{"data":[]}') && (theData != '')){
+    if ((theData != '{"data":[]}') && (theData != '')) {
         //parse it
         //note we are storing this dumb as it never renders once its is stored
         theData = JSON.parse(theData.data);
@@ -194,10 +199,10 @@ let removeCachedProjectData = (theId, debug = 0) => {
     //note could not really get this working so just delete the whole thing
     //window.localStorage.projectAlldata = '';
 
-    
+
     let theItems = window.localStorage.projectAlldata
     theItems = JSON.parse(theItems);
-    let  newItems={};
+    let newItems = {};
     if (debug == 1) {
         console.log(theItems)
         console.log(theId)
@@ -212,18 +217,18 @@ let removeCachedProjectData = (theId, debug = 0) => {
 
             //delete theItems.data[i];
             if (debug == 1) {
-                console.log("Found the id " + theId+ " : "+i)
+                console.log("Found the id " + theId + " : " + i)
                 console.log(theItems[i].data)
             }
             //delete the item
             delete theItems[i]
             //remove the nul
-            theItems = theItems.filter(function(x) { return x !== null }); 
+            theItems = theItems.filter(function(x) { return x !== null });
             window.localStorage.projectAlldata = JSON.stringify(theItems);
         }
     }
     //return (true)
-    
+
 }
 
 //projects
