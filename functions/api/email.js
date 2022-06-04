@@ -10,32 +10,37 @@ export async function onRequestPost(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
-    let send_request = new Request('https://api.mailchannels.net/tx/v1/send', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        personalizations: [
-          {
-            to: [{ email: 'chrisjmccreadie@protonmail.com', name: 'Test Recipient' }],
-          },
-        ],
-        from: {
-          email: 'sender@example.com',
-          name: 'Workers - MailChannels integration',
-        },
-        subject: 'Look! No servers',
-        content: [
-          {
-            type: 'text/plain',
-            value: 'And no email service accounts and all for free too!',
-          },
-        ],
-      }),
-    })
+    try {
+        let send_request = new Request('https://api.mailchannels.net/tx/v1/send', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                personalizations: [{
+                    to: [{ email: 'chrisjmccreadie@protonmail.com', name: 'Test Recipient' }],
+                }, ],
+                from: {
+                    email: 'sender@example.com',
+                    name: 'Workers - MailChannels integration',
+                },
+                subject: 'Look! No servers',
+                content: [{
+                    type: 'text/plain',
+                    value: 'And no email service accounts and all for free too!',
+                }, ],
+            }),
+        })
 
-     //await fetch(send_request);
+    } catch (error) {
+        console.log(error)
+        return new Response(error, { status: 200 });
+    }
+
+//}
+
+
+//await fetch(send_request);
 
 /*
     let content = "dd";
