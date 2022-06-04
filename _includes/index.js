@@ -6,6 +6,10 @@ let whenDocumentReady = (f) => {
 whenDocumentReady(isReady = () => {
     document.getElementById('showBody').classList.remove('d-none')
     projects = getCacheProjects()
-    document.getElementById("backpageprojects").innerHTML = projects.data.length;
+    if (projects == false)
+        document.getElementById("backpageprojects").innerHTML = 0;
+
+    else
+        document.getElementById("backpageprojects").innerHTML = projects.data.length;
 
 });

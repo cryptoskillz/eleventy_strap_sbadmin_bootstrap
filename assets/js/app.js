@@ -314,7 +314,8 @@ let updateCacheProjects = (theProject = "", debug = 0) => {
 
 let getCacheProjects = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projects;
-    if (theItems == undefined) {
+    console.log(theItems)
+    if ((theItems == undefined) || (theItems =="") || (theItems == null)) {
         if (debug == 1)
             consolel.log("no items");
         return (false)
