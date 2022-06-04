@@ -99,7 +99,7 @@ export async function onRequestDelete(context) {
         //console.log(payLoad)
         let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
-        await KV.delete("projects" + details.username + "*" + payLoad.id);
+        await KV.delete("projects" + details.username + "*" + payLoad.dataid);
         return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
     }
 }

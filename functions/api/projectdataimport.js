@@ -47,6 +47,7 @@ export async function onRequestPost(context) {
     } = context;
 
         try {
+            dataArray = []
         let payLoad;
         let projectName = "";
         const contentType = request.headers.get('content-type')

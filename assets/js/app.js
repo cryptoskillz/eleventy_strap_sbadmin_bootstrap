@@ -67,11 +67,10 @@ START OF LOCAL CACHE FUNCTIONS
 
 
 //project data
-
-let deleteProjectAlldata = (debug = 0) => {
-    window.localStorage.projectAlldata = ""
-
+let deleteProjectAlldata = () => {
+   window.localStorage.projectAlldata ="" 
 }
+
 
 let addCachedProjectData = (theData, debug = 0) => {
     //parse the response
@@ -193,14 +192,16 @@ let getProjectAlldata = (theId = "", debug = 0) => {
 let removeCachedProjectData = (theId, debug = 0) => {
 
     //note could not really get this working so just delete the whole thing
-    window.localStorage.projectAlldata = '';
+    //window.localStorage.projectAlldata = '';
 
-    /*
+    
     let theItems = window.localStorage.projectAlldata
     theItems = JSON.parse(theItems);
     let  newItems={};
     if (debug == 1) {
         console.log(theItems)
+        console.log(theId)
+
     }
     for (var i = 0; i < theItems.length; ++i) {
         if (debug == 1) {
@@ -211,26 +212,18 @@ let removeCachedProjectData = (theId, debug = 0) => {
 
             //delete theItems.data[i];
             if (debug == 1) {
-                console.log("Found the id " + theId)
+                console.log("Found the id " + theId+ " : "+i)
                 console.log(theItems[i].data)
             }
-            //note this creates a null fix it
-            //delete theItems[Object.keys(theItems)[i]]
-            //theItems[i].data.splice(i, 1);
-            //update the data
-            //window.localStorage.projectAlldata = JSON.stringify(theItems);
-            //return (true);
-
+            //delete the item
+            delete theItems[i]
+            //remove the nul
+            theItems = theItems.filter(function(x) { return x !== null }); 
+            window.localStorage.projectAlldata = JSON.stringify(theItems);
         }
-        else
-        {
-            newItems.push(theItems[i].data)
-        }
-
     }
-    window.localStorage.projectAlldata = JSON.stringify(newItems);
     //return (true)
-    */
+    
 }
 
 //projects
@@ -381,6 +374,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
         $('#confirmation-modal').modal('toggle')
         let xhrDone = (res) => {
             //parse the response
+            console.log(res)
             showAlert('Item has been deleted', 1)
             table.row('#' + tableRowId).remove().draw();
             if (deleteMethod == "api/projects") {
@@ -388,7 +382,8 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
 
             }
             if (deleteMethod == "api/projectdata") {
-                removeCachedProjectData(deleteId, 1)
+                console.log(deleteId)
+                removeCachedProjectData(deleteId, 0)
 
             }
 
@@ -397,7 +392,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
         //project = JSON.parse(project)
         let project = getCurrentProject();
         let bodyobj = {
-            id: deleteId,
+            dataid: deleteId,
             projectid: project.id
         }
         var bodyobjectjson = JSON.stringify(bodyobj);

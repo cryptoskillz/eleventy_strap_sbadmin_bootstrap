@@ -141,9 +141,9 @@ let zipBackPages = () => {
     let theCode = project.template;
     let theTemplateName = project.templatename;
     valid = 1;
+    //console.log(projectdata)
 
-
-    if ((projectdata.length == "") || (projectData == null) || (projectdata == null)) {
+    if ((projectdata.length == "") || (projectdata == null) || (projectdata == null)) {
         showAlert('No data for this project add some here <a href="/project/data/import/">here</a>',2)
         valid = 0;
     } 
@@ -216,6 +216,7 @@ let whenDocumentReady = (f) => {
 whenDocumentReady(isReady = () => {
     let xhrDone = (res, local = 0) => {
         //if 0 its live not from the cache so we have to save it. 
+        //console.log(res)
         let data="";  
         if (local == 0) {
             console.log('not cached')

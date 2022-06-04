@@ -130,11 +130,11 @@ export async function onRequestDelete(context) {
     if (contentType != null) {
         //get the login credentials
         payLoad = await request.json();
-        //console.log(payLoad)
+        console.log(payLoad)
         let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
-        console.log("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.id)
-        await KV.delete("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.id);
+        console.log("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.dataid)
+        await KV.delete("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.dataid);
         return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
     }
 }
@@ -150,7 +150,7 @@ export async function onRequestGet(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
     try {
-
+        dataArray = []
         const { searchParams } = new URL(request.url)
         let projectid = searchParams.get('projectid')
 
