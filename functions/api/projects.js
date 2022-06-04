@@ -35,7 +35,7 @@ let decodeJwt = async (req, secret) => {
 
 
 export async function onRequestPut(context) {
-    const jwt = require('@tsndr/cloudflare-worker-jwt')
+    //const jwt = require('@tsndr/cloudflare-worker-jwt')
     const {
         request, // same as existing Worker API
         env, // same as existing Worker API
