@@ -18,7 +18,7 @@ let backpages;
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
     //console.log(backpages)
-    getProjectAlldata(theId,0)
+    getProjectAlldata(theId, 0)
     if (blank == 1)
         window.open(theUrl, "_blank")
     else
@@ -76,8 +76,8 @@ let renderTable = (data, actions = [], method = "") => {
     }
     //loop through the data
     for (var i = 0; i < data.length; ++i) {
-        if (i == 0 )
-            getProjectAlldata(data[i].id,0)
+        if (i == 0)
+            getProjectAlldata(data[i].id, 0)
 
 
         //pull out the values and store in the array
@@ -146,18 +146,18 @@ let zipBackPages = () => {
     //console.log(projectdata)
 
     if ((projectdata.length == "") || (projectdata == null) || (projectdata == null)) {
-        showAlert('No data for this project add some here <a href="/project/data/import/">here</a>',2)
+        showAlert('No data for this project add some here <a href="/project/data/import/">here</a>', 2)
         valid = 0;
-    } 
+    }
 
     if ((theCode == "") || (theCode == null)) {
-        showAlert('Template is not set set it <a href="/project/data/template">here</a>',2)
+        showAlert('Template is not set set it <a href="/project/data/template">here</a>', 2)
         valid = 0;
-    } 
+    }
     if ((theTemplateName == "") || (theTemplateName == null)) {
-        showAlert('Template name is not set set it <a href="/project/data/template">here</a>',2)
+        showAlert('Template name is not set set it <a href="/project/data/template">here</a>', 2)
         valid = 0;
-    } 
+    }
 
     if (valid == 1) {
         //process the data
@@ -208,7 +208,7 @@ let zipBackPages = () => {
         });
     }
 
-    
+
 }
 
 let whenDocumentReady = (f) => {
@@ -219,17 +219,15 @@ whenDocumentReady(isReady = () => {
     let xhrDone = (res, local = 0) => {
         //if 0 its live not from the cache so we have to save it. 
         //console.log(res)
-        let data="";  
+        let data = "";
         if (local == 0) {
             console.log('not cached')
             res = JSON.parse(res)
             data = JSON.parse(res.data)
             //console.log(data)
-            storeProjectAlldata(res,0);
+            storeProjectAlldata(res, 0);
 
-        }
-        else
-        {
+        } else {
             //cached
             console.log(' cached')
             data = res
@@ -247,13 +245,13 @@ whenDocumentReady(isReady = () => {
 
     }
     //get all the data
-    projectAllData = getProjectAlldata("",0);
+    projectAllData = getProjectAlldata("", 0);
     //console.log(projectAllData)
     //check if it is false
     if (projectAllData != false) {
         xhrDone(projectAllData, 1);
     } else {
-    //if (projectAllData == false) {
+        //if (projectAllData == false) {
         let projectid = getProjectId()
         xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
     }
@@ -266,22 +264,48 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             window.location.href = `/project/data/import/`
             break;
         case "2":
-            window.location.href = `/project/data/schema/`
+            let valid = 1
+            project = getCurrentProject()
+            if ((project.schema.originalfields == "") || (project.schema.originalfields == null)) {
+                showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
+                valid = 0;
+            }
+
+            if ((project.template == "") || (project.template == null)) {
+                showAlert(`Please save the template to view it`, 2)
+                valid = 0;
+
+            }
+
+            if ((project.templatename == "") || (project.templatename == null)) {
+                showAlert(`Please add a template name to view it`, 2)
+                valid = 0;
+
+            }
+            if (valid == 1) {
+                let url = `/api/export?projectid=${project.id}&secret=${user.secret}`
+                window.open(`${url}`, '_blank');
+
+            }
+
             break;
         case "3":
-            window.location.href = `/project/data/template/`
+            window.location.href = `/project/data/schema/`
             break;
         case "4":
-            zipBackPages()
+            window.location.href = `/project/data/template/`
             break;
         case "5":
-            projectAllData = getProjectAlldata("",0);
+            zipBackPages()
+            break;
+        case "6":
+            projectAllData = getProjectAlldata("", 0);
             if ((projectAllData.length != 0) && (projectAllData != "") && (projectAllData != null))
                 window.location.href = `/project/data/new/`
             else
-                showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV before you can add records`,2)
+                showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV before you can add records`, 2)
             break;
-        case "6":
+        case "7":
             window.location.href = `/projects/`
             break;
         default:

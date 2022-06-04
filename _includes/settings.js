@@ -16,7 +16,6 @@ whenDocumentReady(isReady = () => {
     document.getElementById('secret').innerHTML = `${user.secret} <i class="fas fa-copy" id="copySecretIcon"></i>`;
     //getprojects
     let projects = getCacheProjects();
-    console.log(projects)
     let secretexmp = `${apiUrl}api/export/?projectid=PROJECTID&secret=${user.secret}`;
     if (projects != false)
         secretexmp = `<a target="_blank" href="${apiUrl}api/export/?projectid=${projects.data[0].id}&secret=${user.secret}>${apiUrl}">${apiUrl}api/export/?projectid=${projects.data[0].id}&secret=${user.secret}</a>`;
