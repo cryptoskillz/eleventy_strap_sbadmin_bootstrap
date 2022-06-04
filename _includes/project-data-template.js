@@ -206,9 +206,26 @@ document.getElementById('btn-template').addEventListener('click', function() {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
+            let valid= 1
             if ((project.schema.originalfields == "") || (project.schema.originalfields == null)) {
                 showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
-            } else {
+                valid = 0;
+            }
+
+            if ((project.template == "") || (project.template == null)) {
+                showAlert(`Please save the template to view it`, 2)
+                valid = 0;
+
+            }
+
+            if ((project.templatename == "") || (project.templatename == null)) {
+                showAlert(`Please add a template name to view it`, 2)
+                valid = 0;
+
+            }
+
+
+            if (valid == 1) {
                 window.open(`/project/template/view/`, '_blank');
             }
 

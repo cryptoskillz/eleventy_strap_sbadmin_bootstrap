@@ -3,13 +3,8 @@
 TODO 
 
 check the sendemail works for forogot password
-check for logout paramater
-rationlise the error check functions
 
 notes
-
-to make forgot / reset password I have to test the send mail funciton to see how it actually works.
-in strapi these permissions are disabled so you have to go to settings / roles / public  / user permissions / tick forgot password & reset pssword and update on user
 
 */
 
@@ -23,9 +18,10 @@ whenDocumentReady(isReady = () => {
     //logout
     let urlParam = getUrlParamater('logout')
     if (urlParam != "") {
-        window.localStorage.token = "";
-        window.localStorage.user = JSON.stringify({})
-        showAlert('You are now logged out',1,0)
+        clearCache();
+        //window.localStorage.token = "";
+        //window.localStorage.user = JSON.stringify({})
+        showAlert('You are now logged out', 1, 0)
     }
     //this function checks if an element exists
     let checkElement = (element) => {
@@ -37,6 +33,9 @@ whenDocumentReady(isReady = () => {
             return (false)
         }
     }
+
+
+
 
 
 
@@ -74,7 +73,7 @@ whenDocumentReady(isReady = () => {
                     let success = document.getElementById('accountsSuccess')
                     success.innerHTML = "Update done"
                     success.classList.remove('d-none')
-                    let updateUser = {"username": username.value, "email": user.email, "loggedin": 1 }
+                    let updateUser = { "username": username.value, "email": user.email, "loggedin": 1 }
                     window.localStorage.user = JSON.stringify(updateUser);
                     user = updateUser;
                     document.getElementById('user-account-header').innerHTML = user.username
@@ -322,7 +321,7 @@ whenDocumentReady(isReady = () => {
                     let token = res.jwt
                     //set the user object
                     console.log(res)
-                    let user = {  "username": res.user.username, "email": res.user.email, "loggedin": 1, "secret": res.user.secret }
+                    let user = { "username": res.user.username, "email": res.user.email, "loggedin": 1, "secret": res.user.secret }
                     //console.log(user)
                     //clear the caches 
                     clearCache();

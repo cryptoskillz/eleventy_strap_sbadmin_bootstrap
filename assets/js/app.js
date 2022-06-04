@@ -72,8 +72,12 @@ let clearCache = () => {
     window.localStorage.project = ""
 }
 //project data
-let deleteProjectAlldata = () => {
+let getUser = () => {
     window.localStorage.projectAlldata = ""
+}
+//project data
+let deleteProjectAlldata = () => {
+    return(window.localStorage.user)
 }
 
 
@@ -314,7 +318,6 @@ let updateCacheProjects = (theProject = "", debug = 0) => {
 
 let getCacheProjects = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projects;
-    console.log(theItems)
     if ((theItems == undefined) || (theItems =="") || (theItems == null)) {
         if (debug == 1)
             consolel.log("no items");

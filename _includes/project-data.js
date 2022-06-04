@@ -18,7 +18,7 @@ let backpages;
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
     //console.log(backpages)
-    getProjectAlldata(theId,1)
+    getProjectAlldata(theId,0)
     if (blank == 1)
         window.open(theUrl, "_blank")
     else
@@ -76,6 +76,8 @@ let renderTable = (data, actions = [], method = "") => {
     }
     //loop through the data
     for (var i = 0; i < data.length; ++i) {
+        if (i == 0 )
+            getProjectAlldata(data[i].id,0)
 
 
         //pull out the values and store in the array
