@@ -140,9 +140,24 @@ let zipBackPages = () => {
     let project = getCurrentProject();
     let theCode = project.template;
     let theTemplateName = project.templatename;
+    valid = 1;
+
+
+    if ((projectdata.length == "") || (projectData == null) || (projectdata == null)) {
+        showAlert('No data for this project add some here <a href="/project/data/import/">here</a>',2)
+        valid = 0;
+    } 
+
     if ((theCode == "") || (theCode == null)) {
-        alert('No template')
-    } else {
+        showAlert('Template is not set set it <a href="/project/data/template">here</a>',2)
+        valid = 0;
+    } 
+    if ((theTemplateName == "") || (theTemplateName == null)) {
+        showAlert('Template name is not set set it <a href="/project/data/template">here</a>',2)
+        valid = 0;
+    } 
+
+    if (valid == 1) {
         //process the data
         let keys;
         let theData;
@@ -221,7 +236,9 @@ whenDocumentReady(isReady = () => {
             showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
         else {
             document.getElementById("showBody").classList.remove('d-none')
-            renderTable(data, [1, 0, 1, 1], "api/projectdata")
+            //console.log(data)
+            if ((data.length != 0) && (data != "") && (data != null))
+                renderTable(data, [1, 0, 1, 1], "api/projectdata")
 
         }
 
@@ -255,7 +272,11 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             zipBackPages()
             break;
         case "5":
-            window.location.href = `/project/data/new/`
+            projectAllData = getProjectAlldata("",0);
+            if ((projectAllData.length != 0) && (projectAllData != "") && (projectAllData != null))
+                window.location.href = `/project/data/new/`
+            else
+                showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV before you can add records`,2)
             break;
         case "6":
             window.location.href = `/projects/`

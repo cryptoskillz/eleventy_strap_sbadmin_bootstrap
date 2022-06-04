@@ -32,6 +32,7 @@ let html5layout = `<DOCTYPE! html>
 
 var myCodeMirror;
 var delay;
+let project;
 
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
@@ -53,7 +54,7 @@ let setKey = (theKey) => {
 }
 
 whenDocumentReady(isReady = () => {
-    let project = getCurrentProject()
+    project = getCurrentProject()
 
     //let project = window.localStorage.project
     //if (project == undefined)
@@ -100,8 +101,9 @@ whenDocumentReady(isReady = () => {
     //console.log(elements)
     //console.log(elements2)
 
-    if (keys.length == 0) {
-        document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
+    if ((project.schema.originalfields == "") || (project.schema.originalfields == null)) {
+        showAlert(`No data has been added for this project, no schema generated to add some click <a href="/project/data/import/">here</a>`, 1, 0)
+        //document.getElementById("projectkeys").innerHTML = "No data has been added for this project";
     } else {
         document.getElementById("projectkeys").innerHTML = "Variables: <br>" + elements2;
     }
@@ -153,36 +155,11 @@ function updatePreview() {
 }
 setTimeout(updatePreview, 300);
 
-document.getElementById('pageActionSelect').addEventListener('change', function() {
-    switch (this.value) {
-        case "1":
-            //check if it is black
-            if (project.id != "") {
-                let href = `/project/template/view/?projectid=${project.id}`
-                window.open(
-                    href,
-                    '_blank' // <- This is what makes it open in a new window.
-                );
-            }
-            break;
-        case "2":
-            // code block
-            window.location.href = "/projects/"
-            window.location.target = "_blank"
-            break;
-        default:
-            // code block
-    }
-    //reset the dropdown
-
-
-})
-
 
 document.getElementById('btn-template').addEventListener('click', function() {
     //replace with new functions
     //update  local storage
-   
+
     let project = getCurrentProject()
     let template = myCodeMirror.getValue()
     let templatename = document.getElementById('inp-template-name');
@@ -194,7 +171,7 @@ document.getElementById('btn-template').addEventListener('click', function() {
         showAlert(res.message, 1)
         project.templatename = templatename.value;
         project.template = template;
-        updateCacheProjects(project,0)
+        updateCacheProjects(project, 0)
     }
 
     let errorMesage;
@@ -229,7 +206,11 @@ document.getElementById('btn-template').addEventListener('click', function() {
 document.getElementById('pageActionSelect').addEventListener('change', function() {
     switch (this.value) {
         case "1":
-            window.open(`/project/template/view/`, '_blank');
+            if ((project.schema.originalfields == "") || (project.schema.originalfields == null)) {
+                showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
+            } else {
+                window.open(`/project/template/view/`, '_blank');
+            }
 
             break;
         case "2":

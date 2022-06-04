@@ -74,6 +74,13 @@ export async function onRequestPut(context) {
 }
 
 export async function onRequestDelete(context) {
+
+    /*
+    todo
+
+    remove the data for any project when you delete it
+
+    */
     const {
         request, // same as existing Worker API
         env, // same as existing Worker API
