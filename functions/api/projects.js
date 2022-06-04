@@ -17,6 +17,12 @@ let contentType;
 const jwt = require('@tsndr/cloudflare-worker-jwt')
 var uuid = require('uuid');
 
+let getDate = () => {
+    let ts = Date.now();
+    let date_ob = new Date(ts);
+    let formattedDate = `${date_ob.getDate()}/${date_ob.getMonth()+1}/${date_ob.getFullYear()}`
+    return (formattedDate)
+}
 
 let decodeJwt = async (req, secret) => {
     let bearer = req.get('authorization')
@@ -54,8 +60,7 @@ export async function onRequestPut(context) {
         //console.log(projectData)
         if (payLoad.name != undefined)
             projectData.name = payLoad.name;
-        if (payLoad.template != undefined)
-        {
+        if (payLoad.template != undefined) {
             projectData.template = payLoad.template;
         }
         if (payLoad.templatename != undefined)
@@ -64,7 +69,7 @@ export async function onRequestPut(context) {
             projectData.schema = payLoad.schema;
         //console.log(projectData)
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
-        return new Response(JSON.stringify({ message: "Item updated",data:JSON.stringify(projectData) }), { status: 200 });
+        return new Response(JSON.stringify({ message: "Item updated", data: JSON.stringify(projectData) }), { status: 200 });
 
 
     }
@@ -137,14 +142,14 @@ export async function onRequestPost(context) {
 
         let id = uuid.v4();
         let schemaJson = {
-  "fields": "",
-  "originalfields": ""
-}
-
-        let projectData = { id: id, name: payLoad.name,  templatename: "", template: "" ,schema:schemaJson, createdAt: "21/12/2022"}
+            "fields": "",
+            "originalfields": ""
+        }
+        let fDate = getDate()
+        let projectData = { id: id, name: payLoad.name, templatename: "", template: "", schema: schemaJson, createdAt: fDate }
 
         await KV.put("projects" + details.username + "*" + id, JSON.stringify(projectData));
-        return new Response(JSON.stringify({ message: "Item added",data:JSON.stringify(projectData)  }), { status: 200 });
+        return new Response(JSON.stringify({ message: "Item added", data: JSON.stringify(projectData) }), { status: 200 });
 
     }
 }
@@ -158,6 +163,7 @@ export async function onRequestGet(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
+
     const { searchParams } = new URL(request.url)
     let projectid = searchParams.get('id')
 
@@ -167,14 +173,14 @@ export async function onRequestGet(context) {
     //get the projects based on the name
     //console.log("projects" + details.username + "*")
     let projects = await KV.list({ prefix: "projects" + details.username + "*" });
-    console.log(projects)
+    //console.log(projects)
 
     let projectsData = { data: [] }
-    console.log(projectid)
+    //console.log(projectid)
     if ((projectid != null) && (projectid != "")) {
         let pData = await KV.get("projects" + details.username + "*" + projectid);
-        console.log("projects" + details.username + "*" + projectid)
-        console.log(pData)
+        //console.log("projects" + details.username + "*" + projectid)
+        //console.log(pData)
         //debug for easy clean up
         //await KV.delete("projects-" + details.username+"*"+tmp[2]);
         projectsData.data.push(JSON.parse(pData))
@@ -184,10 +190,10 @@ export async function onRequestGet(context) {
                 let tmp = projects.keys[i].name.split('*');
                 //console.log("projects" + details.username + "|" + tmp[1])
                 let pData = await KV.get("projects" + details.username + "*" + tmp[1]);
-                pData =JSON.parse(pData)
+                pData = JSON.parse(pData)
                 //console.log(pData)
                 //debug for easy clean up
-                console.log("projects" + details.username+"*"+tmp[1]);
+                //console.log("projects" + details.username + "*" + tmp[1]);
 
                 //await KV.delete("projects" + details.username+"*"+tmp[1]);
                 projectsData.data.push(pData)
