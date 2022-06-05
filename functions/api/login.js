@@ -45,7 +45,10 @@ export async function onRequest(context) {
             const isValid = await jwt.verify(token, env.SECRET)
             if (isValid == true) {
                 let json = JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier, "secret": tUser.user.secret } })
+                //temp to deal with old accounts will not need going forward
+                await KV.put("username" + tUser.user.secret , JSON.stringify({username:credentials.identifier}));
                 await KV.put("username" + credentials.username, json);
+
                 return new Response(JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier, "secret": tUser.user.secret } }), { status: 200 });
             }
         }

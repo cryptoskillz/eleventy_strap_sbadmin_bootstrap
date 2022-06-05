@@ -18,7 +18,7 @@ whenDocumentReady(isReady = () => {
     let projects = getCacheProjects();
     let secretexmp = `${apiUrl}api/export/?projectid=PROJECTID&secret=${user.secret}`;
     if (projects != false)
-        secretexmp = `<a target="_blank" href="${apiUrl}api/export/?projectid=${projects.data[0].id}&secret=${user.secret}>${apiUrl}">${apiUrl}api/export/?projectid=${projects.data[0].id}&secret=${user.secret}</a>`;
+        secretexmp = `<a target="_blank" href="${apiUrl}api/export/export/?projectid=${projects.data[0].id}&secretid=${user.secret}">${apiUrl}api/export/export/?projectid=${projects.data[0].id}&secretid=${user.secret}</a>`;
 
     document.getElementById('secretexample').innerHTML = '<br>'+secretexmp
     document.getElementById('showBody').classList.remove('d-none')

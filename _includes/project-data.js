@@ -283,7 +283,7 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 
             }
             if (valid == 1) {
-                let url = `/api/export?projectid=${project.id}&secret=${user.secret}`
+                let url = `/api/export/export/?projectid=${project.id}&secretid=${user.secret}`
                 window.open(`${url}`, '_blank');
 
             }

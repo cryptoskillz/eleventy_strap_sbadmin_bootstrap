@@ -26,12 +26,13 @@ export async function onRequestPost(context) {
         //see if the user exists
         let secretid = uuid.v4();
         let json = JSON.stringify({ "jwt": "", "user": {  "username": registerData.username, "email": registerData.username,"secret":secretid } })
-        console.log(json)
+        //console.log(json)
         //console.log("username"+registerData.username)
         //check if user exist
         const user = await KV.get("username" + registerData.username);
         if (user == null)
         {
+            await KV.put("username" + secretid,  JSON.stringify({username:credentials.identifier}));
             await KV.put("username" + registerData.username, json);
             return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
         }
