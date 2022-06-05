@@ -32,7 +32,7 @@ export async function onRequestPost(context) {
         const user = await KV.get("username" + registerData.username);
         if (user == null)
         {
-            await KV.put("username" + secretid,  JSON.stringify({username:credentials.identifier}));
+            await KV.put("username" + secretid,  JSON.stringify({username:registerData.username}));
             await KV.put("username" + registerData.username, json);
             return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
         }

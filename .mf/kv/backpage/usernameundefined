@@ -1,1 +1,1 @@
-{"jwt":"eyJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6IjEiLCJ1c2VybmFtZSI6ImFAYi5jb20iLCJpYXQiOjE2NTQ0NDY3NDh9.sGNsKsyh6VuMNAdQHvtA_vDX3Dr7mkbWK21sWjGLLxs","user":{"username":"a@b.com","email":"a@b.com"}}
+{"jwt":"eyJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6IjEiLCJ1c2VybmFtZSI6ImRAZC5jb20iLCJpYXQiOjE2NTQ0NDcwMDh9.gCv75sdrawULSOa6wZKxYeul_c1hBskXGqm3SnAvn6c","user":{"username":"d@d.com","email":"d@d.com","secret":"00d58c0c-5183-40ed-94ca-6e11fe8cdc21"}}
