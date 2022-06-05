@@ -1,4 +1,3 @@
-
 let fields;
 let originalfields;
 let projectid;
@@ -48,14 +47,15 @@ whenDocumentReady(isReady = () => {
 })
 
 document.getElementById('btn-create').addEventListener('click', function() {
-    let project=  getCurrentProject()
+    let project = getCurrentProject()
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
-        showAlert(res.message, 1);
-        addCachedProjectData(res,0);
-
-
+        showAlert(res.message, 1, 0);
+        addCachedProjectData(res, 0);
+        document.getElementById('project-header').innerHTML = "Project record added";
+        document.getElementById('formInputs').classList.add("d-none");
+        document.getElementById('btn-create').classList.add("d-none");
     }
     let data = {};
     for (var i = 0; i < fields.length; ++i) {
