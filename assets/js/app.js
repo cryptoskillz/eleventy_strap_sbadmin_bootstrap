@@ -65,11 +65,16 @@ var table // datatable
 START OF LOCAL CACHE FUNCTIONS
 */
 
-let clearCache = () => {
+let clearCache = (clearUser=0) => {
     window.localStorage.projectAlldata = ""
     window.localStorage.projectdata = ""
     window.localStorage.projects = ""
     window.localStorage.project = ""
+    if (clearUser == 1)
+    {
+        window.localStorage.token = ""
+        window.localStorage.user = ""
+    }
 }
 //project data
 let getUser = () => {

@@ -18,9 +18,7 @@ whenDocumentReady(isReady = () => {
     //logout
     let urlParam = getUrlParamater('logout')
     if (urlParam != "") {
-        clearCache();
-        //window.localStorage.token = "";
-        //window.localStorage.user = JSON.stringify({})
+        clearCache(1);
         showAlert('You are now logged out', 1, 0)
     }
     //this function checks if an element exists
@@ -313,22 +311,14 @@ whenDocumentReady(isReady = () => {
                 //login done function
                 let loginDone = (response) => {
                     //get the repsonse
-                    //console.log(response)
                     let res = JSON.parse(response)
-                    //console.log(res)
-                    //parse it
                     //get the JWT
                     let token = res.jwt
                     //set the user object
                     console.log(res)
                     let user = { "username": res.user.username, "email": res.user.email, "loggedin": 1, "secret": res.user.secret }
-                    //console.log(user)
                     //clear the caches 
                     clearCache();
-                    //debug
-                    //console.log(res)
-                    //console.log(token)
-                    //console.log(user)
                     //set the local storage
                     window.localStorage.token = token;
                     window.localStorage.user = JSON.stringify(user);
