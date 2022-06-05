@@ -8,7 +8,13 @@ whenDocumentReady(isReady = () => {
 
     document.getElementById('btn-create').addEventListener('click', function() {
         let xhrDone = (res) => {
-            addCachedProject(res,1);
+            addCachedProject(res,0);
+            res = JSON.parse(res)
+            showAlert(res.message, 1,0);
+            document.getElementById('project-header').innerHTML = "";
+            document.getElementById('formdiv').classList.add("d-none");
+            document.getElementById('btn-create').classList.add("d-none");
+
         }
         //set the valid var
         let valid = 1;

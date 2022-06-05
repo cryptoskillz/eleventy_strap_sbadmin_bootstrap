@@ -96,7 +96,7 @@ let addCachedProjectData = (theData, debug = 0) => {
     }
     projectdata.push(JSON.parse(theData.data));
     window.localStorage.projectAlldata = JSON.stringify(projectdata)
-    showAlert(theData.message, 1)
+    
 }
 
 let storeProjectAlldata = (theData, debug = 0) => {
