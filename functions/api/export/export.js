@@ -14,6 +14,34 @@ let buildDataArray = (theData,theId="") => {
     return(projectData)
 }
 
+let buildTemplate = (project,projectdata) =>{
+            //hold the fields
+        let theFields;
+        ////hold the template
+        let theTemplate;
+        //hold the data
+        let theData;
+        //set the template
+        theTemplate = project.template;
+        //get the fields
+        theFields = Object.keys(projectdata.data)
+        //get the data
+        theData = Object.values(projectdata.data)
+        //loop through the data
+        for (var i = 0; i < theFields.length; ++i) {
+            let element = `\{\{${theFields[i]}\}\}`
+            theTemplate = theTemplate.replace(element, theData[i]);
+        }
+        //check we have data
+        if (theData.length == "")
+            theTemplate = "No data added for this project"
+
+        //check we have a template
+        if (theTemplate== "")
+            theTemplate = "No template added for this project"
+        return(theTemplate)
+}
+
 
 export async function onRequestGet(context) {
     const {
@@ -41,6 +69,7 @@ export async function onRequestGet(context) {
     project = JSON.parse(project)
 
     //get the projects list
+    let templates = []
     let projectdatalist = await KV.list({ prefix: "projects-data" + user.username + "*" + projectid + "*" });
        if (projectdatalist.keys.length > 0) {
             for (var i = 0; i < projectdatalist.keys.length; ++i) {
@@ -51,6 +80,11 @@ export async function onRequestGet(context) {
                 projectdata = JSON.parse(projectdata)
                 //store it
                 let pData2 = buildDataArray(projectdata.data,projectdata.id)
+                let template = buildTemplate(project,projectdata)
+                //console.log(projectdata)
+                let tmpA = {template:template,project:project,data:pData2}
+                templates.push(tmpA)
+
             }
             //console.log(dataArray)
         }
@@ -59,7 +93,7 @@ export async function onRequestGet(context) {
     //check we have template / name and schema (fields set)
 
     //return  it
-    return new Response(JSON.stringify({ message: "ok" ,data:JSON.stringify(dataArray)}), { status: 200 });
+    return new Response(JSON.stringify({templates}), { status: 200 });
 
 
 
