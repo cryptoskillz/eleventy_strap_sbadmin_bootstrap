@@ -172,6 +172,9 @@ document.getElementById('btn-template').addEventListener('click', function() {
         project.templatename = templatename.value;
         project.template = template;
         updateCacheProjects(project, 0)
+        if (document.getElementById("btn-template").innerHTML == "Create")
+            document.getElementById("btn-template").innerHTML = "Update"
+
     }
 
     let errorMesage;
@@ -217,13 +220,13 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
                 valid = 0;
 
             }
-
+/*
             if ((project.templatename == "") || (project.templatename == null)) {
                 showAlert(`Please add a template name to view it`, 2)
                 valid = 0;
 
             }
-
+*/
 
             if (valid == 1) {
                 window.open(`/project/template/view/`, '_blank');

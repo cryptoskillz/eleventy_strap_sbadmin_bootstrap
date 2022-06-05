@@ -20,7 +20,6 @@ let decodeJwt = async (req, secret) => {
     let bearer = req.get('authorization')
     bearer = bearer.replace("Bearer ", "");
     let details = await jwt.decode(bearer, secret)
-    //console.log(details)
     return (details)
 }
 
@@ -28,10 +27,6 @@ let dataArray = [];
 let buildDataArray = (theData) => {
     let id = uuid.v4();
     let projectData = { id: id, data: theData, createdAt: "21/12/2022" }
-    //debug
-    //console.log("theData");
-    //console.log(theData);
-    //console.log(projectData)
     dataArray.push(projectData)
     return (projectData)
 }
@@ -46,15 +41,14 @@ export async function onRequestPost(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
-        try {
-            dataArray = []
+    try {
+        dataArray = []
         let payLoad;
         let projectName = "";
         const contentType = request.headers.get('content-type')
         if (contentType != null) {
             //get the login credentials
             payLoad = await request.json();
-            console.log(payLoad)
         }
         //decode jwt
         let details = await decodeJwt(request.headers, env.SECRET)
@@ -90,9 +84,6 @@ export async function onRequestPost(context) {
             "originalfields": tmp
         }
         project.schema = schemaJson
-        console.log(project)
-        
-        
         await KV.put("projects" + details.username + "*" + payLoad.projectid, JSON.stringify(project));
 
         return new Response(JSON.stringify({ message: `${dataArray.length} records imported`, data: JSON.stringify(dataArray) }), { status: 200 });

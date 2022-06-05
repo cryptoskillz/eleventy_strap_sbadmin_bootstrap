@@ -27,7 +27,7 @@ whenDocumentReady(isReady = () => {
                     //console.log(res);
                     deleteProjectAlldata()
                     document.getElementById('uploadfile').classList.add('d-none')
-                    showAlert(res.message, 2, 0);
+                    showAlert(res.message, 1, 0);
                     //update local schema 
                     let project = getCurrentProject()
                     project.schema.fields = results.meta.fields.toString()

@@ -65,24 +65,23 @@ var table // datatable
 START OF LOCAL CACHE FUNCTIONS
 */
 
-let clearCache = (clearUser=0) => {
+let clearCache = (clearUser = 0) => {
     window.localStorage.projectAlldata = ""
     window.localStorage.projectdata = ""
     window.localStorage.projects = ""
     window.localStorage.project = ""
-    if (clearUser == 1)
-    {
+    if (clearUser == 1) {
         window.localStorage.token = ""
         window.localStorage.user = ""
     }
 }
 //project data
 let getUser = () => {
-    window.localStorage.projectAlldata = ""
+    return (JSON.parse(window.localStorage.user))
 }
 //project data
 let deleteProjectAlldata = () => {
-    return(window.localStorage.user)
+     window.localStorage.projectAlldata = ""
 }
 
 
@@ -323,7 +322,7 @@ let updateCacheProjects = (theProject = "", debug = 0) => {
 
 let getCacheProjects = (theId = "", debug = 0) => {
     let theItems = window.localStorage.projects;
-    if ((theItems == undefined) || (theItems =="") || (theItems == null)) {
+    if ((theItems == undefined) || (theItems == "") || (theItems == null)) {
         if (debug == 1)
             consolel.log("no items");
         return (false)
@@ -361,8 +360,14 @@ let getCurrentProject = (debug = 0) => {
 let getProjectId = (debug = 0) => {
     if (debug == 1)
         console.log(window.localStorage.project);
-    let project = JSON.parse(window.localStorage.project)
-    return (project.id)
+    let project = window.localStorage.project 
+    if ((project == "") || (project == null)) {
+        return ("")
+    } else
+    {
+        project = JSON.parse(project)
+        return (project.id)
+    }
 
 }
 //getCacheProjects("1defd828-d637-44bd-9329-0d703de4b4a4")

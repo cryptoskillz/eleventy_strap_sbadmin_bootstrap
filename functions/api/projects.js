@@ -28,7 +28,6 @@ let decodeJwt = async (req, secret) => {
     let bearer = req.get('authorization')
     bearer = bearer.replace("Bearer ", "");
     let details = await jwt.decode(bearer, secret)
-    //console.log(details)
     return (details)
 }
 
@@ -46,10 +45,8 @@ export async function onRequestPut(context) {
     } = context;
 
     contentType = request.headers.get('content-type');
-    //console.log(contentType)
     if (contentType != null) {
         payLoad = await request.json();
-        //console.log(payLoad)
         let details = await decodeJwt(request.headers, env.SECRET)
 
         //let details = await decodeJwt(request.headers, env.SECRET)
@@ -57,7 +54,6 @@ export async function onRequestPut(context) {
         let projectData = await KV.get("projects" + details.username + "*" + payLoad.id);
         //console.log("projects" + details.username + "*" + payLoad.id)
         projectData = JSON.parse(projectData)
-        //console.log(projectData)
         if (payLoad.name != undefined)
             projectData.name = payLoad.name;
         if (payLoad.template != undefined) {
@@ -67,7 +63,6 @@ export async function onRequestPut(context) {
             projectData.templatename = payLoad.templatename;
         if (payLoad.schema != undefined)
             projectData.schema = payLoad.schema;
-        //console.log(projectData)
         await KV.put("projects" + details.username + "*" + payLoad.id, JSON.stringify(projectData));
         return new Response(JSON.stringify({ message: "Item updated", data: JSON.stringify(projectData) }), { status: 200 });
 
@@ -97,11 +92,9 @@ export async function onRequestDelete(context) {
 
     //return new Response({message:"delete"}, { status: 200 });
     contentType = request.headers.get('content-type');
-    //console.log(contentType)
     if (contentType != null) {
         //get the login credentials
         payLoad = await request.json();
-        //console.log(payLoad)
         let details = await decodeJwt(request.headers, env.SECRET)
         const KV = context.env.backpage;
         await KV.delete("projects" + details.username + "*" + payLoad.dataid);
@@ -173,14 +166,11 @@ export async function onRequestGet(context) {
     //get the projects based on the name
     //console.log("projects" + details.username + "*")
     let projects = await KV.list({ prefix: "projects" + details.username + "*" });
-    //console.log(projects)
 
     let projectsData = { data: [] }
-    //console.log(projectid)
     if ((projectid != null) && (projectid != "")) {
         let pData = await KV.get("projects" + details.username + "*" + projectid);
         //console.log("projects" + details.username + "*" + projectid)
-        //console.log(pData)
         //debug for easy clean up
         //await KV.delete("projects-" + details.username+"*"+tmp[2]);
         projectsData.data.push(JSON.parse(pData))
@@ -191,10 +181,8 @@ export async function onRequestGet(context) {
                 //console.log("projects" + details.username + "|" + tmp[1])
                 let pData = await KV.get("projects" + details.username + "*" + tmp[1]);
                 pData = JSON.parse(pData)
-                //console.log(pData)
                 //debug for easy clean up
                 //console.log("projects" + details.username + "*" + tmp[1]);
-
                 //await KV.delete("projects" + details.username+"*"+tmp[1]);
                 projectsData.data.push(pData)
             }
