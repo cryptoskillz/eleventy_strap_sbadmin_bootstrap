@@ -33,25 +33,37 @@ export async function onRequest(context) {
         const KV = context.env.backpage;
         //see if the user exists
         const user = await KV.get("username" + credentials.identifier);
-        let tUser = JSON.parse(user);
         //user does not exist
         if (user == null)
             return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
-        //check if it is valid
-        if (valid == 1) {
-            //make a JWT token
-            const token = await jwt.sign({ password: credentials.password, username: credentials.identifier }, env.SECRET)
-            // Verifing token
-            const isValid = await jwt.verify(token, env.SECRET)
-            if (isValid == true) {
-                let json = JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier, "secret": tUser.user.secret } })
-                //temp to deal with old accounts will not need going forward
-                await KV.put("username" + tUser.user.secret , JSON.stringify({username:credentials.identifier}));
-                await KV.put("username" + credentials.username, json);
 
-                return new Response(JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier, "secret": tUser.user.secret } }), { status: 200 });
+        let tUser = JSON.parse(user);
+        if ((tUser.user.email == credentials.identifier) || (tUser.user.password == credentials.password)) {
+            //check if it is valid
+            if (valid == 1) {
+                //make a JWT token
+                const token = await jwt.sign({ password: credentials.password, username: credentials.identifier }, env.SECRET)
+                // Verifing token
+                const isValid = await jwt.verify(token, env.SECRET)
+                if (isValid == true) {
+                    ///let json = JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier, "secret": tUser.user.secret } })
+                    //temp to deal with old accounts will not need going forward
+                    //await KV.put("username" + tUser.user.secret , JSON.stringify({username:credentials.identifier}));
+                    //await KV.put("username" + credentials.identifier, json);
+
+                    return new Response(JSON.stringify({ "jwt": token, "user": { "username": credentials.identifier, "email": credentials.identifier, "secret": tUser.user.secret } }), { status: 200 });
+                } else {
+                    return new Response(JSON.stringify({ error: "invalid login" }), { status: 400 });
+
+                }
             }
+
+        } else {
+            return new Response(JSON.stringify({ error: "invalid login: username or password incorrect" }), { status: 400 });
+
         }
+
+
     } catch (error) {
         console.log(error)
         return new Response(error, { status: 200 });

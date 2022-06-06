@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
         const KV = context.env.backpage;
         //see if the user exists
         let secretid = uuid.v4();
-        let json = JSON.stringify({ "jwt": "", "user": {  "username": registerData.username, "email": registerData.username,"secret":secretid } })
+        let json = JSON.stringify({ "jwt": "", "user": {  "username": registerData.username, "email": registerData.username,"password":registerData.password,"secret":secretid } })
         //check if user exist
         const user = await KV.get("username" + registerData.username);
         if (user == null)
