@@ -1,4 +1,4 @@
-it("login ", () => {
+it("project ", () => {
     //go to page
     cy.visit("http://localhost:8788/login/")
     cy.get("#inp-email").clear().type('a@b.com');
@@ -21,7 +21,16 @@ it("login ", () => {
     cy.get("#btn-create").click();
     cy.get(".fa-backward").click();
     //edit / back udpate
-
+    cy.get("#ep-project-2-0").click();
+    cy.get(".fa-backward").click();
+    cy.get("#ep-project-2-0").click();
+    cy.get("#inp-projectname").clear().type('project 2e');
+    cy.get("#btn-edit").click();
+    cy.get(".fa-backward").click();
+    cy.get("#btn-create-cy").click();
+    cy.get("#inp-projectname").type('project 1');
+    cy.get("#btn-create").click();
+    cy.get(".fa-backward").click();
     //add data 
 
 });
