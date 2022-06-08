@@ -36,6 +36,7 @@ whenDocumentReady(isReady = () => {
         let method = "api/projects"
         //loop through the data
         for (var i = 0; i < res.data.length; ++i) {
+            let tmpName = res.data[i].name.replace(" ","-");
             //console.log(res.data[i].attributes.template)
             //theProject = res.data[i]
             let databutton = `<a href="javascript:loadURL('/project/data/','${res.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
@@ -44,7 +45,7 @@ whenDocumentReady(isReady = () => {
             // <i class="fas fa-code fa-sm text-white-50"></i> Template</a>`
             let editbutton = `<a href="javascript:loadURL('/project/edit/','${res.data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
-            let deletebutton = `<a href="javascript:deleteTableItem('${res.data[i].id}','${res.data[i].id}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            let deletebutton = `<a href="javascript:deleteTableItem('${res.data[i].id}','${res.data[i].id}','${method}')" id="dp-${tmpName}-${i}" class=" d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
             //get the created date

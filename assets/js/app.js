@@ -125,7 +125,12 @@ let storeProjectAlldata = (theData, debug = 0) => {
 let getCurrentProjectData = (debug = 0) => {
     if (debug == 1)
         console.log(window.localStorage.projectdata);
-    let project = JSON.parse(window.localStorage.projectdata)
+    let projectdata = window.localStorage.projectdata
+    let project;
+    if ((project != "") && (project != null))
+        project = JSON.parse(window.localStorage.projectdata)
+    else
+        project = false;
     return (project)
 
 }
@@ -392,10 +397,11 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
     document.getElementById('confirmation-modal-delete-button').addEventListener('click', function() {
         $('#confirmation-modal').modal('toggle')
         let xhrDone = (res) => {
+           // console.log(deleteMethod)
             //parse the response
             console.log(res)
             showAlert('Item has been deleted', 1)
-            table.row('#' + tableRowId).remove().draw();
+            table.row('#' + tableRowId).remove().draw()
             if (deleteMethod == "api/projects") {
                 removeCachedProject(deleteId)
 
@@ -409,7 +415,7 @@ if (typeof(checkElement) != 'undefined' && checkElement != null) {
         }
         //let project = window.localStorage.project
         //project = JSON.parse(project)
-        let project = getCurrentProject();
+        let project = getCacheProjects(deleteId);
         let bodyobj = {
             dataid: deleteId,
             projectid: project.id
