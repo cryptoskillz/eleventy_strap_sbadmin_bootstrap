@@ -4,25 +4,39 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-    let copySecret = (text) => {
-        var dummy = document.createElement("textarea");
-        document.body.appendChild(dummy);
-        dummy.value = text;
-        dummy.select();
-        document.execCommand("copy");
-        document.body.removeChild(dummy);
-        showAlert('Secret copied to clipboard', 1)
-    }
-    document.getElementById('secret').innerHTML = `${user.secret} <i class="fas fa-copy" id="copySecretIcon"></i>`;
-    //getprojects
-    let projects = getCacheProjects();
-    let secretexmp = `${apiUrl}api/export/?projectid=PROJECTID&secret=${user.secret}`;
-    if (projects != false)
-        secretexmp = `<a target="_blank" href="${apiUrl}api/export/export/?projectid=${projects.data[0].id}&secretid=${user.secret}">${apiUrl}api/export/export/?projectid=${projects.data[0].id}&secretid=${user.secret}</a>`;
 
-    document.getElementById('secretexample').innerHTML = '<br>'+secretexmp
-    document.getElementById('showBody').classList.remove('d-none')
-    document.getElementById('copySecretIcon').addEventListener('click', function() {
-        copySecret(`${user.secret}`)
-    });
+
+    //build the url
+    let theUrl = apiUrl+'settings/';
+    //get the token
+    let token = getToken();
+    
+    //process the settings
+    let settingsDone = (res) => {
+        //parse the settings
+        res = JSON.parse(res);
+        //set it
+        document.getElementById('inp-companyname').value = res.settings.companyName;
+    }
+    //call the API to get the settings
+    xhrcall(1,theUrl, "", "json", "", settingsDone, token)
+
+    //update it
+    document.getElementById('btn-edit').addEventListener('click', function() { //api call done
+        let xhrDone = (res) => {
+            res = JSON.parse(res)
+            //show the message
+            showAlert(res.message, 1)
+        }
+        //check there is data to submit
+        let bodyJson = {
+            companyName: document.getElementById('inp-companyname').value
+        }
+        bodyJson = JSON.stringify(bodyJson);
+        //call it
+        xhrcall(4, theUrl, bodyJson, "json", "", xhrDone, token);
+    })
+    //show the body
+    document.getElementById('showBody').classList.remove('d-none');
+
 });

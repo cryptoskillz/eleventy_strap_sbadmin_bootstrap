@@ -1,0 +1,4 @@
+[[ d1_databases ]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "backpage"
+database_id = "1a8a6bc7-dd6d-4042-a89f-c17264fe4136"

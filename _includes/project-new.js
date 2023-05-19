@@ -33,7 +33,7 @@ whenDocumentReady(isReady = () => {
                     name: projectname.value
             }
             var bodyobjectjson = JSON.stringify(bodyobj);
-            xhrcall(0, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
+            xhrcall(0, apiUrl+"projects/", bodyobjectjson, "json", "", xhrDone, token)
         }
     })
 })

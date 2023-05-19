@@ -17,13 +17,14 @@ wipeOutOldBuild () {
 #delete the files in the site dir
 wipeOutOldBuild
 #run eleventy
-eleventy 
+npx @11ty/eleventy 
 
 echo "killing rouge wrangler"
 kill -9 `lsof -t -i:8788`
 
 echo "starting wrangler"
-wrangler pages dev _site --binding SECRET=fdfdf --kv=backpage --local --live-reload  &
+#wrangler pages dev _site --binding SECRET=fdfdf --kv=backpage --local --live-reload  &
+wrangler pages dev _site --port 8789 --d1=DB --persist --binding SECRET=fdfdf  --kv=kvdata --local --live-reload  &
 
 if [[ $ELEVENTY_ENV == 'cypress' ]]
 then

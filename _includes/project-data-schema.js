@@ -14,8 +14,13 @@ let whenDocumentReady = (f) => {
 whenDocumentReady(isReady = () => {
     projectid = getProjectId();
     project = getCacheProjects(projectid)
+    document.getElementById('showBody').classList.remove('d-none')
+
     if (project.schema.fields == "") {
         showAlert(`No schema for this project, click here to import <a href="/project/data/import/data/?projectid=${projectid}">data</a>`, 2, 0)
+        document.getElementById('btn-edit').classList.add('d-none');
+        document.getElementById('originalschema').classList.add('d-none');
+
 
     } else {
         let fields = project.schema.fields.split(",")

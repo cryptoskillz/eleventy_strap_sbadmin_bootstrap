@@ -1,0 +1,27 @@
+ Settings
+
+ ☐ settings page throws an error on load
+ ☐ update company profile does not work as excepted
+
+ project 
+
+ ☐ add a new project
+
+ FUNCTIONS API
+
+ projects.js
+
+ ☐ port from KV to database
+ ☐ build table to store the project
+
+
+ Login
+
+ ☐ port to d1
+
+
+ SQL
+
+ ☐ clean up sql file
+ ☐ add it to the readme
+ ☐ add the project table (make this a primitive going forward)

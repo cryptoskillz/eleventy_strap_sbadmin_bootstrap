@@ -1,30 +1,24 @@
 ---
 layout: layout.njk
+permalink: /profile/
 ---
 {% set theJs %}
-    {% include 'settings.js' %}
+        {% include 'admin/users-generic.js' %}
+
 {% endset %}
 <!-- Page Heading -->
-<h1 class="h3 mb-4 text-gray-800">Settings</h1>
+<h1 class="h3 mb-4 text-gray-800">Profile</h1>
 <p class="mb-4">
 </p>
 <div class="alert alert-success  d-none" role="alert" id="accountsSuccess">
 </div>
 <div class="alert alert-danger  d-none" role="alert" id="accountsAlert">
 </div>
-<div class="form-group d-none">
+<div class="form-group">
     <input type="email" class="form-control form-control-user" id="inp-username" aria-describedby="emailHelp" placeholder="Enter Username...">
    	<span class="text-danger d-none" id="error-username">Invalid Username </span>  
 </div>
-<div class="form-group">
-<span>Use this secret to access the API</br></span></span>
-
-    <span class="" id="secret"></span>
-        <span class="" id="secretexample"></span>
-
-</div>
-
-<button class="btn btn-primary btn-user btn-block d-none" id="btn-profile-update">
+<button class="btn btn-primary btn-user btn-block" id="btn-profile-update">
     Update
 </button>
 {% if env.ENVIRONMENT == 'local' %}
