@@ -18,6 +18,13 @@
 
  ☐ add an admin clone of table js that returns everything for all the projects.  We still want to keep it single tenant for create / edit / delete
 
+projectdata.js
+
+ ☐ return the table schema as part of the call or a seperate endpoint
+ ☐ recode the get query so it pulls all the records by project id and groups by projectDataId this is weird and recursive but allows to re poll the table
+ ☐ add a loop for the above query and pull the query again and this time pull everything that matches this id
+ ☐ build a results object that is the schema (could be another end point) and the data flattened based on the schema
+ ☐ update the import function so we store it in this format. 
 
  Login
 

@@ -1,5 +1,8 @@
 DROP TABLE IF EXISTS projects;
-DROP TABLE IF EXISTS project_images;
+DROP TABLE IF EXISTS projectData;
+DROP TABLE IF EXISTS projectSchema;
+
+DROP TABLE IF EXISTS projectImages;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS userAccess;
 DROP TABLE IF EXISTS userSettings;
@@ -19,11 +22,47 @@ CREATE TABLE "projects" (
 );
 
 
-
 INSERT INTO "projects" ("id","guid","name") VALUES(1, '99ad01ac-062d-44f1-3c9d-69e1bf815700','Project 1');
 
+CREATE TABLE "projectData" (
+	"id" INTEGER,
+	"projectId" INTEGER,
+	"projectDataId" INTEGER,
+	"schemaId" INTEGER,
+	"fieldValue" TEXT,
+	"isDeleted" INTEGER DEFAULT 0,
+	"createdAt" TEXT DEFAULT CURRENT_TIMESTAMP,
+	"updatedAt" TEXT,
+	"publishedAt" TEXT DEFAULT CURRENT_TIMESTAMP,
+	"deletedAt" TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
 
-CREATE TABLE "project_images" (
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,1,'Chris');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,2,'McC');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,1,'Chris2');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,2,'Mc2');
+
+
+CREATE TABLE "projectSchema" (
+	"id" INTEGER,
+	"projectId" INTEGER,
+	"fieldName" TEXT,
+	"isDeleted" INTEGER DEFAULT 0,
+	"createdAt" TEXT DEFAULT CURRENT_TIMESTAMP,
+	"updatedAt" TEXT,
+	"publishedAt" TEXT DEFAULT CURRENT_TIMESTAMP,
+	"deletedAt" TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+INSERT INTO "projectSchema" ("projectId","fieldName") VALUES(1,'firstName');
+INSERT INTO "projectSchema" ("projectId","fieldName") VALUES(1,'secondName');
+
+
+
+
+CREATE TABLE "projectImages" (
 	"id"	INTEGER,
 	"propertyId" INTEGER,
 	"cfid"	INTEGER,

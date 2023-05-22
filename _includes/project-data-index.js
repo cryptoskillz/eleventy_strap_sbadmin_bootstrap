@@ -18,7 +18,7 @@ let backpages;
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
     //console.log(backpages)
-    getProjectAlldata(theId, 0)
+
     if (blank == 1)
         window.open(theUrl, "_blank")
     else
@@ -29,6 +29,13 @@ let loadURL = (theUrl, theId, blank = 0) => {
 //table render
 let renderTable = (data, actions = [], method = "") => {
 
+    //get the schema
+    let tmp = JSON.parse(data)
+    let tmpField = tmp[0];
+    console.log(tmpField);
+
+    return;
+    console.log(data)
     //get the project
     let project = window.localStorage.project
     project = JSON.parse(project);
@@ -217,44 +224,19 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
     let xhrDone = (res, local = 0) => {
-        //if 0 its live not from the cache so we have to save it. 
-        //console.log(res)
-        let data = "";
-        if (local == 0) {
-            console.log('not cached')
-            res = JSON.parse(res)
-            data = JSON.parse(res.data)
-            //console.log(data)
-            storeProjectAlldata(res, 0);
-
-        } else {
-            //cached
-            console.log(' cached')
-            data = res
-        }
-
+        let data = res
         if (res.length == 0)
             showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
         else {
             document.getElementById("showBody").classList.remove('d-none')
-            //console.log(data)
             if ((data.length != 0) && (data != "") && (data != null))
                 renderTable(data, [1, 0, 1, 1], "api/projectdata")
 
         }
 
     }
-    //get all the data
-    projectAllData = getProjectAlldata("", 0);
-    //console.log(projectAllData)
-    //check if it is false
-    if (projectAllData != false) {
-        xhrDone(projectAllData, 1);
-    } else {
-        //if (projectAllData == false) {
-        let projectid = getProjectId()
-        xhrcall(1, `api/projectdata/?projectid=${projectid}`, "", "json", "", xhrDone, token)
-    }
+    xhrcall(1, `${apiUrl}projectdata/?projectid=${window.localStorage.currentDataItemId}`, "", "json", "", xhrDone, token)
+
 })
 
 //process the action drop down

@@ -3,7 +3,7 @@ layout: layout.njk
 permalink: /project/data/
 ---
 {% set theJs %}
-    {% include 'project-data.js' %}
+    {% include 'project-data-index.js' %}
 {% endset %}
 <!-- Page Heading -->
 
@@ -43,4 +43,6 @@ permalink: /project/data/
     <script type="text/javascript">{{theJs | jsmin | safe}}</script>
 {% endif %}
 <script type="text/javascript" src="/assets/js/jszip.min.js"></script>
+
+
 

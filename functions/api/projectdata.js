@@ -30,6 +30,7 @@ let buildDataArray = (theData,theId="") => {
     return(projectData)
 }
 
+
 let decodeJwt = async (req, secret) => {
     let bearer = req.get('authorization')
     bearer = bearer.replace("Bearer ", "");
@@ -138,29 +139,12 @@ export async function onRequestGet(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
     try {
-        dataArray = []
-        const { searchParams } = new URL(request.url)
-        let projectid = searchParams.get('projectid')
-        //console.log("projects" + details.username + "|" + tmp[1])
-        let details = await decodeJwt(request.headers, env.SECRET)
-        //set up the KV
-        const KV = context.env.backpage;
-        //get the project
-        let project = await KV.get("projects" + details.username + "*" + projectid);
-        project = JSON.parse(project)
-        //get the projects based on the name
-        let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + projectid + "*" });
-        if (kv.keys.length > 0) {
-            for (var i = 0; i < kv.keys.length; ++i) {
-                let tmp = kv.keys[i].name.split('*');
-                //console.log("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2])
-                let pData = await KV.get("projects-data" + details.username + "*" + tmp[1] + "*" + tmp[2]);
-                pData = JSON.parse(pData)
-                let pData2 = buildDataArray(pData.data,pData.id)
-            }
-        }
-
-        return new Response(JSON.stringify({ message: "ok",data: JSON.stringify(dataArray)}), { status: 200 });
+        const { searchParams } = new URL(request.url);
+        let projectid = searchParams.get('projectid');
+        const query = context.env.DB.prepare(`SELECT id,fieldName,fieldValue from projectData where projectid = '${projectid}'`);
+        //get the first
+        const queryResults = await query.all();
+        return new Response(JSON.stringify(queryResults.results), { status: 200 });
     } catch (error) {
         console.log(error)
         return new Response(error, { status: 200 });
