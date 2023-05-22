@@ -19,8 +19,10 @@ let loadURL = (theUrl, theId, blank = 0) => {
 }
 
 whenDocumentReady(isReady = () => {
-    document.getElementById('showBody').classList.remove('d-none')
 
+    //show it
+    document.getElementById('showBody').classList.remove('d-none')
+    /*
     let xhrDone = (res, local = 0) => {
         //store it in local storage
 
@@ -49,11 +51,7 @@ whenDocumentReady(isReady = () => {
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
 
             //get the created date
-            /*
-            let createdAt = new Date(res.data[i].createdAt);
-            //convert, apis should give a formatted data option!
-            createdAt = `${createdAt.getDate()}/${createdAt.getDate()}/${createdAt.getFullYear()}`
-            */
+
             //add the records
             var rowNode = table
                 .row.add([res.data[i].id, res.data[i].name, res.data[i].createdAt, `${databutton} ${editbutton} ${deletebutton} `])
@@ -74,5 +72,6 @@ whenDocumentReady(isReady = () => {
         xhrcall(1, "api/projects/", bodyobjectjson, "json", "", xhrDone, token)
 
     }
+    */
 
 })

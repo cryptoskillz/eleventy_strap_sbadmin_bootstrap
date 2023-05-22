@@ -14,7 +14,7 @@ let level1Data;
 /*
 This function handles the property select
 */
-let propertySelectChange = (id, theElement) => {
+let projectSelectChange = (id, theElement) => {
     //clear the current element
     //note : Not sure why we cleared it here previoulsy as we need it.  Could be related to the caching we used to do I will leave it here as a reminder
     //       until iam sure I have not broken anything further down the chain.
@@ -130,7 +130,7 @@ whenDocumentReady(isReady = () => {
                         }
                     }
 
-                   // tmpcustomButton = tmpcustomButton.replaceAll(`[${theFields[i2]}]`, theData.id);
+                    // tmpcustomButton = tmpcustomButton.replaceAll(`[${theFields[i2]}]`, theData.id);
 
                 }
                 //tmpcustomButton = tmpcustomButton.replaceAll("[id]", theData.id);
@@ -232,7 +232,8 @@ whenDocumentReady(isReady = () => {
 
 
     let init = async (theSettings) => {
-
+        //get the token
+        token = getToken();
         //set a url array
         let urls = [];
 

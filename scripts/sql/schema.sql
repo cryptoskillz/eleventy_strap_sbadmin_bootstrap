@@ -19,6 +19,7 @@ CREATE TABLE "projects" (
 );
 
 
+
 INSERT INTO "projects" ("id","guid","name") VALUES(1, '99ad01ac-062d-44f1-3c9d-69e1bf815700','Project 1');
 
 

@@ -56,8 +56,8 @@ whenDocumentReady(isReady = () => {
             document.getElementById('data-header').innerHTML = theSettings.title;
         } else {
             //set the tmpName
-            let tmpName = theSettings.table.replace("_", " ");
-            document.getElementById('data-header').innerHTML = `add a new ${tmpName}`
+           // let tmpName = theSettings.table.replace("_", " ");
+            document.getElementById('data-header').innerHTML = `add a new ${level2name}`
         }
         //build the look up url
         //let tmpLookUpUrl = "";

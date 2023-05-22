@@ -45,7 +45,7 @@
          //parse the repsonse
          res = JSON.parse(res)
          if (res.data.length == 0) {
-             showAlert('Property not found', 2, 0)
+             showAlert(`${level2name} not found`, 2, 0);
              return;
          }
 
@@ -82,7 +82,7 @@
              recordId = window.localStorage.currentDataItemId
          //end it.
          if (recordId == "") {
-             showAlert('Property ID not set', 2, 0)
+            showAlert(`${level2name}  ID not set`, 2, 0)
              return;
          }
 

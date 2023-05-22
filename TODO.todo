@@ -1,7 +1,7 @@
  Settings
 
- ☐ settings page throws an error on load
- ☐ update company profile does not work as excepted
+ ✔ settings page throws an error on load @done (23-05-19 22:31)
+ ✔ update company profile does not work as excepted @done (23-05-19 22:31)
 
  project 
 
@@ -14,14 +14,24 @@
  ☐ port from KV to database
  ☐ build table to store the project
 
+ table.js
+
+ ☐ add an admin clone of table js that returns everything for all the projects.  We still want to keep it single tenant for create / edit / delete
+
 
  Login
 
- ☐ port to d1
+ ✔ port to d1 @done (23-05-19 22:31)
 
 
  SQL
 
- ☐ clean up sql file
+ ✔ clean up sql file @done (23-05-19 22:31)
  ☐ add it to the readme
- ☐ add the project table (make this a primitive going forward)
+ ✔ add the project table (make this a primitive going forward) @done (23-05-19 22:31)
+
+ MISC
+
+ ☐ change the cypress local data if (window.location.pathname != `/${level1name}/`) {
+
+

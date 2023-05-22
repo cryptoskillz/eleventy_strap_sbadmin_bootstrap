@@ -25,7 +25,7 @@ export async function onRequestPost(context) {
     let registerData;
     if (contentType != null) {
         registerData = await request.json();
-        console.log(registerData);
+        //console.log(registerData);
         //check if we want to create a user
         if (registerData.action == 1) {
             const query = context.env.DB.prepare(`SELECT COUNT(*) as total from user where email = '${registerData.email}'`);
@@ -103,16 +103,18 @@ export async function onRequestPost(context) {
 
                 if (user.isAdmin == 1) {
                     //prepare the query
-                    const query2 = context.env.DB.prepare(`SELECT COUNT(*) as total from property where isDeleted = 0`);
+                    const query2 = context.env.DB.prepare(`SELECT COUNT(*) as total from projects where isDeleted = 0`);
                     const queryResult2 = await query2.first();
                     user.foreignCount = queryResult2.total;
                 } else {
 
                     //prepare the query
-                    const query2 = context.env.DB.prepare(`SELECT COUNT(*) as total from property_owner where userId = ${user.id} and isDeleted = 0 `);
+                    const query2 = context.env.DB.prepare(`SELECT COUNT(*) as total from projects where userId = ${user.id} and isDeleted = 0 `);
                     const queryResult2 = await query2.first();
                     user.foreignCount = queryResult2.total;
                 }
+
+                
                 //sign the token
                 const token = await jwt.sign({ id: user.id, password: user.password, username: user.username, isAdmin: user.isAdmin }, env.SECRET)
                 // Verifing token
