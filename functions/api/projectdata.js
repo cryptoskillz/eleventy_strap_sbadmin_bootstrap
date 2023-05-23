@@ -19,15 +19,15 @@ const jwt = require('@tsndr/cloudflare-worker-jwt')
 var uuid = require('uuid');
 
 let dataArray = [];
-let buildDataArray = (theData,theId="") => {
+let buildDataArray = (theData, theId = "") => {
     let id;
     if (theId == "")
         id = uuid.v4();
     else
         id = theId
-    let projectData = { id: id, data: theData, createdAt: "21/12/2022"}
+    let projectData = { id: id, data: theData, createdAt: "21/12/2022" }
     dataArray.push(projectData)
-    return(projectData)
+    return (projectData)
 }
 
 
@@ -139,12 +139,43 @@ export async function onRequestGet(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
     try {
+        //set the results object
+        let results = []
+        //get the search params
         const { searchParams } = new URL(request.url);
-        let projectid = searchParams.get('projectid');
-        const query = context.env.DB.prepare(`SELECT id,fieldName,fieldValue from projectData where projectid = '${projectid}'`);
-        //get the first
+        //get the project id
+        let projectId = searchParams.get('projectid');
+        //get the schema
+        const query = context.env.DB.prepare(`SELECT id,fieldName from projectSchema where projectId = '${projectId}'`);
         const queryResults = await query.all();
-        return new Response(JSON.stringify(queryResults.results), { status: 200 });
+        //get the projects and group by id
+        const query2 = context.env.DB.prepare(`SELECT projectData.projectDataId from projectData where projectData.projectId = '${projectId}' group by projectDataId `);
+        //get the results
+        const queryResults2 = await query2.all();
+        //loop through the projectdata results
+        for (var i = 0; i < queryResults2.results.length; ++i) {
+            //get the id
+            let projectDataId = queryResults2.results[i].projectDataId;
+            //get the data
+            const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
+            //get the results
+            const queryResults3 = await query3.all();
+            //put them into our array
+            results.push(queryResults3.results);
+            //debugs
+            //console.log(queryResults3.results)
+        }
+        //make a data object
+        let finData = {};
+        //store the schema
+        finData.schema = queryResults.results;
+        //store the results. 
+        finData.data = JSON.stringify(results);
+        //debug
+        //console.log(queryResults)
+        //console.log(queryResults2)
+        //console.log(finData);
+        return new Response(JSON.stringify(queryResults2.results), { status: 200 });
     } catch (error) {
         console.log(error)
         return new Response(error, { status: 200 });

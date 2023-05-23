@@ -38,7 +38,7 @@ CREATE TABLE "projectData" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,1,'Chris');
+INSERT INTO "projectData" ("projectId","ç","schemaId","fieldValue") VALUES(1,1,1,'Chris');
 INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,2,'McC');
 INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,1,'Chris2');
 INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,2,'Mc2');

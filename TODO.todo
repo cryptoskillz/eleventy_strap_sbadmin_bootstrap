@@ -20,11 +20,12 @@
 
 projectdata.js
 
- ☐ return the table schema as part of the call or a seperate endpoint
- ☐ recode the get query so it pulls all the records by project id and groups by projectDataId this is weird and recursive but allows to re poll the table
- ☐ add a loop for the above query and pull the query again and this time pull everything that matches this id
- ☐ build a results object that is the schema (could be another end point) and the data flattened based on the schema
+ ✔ return the table schema as part of the call or a seperate endpoint @done (23-05-23 14:02)
+ ✔ recode the get query so it pulls all the records by project id and groups by projectDataId this is weird and recursive but allows to re poll the table @done (23-05-23 14:02)
+ ✔ add a loop for the above query and pull the query again and this time pull everything that matches this id @done (23-05-23 14:02)
+ ✔ build a results object that is the schema (could be another end point) and the data flattened based on the schema @done (23-05-23 14:02)
  ☐ update the import function so we store it in this format. 
+ ☐ recode the render table function to use this new format.
 
  Login
 
