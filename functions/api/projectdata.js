@@ -146,7 +146,7 @@ export async function onRequestGet(context) {
         //get the project id
         let projectId = searchParams.get('projectid');
         //get the schema
-        const query = context.env.DB.prepare(`SELECT id,fieldName from projectSchema where projectId = '${projectId}'`);
+        const query = context.env.DB.prepare(`SELECT id,isUsed,fieldName from projectSchema where projectId = '${projectId}'`);
         const queryResults = await query.all();
         //get the projects and group by id
         const query2 = context.env.DB.prepare(`SELECT projectData.projectDataId from projectData where projectData.projectId = '${projectId}' group by projectDataId `);
@@ -157,7 +157,7 @@ export async function onRequestGet(context) {
             //get the id
             let projectDataId = queryResults2.results[i].projectDataId;
             //get the data
-            const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
+            const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
             //get the results
             const queryResults3 = await query3.all();
             //put them into our array
@@ -170,12 +170,12 @@ export async function onRequestGet(context) {
         //store the schema
         finData.schema = queryResults.results;
         //store the results. 
-        finData.data = JSON.stringify(results);
+        finData.data = results;
         //debug
         //console.log(queryResults)
         //console.log(queryResults2)
         //console.log(finData);
-        return new Response(JSON.stringify(queryResults2.results), { status: 200 });
+        return new Response(JSON.stringify(finData), { status: 200 });
     } catch (error) {
         console.log(error)
         return new Response(error, { status: 200 });

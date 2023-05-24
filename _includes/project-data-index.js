@@ -28,119 +28,94 @@ let loadURL = (theUrl, theId, blank = 0) => {
 
 //table render
 let renderTable = (data, actions = [], method = "") => {
+    //parse the results
+    let results = JSON.parse(data)
 
-    //get the schema
-    let tmp = JSON.parse(data)
-    let tmpField = tmp[0];
-    console.log(tmpField);
-
-    return;
-    console.log(data)
-    //get the project
-    let project = window.localStorage.project
-    project = JSON.parse(project);
-    //set the arrays for the table
-    let columns = []
-    let dataresult = []
-    //get the keys from the schema and move into an array
-    var keys = project.schema.fields.split(",")
-    let unusedFields = []
-
-    //loop through the keys and build the columns
-    for (var i = 0; i < keys.length; ++i) {
-        if (keys[i] != "UNUSED") {
-            colJson = { title: keys[i] }
-            //add it it the columns object
-            columns.push(colJson)
-
-        } else
+    //build the columns from the scheama
+    let columns = [];
+    //set the unsed fields
+    //note: may not be used anymore
+    let unusedFields = [];
+    //store the process data results
+    let dataresult = [];
+    //add an id column as this is not a generic rendered we can get away with hard coding this
+    colJson = { title: "id" };
+    //add the column
+    columns.push(colJson);
+    //loop through the schema and add the columns
+    for (var i = 0; i < results.schema.length; i++) {
+        //check if it is used
+        if (results.schema[i].isUsed == 1) {
+            //add it
+            colJson = { title: results.schema[i].fieldName }
+            columns.push(colJson);
+        } else {
+            // is this required
             unusedFields.push(i)
+        }
     }
-    //console.log(unusedFields)
 
     //add the actions column
     if (actions.length != 0) {
         columns.push({ title: "actions" })
     }
+    //debug
+    //console.log(results.schema)  
+    //console.log(results.data);
+    //console.log(columns);
 
-
-    let tableRowCount = 0;
-
-    //check for the first column with a number to set as the ids for row deletion in the table
-    let foundIt = 0
-    //console.log(data[0].data)
-    //console.log("render table data")
-    //console.log(data)
-
-    let tmpd = Object.values(data[0].data)
-
-    for (var i = 0; i < tmpd.length; ++i) {
-        if ((!isNaN(tmpd[i]) && foundIt == 0)) {
-            foundIt = 1;
-            tableRowCount = i
-        }
-
-    }
     //loop through the data
-    for (var i = 0; i < data.length; ++i) {
-        if (i == 0)
-            getProjectAlldata(data[i].id, 0)
+    for (var i = 0; i < results.data.length; ++i) {
+        //get the row
+        let theRow = results.data[i];
+        //set an array for each data field
+        let theFields = [];
+        //loop through the fields
+        for (var i2 = 0; i2 < theRow.length; ++i2) {
+            //check if it is the first pass and add the project id
+            if (i2 == 0)
+                theFields.push(theRow[i2].projectDataId)
+            //add the field values
+            theFields.push(theRow[i2].fieldValue)
 
-
-        //pull out the values and store in the array
-        let tmp = data[i].data;
-
-
-        //remove unused fields
-        for (var i2 = 0; i2 < unusedFields.length; ++i2) {
-            delete tmp[Object.keys(tmp)[unusedFields[i2]]]
         }
 
-        // console.log(tmp)
-
-
-
-        //the field values
-        let tableId;
-        tableId = Object.values(tmp)
-
-
-
-
-        //tableDeleteId =data.data[i].bpid
+        //check if we want to add actions 
+        //note we could remove this as we will always require actions on this render
         if (actions.length != 0) {
+            //hold the buttons
             let buttons = "";
-
             //edit button
             if (actions[0] == 1)
-                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${data[i].id}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${theFields.id }')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             //publish button
             if (actions[1] == 1)
-                buttons = buttons + `<a href="/project/data/?id=${data[i].id}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="/project/data/?id=${theFields.id }" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
             //view button
             if (actions[2] == 1)
-                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${data[i].id}',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${theFields.id }',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             //delete button
             if (actions[3] == 1)
-                buttons = buttons + `<a href="javascript:deleteTableItem('${data[i].id}','${tableId[tableRowCount]}','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:deleteTableItem('${theFields.id }','${theFields.id }','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
-            tmp.actions = buttons;
+            theFields.push(buttons);
+            //theValue = theRow[i2].fieldValue;
+
         }
-        //console.log(tmp)
-        dataresult.push(Object.values(tmp))
+        //add the row to the array
+        dataresult.push(Object.values(theFields));
     }
-    //render the table
-    //console.log(dataresult)
+
+    //add the data to the table we want row 0 to be the id which is the ID so we can soft delete etc.
     table = $('#dataTable').DataTable({
         data: dataresult,
-        rowId: tableRowCount,
+        rowId: "0",
         columns: columns,
 
     });
-
 
 }
 
@@ -224,13 +199,12 @@ let whenDocumentReady = (f) => {
 
 whenDocumentReady(isReady = () => {
     let xhrDone = (res, local = 0) => {
-        let data = res
         if (res.length == 0)
             showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
         else {
             document.getElementById("showBody").classList.remove('d-none')
-            if ((data.length != 0) && (data != "") && (data != null))
-                renderTable(data, [1, 0, 1, 1], "api/projectdata")
+            if ((res.length != 0) && (res != "") && (res != null))
+                renderTable(res, [1, 0, 1, 1], "api/projectdata")
 
         }
 

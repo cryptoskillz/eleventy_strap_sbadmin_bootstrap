@@ -38,7 +38,7 @@ CREATE TABLE "projectData" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-INSERT INTO "projectData" ("projectId","ç","schemaId","fieldValue") VALUES(1,1,1,'Chris');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,1,'Chris');
 INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,2,'McC');
 INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,1,'Chris2');
 INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,2,'Mc2');
@@ -48,6 +48,7 @@ CREATE TABLE "projectSchema" (
 	"id" INTEGER,
 	"projectId" INTEGER,
 	"fieldName" TEXT,
+	"isUsed" INTEGER DEFAULT 1,
 	"isDeleted" INTEGER DEFAULT 0,
 	"createdAt" TEXT DEFAULT CURRENT_TIMESTAMP,
 	"updatedAt" TEXT,
