@@ -22,8 +22,8 @@ projectdata.js
 
 
  ☐ update all the functions to use a bearer token (do we want to make edit etc admin only?)
- ☐ set the correct data id on the edit
- ☐ make the back button just go back to project data it does not have to use history back 
+ ✔ set the correct data id on the edit @done (23-05-25 14:36)
+ ✔ make the back button just go back to project data it does not have to use history back @done (23-05-25 14:36)
  ☐ code the delete method in projectdata
  ☐ code the view method
  ☐ update the import function so we store it in this format. 

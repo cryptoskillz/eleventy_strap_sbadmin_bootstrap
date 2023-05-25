@@ -22,7 +22,10 @@ let loadURL = (theUrl, theId, blank = 0) => {
     if (blank == 1)
         window.open(theUrl, "_blank")
     else
+    {
+        window.localStorage.currentDataItemId = theId
         window.location.href = theUrl;
+    }
 
 }
 
@@ -209,7 +212,9 @@ whenDocumentReady(isReady = () => {
         }
 
     }
-    xhrcall(1, `${apiUrl}projectdata/?projectid=${window.localStorage.currentDataItemId}`, "", "json", "", xhrDone, token)
+    let project = JSON.parse(window.localStorage.currentDataItem);
+    console.log(project.id)
+    xhrcall(1, `${apiUrl}projectdata/?projectid=${project.id}`, "", "json", "", xhrDone, token)
 
 })
 
