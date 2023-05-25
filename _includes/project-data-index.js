@@ -87,7 +87,7 @@ let renderTable = (data, actions = [], method = "") => {
             let buttons = "";
             //edit button
             if (actions[0] == 1)
-                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${theFields.id }')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:loadURL('/project/data/edit/','${theFields[0] }')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-file fa-sm text-white-50"></i> Edit</a>`
             //publish button
             if (actions[1] == 1)
@@ -95,11 +95,11 @@ let renderTable = (data, actions = [], method = "") => {
     <i class="fas fa-globe fa-sm text-white-50"></i> Publish</a>`
             //view button
             if (actions[2] == 1)
-                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${theFields.id }',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a  href="javascript:loadURL('/project/template/view/','${theFields[0] }',1)" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-eye fa-sm text-white-50" ></i> View</a>`
             //delete button
             if (actions[3] == 1)
-                buttons = buttons + `<a href="javascript:deleteTableItem('${theFields.id }','${theFields.id }','${method}')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                buttons = buttons + `<a href="javascript:deleteTableItem('${theFields[0] }','projectdata/')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-trash fa-sm text-white-50"></i> Delete</a>`
             theFields.push(buttons);
             //theValue = theRow[i2].fieldValue;
@@ -198,7 +198,7 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-    let xhrDone = (res, local = 0) => {
+    let xhrDone = (res) => {
         if (res.length == 0)
             showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
         else {

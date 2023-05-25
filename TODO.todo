@@ -26,9 +26,13 @@ projectdata.js
  ✔ build a results object that is the schema (could be another end point) and the data flattened based on the schema @done (23-05-23 14:02)
  ☐ update the import function so we store it in this format. 
  ✔ recode the render table function to use this new format. @done (23-05-25 01:46)
- ☐ Check the edit button works renderTable
- ☐ Check the delete buttons works on renderTable
- ☐ Check the view button works on renderTable
+ ✔ Check the edit button works renderTable @done (23-05-25 01:58)
+ ✔ Check the delete buttons works on renderTable @done (23-05-25 01:58)
+ ✔ Check the view button works on renderTable @done (23-05-25 01:58)
+ ☐ code the delete method in projectdata
+ ☐ project data edit code the update method
+ ☐ add a put element to the projectdata.js API 
+
 
  Login
 

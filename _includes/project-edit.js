@@ -8,6 +8,14 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
+    let projectid = window.localStorage.currentDataItemId;
+    document.getElementById('inp-projectname').value = project.name;
+    document.getElementById('project-header').innerHTML = `Edit ${project.name}`;
+    document.getElementById('showBody').classList.remove('d-none')
+
+
+    return;
+    /*
     let projectid = getProjectId();
     let project = getCacheProjects(projectid)
     //console.log(project)
@@ -40,4 +48,5 @@ whenDocumentReady(isReady = () => {
             xhrcall(4, `api/projects/`, bodyobjectjson, "json", "", xhrDone, token)
         }
     });
+    */
 })

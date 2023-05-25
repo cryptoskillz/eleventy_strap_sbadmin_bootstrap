@@ -1,32 +1,50 @@
-let fields;
-let originalfields;
-let projectid;
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
 whenDocumentReady(isReady = () => {
 
-    let projectdata = getCurrentProjectData();
-    let tmpd = Object.values(projectdata.data)
-    let fields = Object.keys(projectdata.data)
-    //loop through  the keys
-    let inpHtml = "";
-    for (var i = 0; i < fields.length; ++i) {
-        //console.log(fields[i])
-        if (fields[i] != "UNUSED") {
+    let project = JSON.parse(window.localStorage.currentDataItem);
 
-            inpHtml = inpHtml + `<div class="form-group" >
-            <label>${fields[i]}</label>
-<input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="${tmpd[i]}">
-</div>`
+
+    let xhrDone = (res) => {
+        //set at input variable
+        let inpHtml = "";
+        //prcess the results
+        let results = JSON.parse(res);
+        //check we have some 
+        if ((results.length != 0) && (results != "") && (results != null)) {
+            //loop through the results
+            for (var i = 0; i < results.data.length; ++i) {
+                //get the row
+                let theRow = results.data[i];
+                //loop through the fields
+                for (var i2 = 0; i2 < theRow.length; ++i2) {
+                    if (theRow[i2].isUsed == 1) {
+                        //build the input elements
+                        inpHtml = inpHtml + `<div class="form-group" >
+                                            <label>${theRow[i2].fieldName}</label>
+                                            <input type="text" class="form-control form-control-user" id="inp-${theRow[i2].fieldName}" aria-describedby="emailHelp" placeholder="Enter ${theRow[i2].fieldName}" value="${theRow[i2].fieldValue}">
+                                            </div>`
+                    }
+                }
+            }
+            //set the header
+            document.getElementById('project-header').innerHTML = `Edit Record`;
+            //add the elements
+            document.getElementById('formInputs').innerHTML = inpHtml
+            //show the body
+            document.getElementById('showBody').classList.remove('d-none');
+        } else {
+            //record not found
+            showAlert(`record not found`, 2, 0)
         }
-    }
-    document.getElementById('formInputs').innerHTML = inpHtml
-    //show the body
-    document.getElementById('showBody').classList.remove('d-none');
 
+    }
+    //make the call.
+    xhrcall(1, `${apiUrl}projectdata/?projectid=${window.localStorage.currentDataItemId}`, "", "json", "", xhrDone, token)
 })
+
 
 document.getElementById('btn-edit').addEventListener('click', function() {
     let xhrDone = (res) => {
@@ -38,7 +56,7 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     let data = {};
 
     let currentproject = getCurrentProject();
-        let currentprojectdata = getCurrentProjectData();
+    let currentprojectdata = getCurrentProjectData();
 
     let projectfields = currentproject.schema.fields.split(",");
     let projectoriginalfields = currentproject.schema.originalfields.split(",")
