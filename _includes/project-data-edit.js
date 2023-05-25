@@ -1,10 +1,10 @@
+let project = JSON.parse(window.localStorage.currentDataItem);
+
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }
 
 whenDocumentReady(isReady = () => {
-
-    let project = JSON.parse(window.localStorage.currentDataItem);
 
 
     let xhrDone = (res) => {
@@ -47,6 +47,10 @@ whenDocumentReady(isReady = () => {
 
 
 document.getElementById('btn-edit').addEventListener('click', function() {
+
+    console.log(project)
+
+/*
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
@@ -78,4 +82,6 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     }
     var bodyobjectjson = JSON.stringify(bodyobj);
     xhrcall(4, `api/projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
+
+    */
 })
