@@ -45,7 +45,7 @@ let decodeJwt = async (req, secret) => {
             return (details)
         } catch (error) {
             console.log(error)
-            return("")
+            return ("")
         }
 
     }
@@ -139,7 +139,6 @@ export async function onRequestPost(context) {
     let kvname = "projects-data" + details.username + "*" + payLoad.projectid + "*" + id;
     //check it does not already exist
     projectData = JSON.stringify(projectData)
-    //await KV.delete(kvname);
     await KV.put(kvname, projectData);
     return new Response(JSON.stringify({ message: "Item added", data: projectData }), { status: 200 });
 
@@ -147,6 +146,7 @@ export async function onRequestPost(context) {
 }
 
 export async function onRequestDelete(context) {
+    //build the paramaters
     const {
         request, // same as existing Worker API
         env, // same as existing Worker API
@@ -155,17 +155,25 @@ export async function onRequestDelete(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
+    //decode the token
+    let token = await decodeJwt(request.headers, env.SECRET);
+    if (token == "") {
+        return new Response(JSON.stringify({ error: "not allowed to delete records" }), { status: 400 });
+    } else {
+        //get the content type
+        const contentType = request.headers.get('content-type')
+        let theData;
+        if (contentType != null) {
+            theData = await request.json();
+            const info = await context.env.DB.prepare(`UPDATE projectData SET isDeleted = '1',deletedAt = CURRENT_TIMESTAMP WHERE projectDataId = ${theData.id}`)
+                //.bind(1,CURRENT_TIMESTAMP,theData.id)
+                .run();
+            return new Response(JSON.stringify({ message: `Record has been deleted` }), { status: 200 });
 
-    contentType = request.headers.get('content-type');
-    if (contentType != null) {
-        //get the login credentials
-        payLoad = await request.json();
-        let details = await decodeJwt(request.headers, env.SECRET)
-        const KV = context.env.backpage;
-        //console.log("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.dataid)
-        await KV.delete("projects-data" + details.username + "*" + payLoad.projectid + "*" + payLoad.dataid);
-        return new Response(JSON.stringify({ message: "item deleted" }), { status: 200 });
+        }
     }
+    return new Response(JSON.stringify({ error: "server error" }), { status: 400 });
+
 }
 
 
@@ -189,24 +197,38 @@ export async function onRequestGet(context) {
         //get the search params
         const { searchParams } = new URL(request.url);
         //get the project id
-        let projectId = searchParams.get('projectid');
-        console.log(projectId)
+        let projectId = searchParams.get('projectId');
         //get the project dataId 
         const projectDataId = searchParams.get('projectDataId');
-        if (projectId != null) {
+        //set the template
+        const getTemplate = searchParams.get('getTemplate');
+        //debug
+        //console.log(getTemplate);
+        //console.log(projectDataId)
+        //console.log(projectId)
+        if ((projectId != null) && (projectId != "")) {
+
             //get the schema
             const query = context.env.DB.prepare(`SELECT id,isUsed,fieldName from projectSchema where projectId = '${projectId}'`);
             const queryResults = await query.all();
+
+            //debug
+            //const querya = context.env.DB.prepare(`SELECT * from projectData`);
+            //get the results
+            //const queryResultsa = await querya.all();
+            //console.log(queryResultsa)
+
             //get the projects and group by id
-            const query2 = context.env.DB.prepare(`SELECT projectData.projectDataId from projectData where projectData.projectId = '${projectId}' group by projectDataId `);
+            const query2 = context.env.DB.prepare(`SELECT projectData.projectDataId from projectData where projectData.projectId = '${projectId}' and isDeleted = 0 group by projectDataId `);
             //get the results
             const queryResults2 = await query2.all();
+            console.log(queryResults2)
             //loop through the projectdata results
             for (var i = 0; i < queryResults2.results.length; ++i) {
                 //get the id
                 let projectDataId = queryResults2.results[i].projectDataId;
                 //get the data
-                const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
+                const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' and projectData.isDeleted = 0`);
                 //get the results
                 const queryResults3 = await query3.all();
                 //put them into our array
@@ -219,14 +241,25 @@ export async function onRequestGet(context) {
             finData.schema = queryResults.results;
             //store the results. 
             finData.data = results;
+            //console.log(finData)
         } else {
             //return the one project
-            const queryData = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
+            const queryData = context.env.DB.prepare(`SELECT projectData.projectId,projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
             //get the results
             const queryDataResults = await queryData.all();
             //put them into our array
             //results.push(queryDataResults.results);
             finData.data = queryDataResults.results;
+
+            if (getTemplate != null) {
+                const queryTemplate = context.env.DB.prepare(`SELECT template from projects where id = '${queryDataResults.results[0].projectId}'`);
+                const queryTemplateResults = await queryTemplate.first();
+                //console.log(queryTemplateResults)
+                finData.template = queryTemplateResults;
+            } else {
+                finData.template = "";
+            }
+            //console.log(finData)
         }
         //debug
         //console.log(queryResults)

@@ -26,7 +26,7 @@ let decodeJwt = async (req, secret) => {
 let dataArray = [];
 let buildDataArray = (theData) => {
     let id = uuid.v4();
-    let projectData = { id: id, data: theData, createdAt: "21/12/2022" }
+    let projectData = { id: id, data: theData }
     dataArray.push(projectData)
     return (projectData)
 }
@@ -42,51 +42,44 @@ export async function onRequestPost(context) {
     } = context;
 
     try {
-        dataArray = []
-        let payLoad;
-        let projectName = "";
-        const contentType = request.headers.get('content-type')
-        if (contentType != null) {
-            //get the login credentials
-            payLoad = await request.json();
-        }
-        //decode jwt
-        let details = await decodeJwt(request.headers, env.SECRET)
-        //check for projects
-        const KV = context.env.backpage;
-        //delete the data
-        let kv = await KV.list({ prefix: "projects-data" + details.username + "*" + payLoad.projectid + "*" });
-        //delte old records
-        if (kv.keys.length > 0) {
-            for (var i = 0; i < kv.keys.length; ++i) {
-                await KV.delete(kv.keys[i].name);
-            }
-        }
-        //add new records
-        let projectsData = { data: [] }
-        let pData;
-        if (payLoad.data.length > 0) {
-            dataArray = [];
-            for (var i = 1; i < payLoad.data.length; ++i) {
-                let pData = buildDataArray(payLoad.data[i])
-                let kvname = "projects-data" + details.username + "*" + payLoad.projectid + "*" + pData.id;
-                await KV.put(kvname, JSON.stringify(pData));
-            }
-        }
-        //update the schema
-        let project = await KV.get("projects" + details.username + "*" + payLoad.projectid);
-        project = JSON.parse(project)
-        let tmp = "";
-        if (payLoad.fields.originalfields != "")
-            tmp = payLoad.fields.originalfields.toString();
-        let schemaJson = {
-            "fields": tmp,
-            "originalfields": tmp
-        }
-        project.schema = schemaJson
-        await KV.put("projects" + details.username + "*" + payLoad.projectid, JSON.stringify(project));
+        //set a data array
+        let theData;
+        let token = await decodeJwt(request.headers, env.SECRET);
+        if (token == "") {
+            return new Response(JSON.stringify({ error: "Not allowed to add records" }), { status: 400 });
+        } else {
+            //get the content type
+            const contentType = request.headers.get('content-type')
+            //check we have a content type
+            if (contentType != null) {
+                //get the data
+                theData = await request.json();
+                //clearconsole.log(theData)
 
-        return new Response(JSON.stringify({ message: `${dataArray.length} records imported`, data: JSON.stringify(dataArray) }), { status: 200 });
+                //delete old records
+                const deleteResult = await context.env.DB.prepare(`DELETE from projectData where projectId = ${theData.projectId}`).run();
+                //console.log(deleteResult);
+                
+                //add them
+                let counter=0;
+                for (var i = 0; i < theData.data.length; ++i) {
+                    //get the fieldname 
+                    const dataId = uuid.v4();
+                    for (const key in theData.data[i]) {
+                        //set the data
+                        const tdata = theData.data[i];
+                        //get the schema id from the fieldname
+                        const query = context.env.DB.prepare(`SELECT * from projectSchema where projectId = '${theData.projectId}' and fieldName = '${key}'`);
+                        const queryResult = await query.first();
+                        //insert it
+                        const insertResult = await context.env.DB.prepare(`INSERT INTO projectData ('projectId','projectDataId','SchemaId','fieldValue') VALUES ('${theData.projectId}','${dataId}','${queryResult.id}','${tdata[key]}')`).run();
+                    }
+                    //inc a counter
+                    counter++;
+                }
+                return new Response(JSON.stringify({ message: `${counter} records imported` }), { status: 200 });
+            }
+        }
     } catch (error) {
         return new Response(error, { status: 200 });
     }

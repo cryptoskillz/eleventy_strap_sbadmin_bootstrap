@@ -11,7 +11,7 @@ CREATE TABLE "projects" (
 	"id"	INTEGER,
 	"guid" INTEGER,
 	"name"	TEXT,
-	"templatenName"	TEXT,
+	"template"	TEXT,
 	"schema" TEXT,
 	"isDeleted" INTEGER DEFAULT 0,
 	"createdAt" TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -21,8 +21,19 @@ CREATE TABLE "projects" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-
-INSERT INTO "projects" ("id","guid","name") VALUES(1, '99ad01ac-062d-44f1-3c9d-69e1bf815700','Project 1');
+INSERT INTO "projects" ("id","guid","name","template") VALUES(1, '99ad01ac-062d-44f1-3c9d-69e1bf815700','Project 1','<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    first name {{firstName}} <br>
+    second name {{secondName}} <br>
+  </head>
+  <body>
+  </body>
+</html>');
 
 CREATE TABLE "projectData" (
 	"id" INTEGER,

@@ -13,17 +13,14 @@ add record will rely on the schema to be set
 
 
 */
-let backpages;
 
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
     //console.log(backpages)
-
+    window.localStorage.currentDataItemId = theId
     if (blank == 1)
         window.open(theUrl, "_blank")
-    else
-    {
-        window.localStorage.currentDataItemId = theId
+    else {
         window.location.href = theUrl;
     }
 
@@ -214,7 +211,7 @@ whenDocumentReady(isReady = () => {
     }
     let project = JSON.parse(window.localStorage.currentDataItem);
     console.log(project.id)
-    xhrcall(1, `${apiUrl}projectdata/?projectid=${project.id}`, "", "json", "", xhrDone, token)
+    xhrcall(1, `${apiUrl}projectdata/?projectId=${project.id}`, "", "json", "", xhrDone, token)
 
 })
 
