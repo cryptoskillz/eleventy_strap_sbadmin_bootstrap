@@ -165,7 +165,7 @@ export async function onRequestDelete(context) {
         let theData;
         if (contentType != null) {
             theData = await request.json();
-            const info = await context.env.DB.prepare(`UPDATE projectData SET isDeleted = '1',deletedAt = CURRENT_TIMESTAMP WHERE projectDataId = ${theData.id}`)
+            const info = await context.env.DB.prepare(`UPDATE projectData SET isDeleted = '1',deletedAt = CURRENT_TIMESTAMP WHERE projectDataId = '${theData.id}'`)
                 //.bind(1,CURRENT_TIMESTAMP,theData.id)
                 .run();
             return new Response(JSON.stringify({ message: `Record has been deleted` }), { status: 200 });
@@ -222,7 +222,7 @@ export async function onRequestGet(context) {
             const query2 = context.env.DB.prepare(`SELECT projectData.projectDataId from projectData where projectData.projectId = '${projectId}' and isDeleted = 0 group by projectDataId `);
             //get the results
             const queryResults2 = await query2.all();
-            console.log(queryResults2)
+            //console.log(queryResults2)
             //loop through the projectdata results
             for (var i = 0; i < queryResults2.results.length; ++i) {
                 //get the id
@@ -252,14 +252,14 @@ export async function onRequestGet(context) {
             finData.data = queryDataResults.results;
 
             if (getTemplate != null) {
-                const queryTemplate = context.env.DB.prepare(`SELECT template from projects where id = '${queryDataResults.results[0].projectId}'`);
-                const queryTemplateResults = await queryTemplate.first();
+                const queryTemplate = context.env.DB.prepare(`SELECT template,templateName as name from projects where id = '${queryDataResults.results[0].projectId}'`);
+                const queryTemplateResult = await queryTemplate.first();
                 //console.log(queryTemplateResults)
-                finData.template = queryTemplateResults;
+                finData.template = queryTemplateResult;
             } else {
                 finData.template = "";
             }
-            //console.log(finData)
+            console.log(finData)
         }
         //debug
         //console.log(queryResults)

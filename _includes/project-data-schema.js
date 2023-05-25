@@ -2,11 +2,20 @@
 
 when you update, refresh the form (chnage the label)
 */
+
+/*
 let newfields;
 let fields;
 let originalfields;
 let projectid;
 let project;
+*/
+
+let project = JSON.parse(window.localStorage.currentDataItem);
+let projecDatatId = window.localStorage.currentDataItemId
+
+
+
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()
 }

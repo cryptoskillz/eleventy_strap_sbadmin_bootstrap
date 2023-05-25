@@ -13,6 +13,9 @@ add record will rely on the schema to be set
 
 
 */
+let project = JSON.parse(window.localStorage.currentDataItem);
+let projectData;
+
 
 let loadURL = (theUrl, theId, blank = 0) => {
     //update this to use generic finctions
@@ -202,6 +205,7 @@ whenDocumentReady(isReady = () => {
         if (res.length == 0)
             showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV`, 2, 0)
         else {
+            projectData = JSON.parse(res);
             document.getElementById("showBody").classList.remove('d-none')
             if ((res.length != 0) && (res != "") && (res != null))
                 renderTable(res, [1, 0, 1, 1], "api/projectdata")
@@ -222,29 +226,74 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             window.location.href = `/project/data/import/`
             break;
         case "2":
-            let valid = 1
-            project = getCurrentProject()
-            if ((project.schema.originalfields == "") || (project.schema.originalfields == null)) {
-                showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
-                valid = 0;
+
+            let templateDone = (res) => {
+                //prcess the results
+                results = JSON.parse(res);
+                //check we have some 
+                console.log(results)
+                console.log(projectData)
+                if ((results.length != 0) && (results != "") && (results != null)) {
+                    let valid = 1;
+                    if (projectData.data.length == 0) {
+                        showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
+                        valid = 0;
+                    }
+
+                    if (results.template.template == "") {
+                        showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
+                        valid = 0;
+                    }
+
+                
+                    if (results.template.name == "") {
+                        showAlert(`Please add a template name to view it`, 2)
+                        valid = 0;
+
+                    }
+                    
+                    if (valid == 1) {
+                        let url = `/api/export/export/?projectId=${project.id}&secretId=${user.secret}`
+                        window.open(`${url}`, '_blank');
+
+                    }
+
+
+
+
+                }
+               
+
             }
+            //make the call.
+            xhrcall(1, `${apiUrl}projectdata/?projectId=&getTemplate=1&projectDataId=${window.localStorage.currentDataItemId}`, "", "json", "", templateDone, token)
 
-            if ((project.template == "") || (project.template == null)) {
-                showAlert(`Please save the template to view it`, 2)
-                valid = 0;
 
-            }
 
-            if ((project.templatename == "") || (project.templatename == null)) {
-                showAlert(`Please add a template name to view it`, 2)
-                valid = 0;
 
-            }
-            if (valid == 1) {
-                let url = `/api/export/export/?projectid=${project.id}&secretid=${user.secret}`
-                window.open(`${url}`, '_blank');
+            /*
+             if ((project.schema.originalfields == "") || (project.schema.originalfields == null)) {
+                 showAlert(`Unable to view template as no data has been added to add some click <a href="/project/data/import/">here</a>`, 2)
+                 valid = 0;
+             }
 
-            }
+             if ((project.template == "") || (project.template == null)) {
+                 showAlert(`Please save the template to view it`, 2)
+                 valid = 0;
+
+             }
+
+             if ((project.templatename == "") || (project.templatename == null)) {
+                 showAlert(`Please add a template name to view it`, 2)
+                 valid = 0;
+
+             }
+             if (valid == 1) {
+                 let url = `/api/export/export/?projectid=${project.id}&secretid=${user.secret}`
+                 window.open(`${url}`, '_blank');
+
+             }
+             */
 
             break;
         case "3":

@@ -1,5 +1,5 @@
 let project = JSON.parse(window.localStorage.currentDataItem);
-let projecDatatId = JSON.parse(window.localStorage.currentDataItemId)
+let projecDatatId = window.localStorage.currentDataItemId;
 let results;
 let whenDocumentReady = (f) => {
     /in/.test(document.readyState) ? setTimeout('whenDocumentReady(' + f + ')', 9) : f()

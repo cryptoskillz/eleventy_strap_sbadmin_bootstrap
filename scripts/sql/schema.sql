@@ -12,6 +12,7 @@ CREATE TABLE "projects" (
 	"guid" INTEGER,
 	"name"	TEXT,
 	"template"	TEXT,
+	"templateName" TEXT,
 	"schema" TEXT,
 	"isDeleted" INTEGER DEFAULT 0,
 	"createdAt" TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -21,7 +22,7 @@ CREATE TABLE "projects" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-INSERT INTO "projects" ("id","guid","name","template") VALUES(1, '99ad01ac-062d-44f1-3c9d-69e1bf815700','Project 1','<!DOCTYPE html>
+INSERT INTO "projects" ("id","guid","name","template","templateName") VALUES(1, '99ad01ac-062d-44f1-3c9d-69e1bf815700','Project 1','<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -33,12 +34,12 @@ INSERT INTO "projects" ("id","guid","name","template") VALUES(1, '99ad01ac-062d-
   </head>
   <body>
   </body>
-</html>');
+</html>','html5 Template');
 
 CREATE TABLE "projectData" (
 	"id" INTEGER,
 	"projectId" INTEGER,
-	"projectDataId" INTEGER,
+	"projectDataId" TEXT,
 	"schemaId" INTEGER,
 	"fieldValue" TEXT,
 	"isDeleted" INTEGER DEFAULT 0,
@@ -49,10 +50,10 @@ CREATE TABLE "projectData" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,1,'Chris');
-INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,1,2,'McC');
-INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,1,'Chris2');
-INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,2,2,'Mc2');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,'402b4c09-41d7-4159-a69a-165a887f5baa',1,'Chris');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,'402b4c09-41d7-4159-a69a-165a887f5baa',2,'McC');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,'57d8de63-6eac-4e10-bee3-8a2ab853b623',1,'Chris2');
+INSERT INTO "projectData" ("projectId","projectDataId","schemaId","fieldValue") VALUES(1,'57d8de63-6eac-4e10-bee3-8a2ab853b623',2,'Mc2');
 
 
 CREATE TABLE "projectSchema" (

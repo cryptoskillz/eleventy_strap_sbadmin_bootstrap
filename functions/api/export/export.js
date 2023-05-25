@@ -1,46 +1,3 @@
-let dataArray = [];
-let buildDataArray = (theData, theId = "") => {
-    //console.log("theData");
-    let id;
-    if (theId == "")
-        id = uuid.v4();
-    else
-        id = theId
-    //console.log(theData);
-    let projectData = { id: id, data: theData, createdAt: "21/12/2022" }
-    //console.log(projectData)
-    dataArray.push(projectData)
-    return (projectData)
-}
-
-let buildTemplate = (project, projectdata) => {
-    //hold the fields
-    let theFields;
-    ////hold the template
-    let theTemplate;
-    //hold the data
-    let theData;
-    //set the template
-    theTemplate = project.template;
-    //get the fields
-    theFields = Object.keys(projectdata.data)
-    //get the data
-    theData = Object.values(projectdata.data)
-    //loop through the data
-    for (var i = 0; i < theFields.length; ++i) {
-        let element = `\{\{${theFields[i]}\}\}`
-        theTemplate = theTemplate.replace(element, theData[i]);
-    }
-    //check we have data
-    if (theData.length == "")
-        theTemplate = "No data added for this project"
-
-    //check we have a template
-    if (theTemplate == "")
-        theTemplate = "No template added for this project"
-    return (theTemplate)
-}
-
 
 export async function onRequestGet(context) {
     const {
@@ -51,68 +8,61 @@ export async function onRequestGet(context) {
         next, // used for middleware or to fetch assets
         data, // arbitrary space for passing data between middlewares
     } = context;
-    const KV = context.env.backpage;
+    let finData = {}
+    let results = []
+    let dataArray = [];
 
     //get the paramaters
-    const { searchParams } = new URL(request.url)
-    let projectid = searchParams.get('projectid')
-    let secretid = searchParams.get('secretid')
-    let showproject = searchParams.get('showproject')
-    let showtemplate = searchParams.get('showtemplate')
-    let showdata = searchParams.get('showdata')
-    if (showproject == null)
-        showproject = 1;
-    if (showtemplate == null)
-        showtemplate = 1;
-    if (showdata == null)
-        showdata = 1;
+    const { searchParams } = new URL(request.url);
+
+    //get the project id
+    let projectId = searchParams.get('projectId');
     //get the secret id
-    let user = await KV.get("username" + secretid);
-    user = JSON.parse(user);
-    //tocheck if username matches
+    let secretId = searchParams.get('secretId');
+    //get the show project flag
+    let showProject = searchParams.get('showProject');
+    //get the show data flag 
+    let showData = searchParams.get('showData');
+
+    //clean up
+    if (showProject == null)
+        showProject = 1;
+    if (showData == null)
+        showData = 1;
 
     //get the project
-    let project = await KV.get("projects" + user.username + "*" + projectid);
-    project = JSON.parse(project)
+    const queryProject = context.env.DB.prepare(`SELECT id,name,template,templateName from projects where id = '${projectId}'`);
+    const queryProjectResults = await queryProject.first();
 
-    //get the projects list
-    let templates = []
-    let projectdatalist = await KV.list({ prefix: "projects-data" + user.username + "*" + projectid + "*" });
-    if (projectdatalist.keys.length > 0) {
-        for (var i = 0; i < projectdatalist.keys.length; ++i) {
-            //build the data object
-            let tmp = projectdatalist.keys[i].name.split('*');
-            let projectdata = await KV.get("projects-data" + user.username + "*" + projectid + "*" + tmp[2]);
-            //parse it
-            projectdata = JSON.parse(projectdata)
-            //store it
-            let pData2 = buildDataArray(projectdata.data, projectdata.id)
-            let template;
-            if (showtemplate == 1)
-                template = buildTemplate(project, projectdata)
+    //get the project data
+    const queryProjectData = context.env.DB.prepare(`SELECT projectData.projectDataId from projectData where projectData.projectId = '${projectId}' and isDeleted = 0 group by projectDataId `);
+    const queryProjectDataResults = await queryProjectData.all();
+    //add the project
+    if (showProject == 1)
+        finData.project = queryProjectResults
+
+    //loop through the projectdata results
+    for (var i = 0; i < queryProjectDataResults.results.length; ++i) {
+        //get the id
+        let projectDataId = queryProjectDataResults.results[i].projectDataId;
+        //get the data
+        const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' and projectData.isDeleted = 0`);
+        //get the results
+        const queryResults3 = await query3.all();
+        let dataRow = "";
+        for (var i2 = 0; i2 < queryResults3.results.length; ++i2) {
+            //get the data
+            let theRow = queryResults3.results[i2];
+            if (dataRow == "")
+                dataRow = dataRow + theRow.fieldValue;
             else
-                template = "";
-            //console.log(projectdata)
-            let tmpA = { template: template, project: project, data: pData2 }
-            if (showproject == 0)
-                delete tmpA.project;
-            if (showtemplate == 0)
-                delete tmpA.template;
-            if (showdata == 0)
-                delete tmpA.data;
-            //console.log(tmpA)
-            templates.push(tmpA)
-
+                 dataRow = dataRow +','+ theRow.fieldValue;
         }
-        //console.log(dataArray)
+        //put them into our array
+        results.push(dataRow);
     }
-
-    //merge it with the template
-    //check we have template / name and schema (fields set)
-
-    //return  it
-    return new Response(JSON.stringify({ templates }), { status: 200 });
-
-
+    //store the data
+    finData.data = results
+    return new Response(JSON.stringify({ "result":finData }), { status: 200 });
 
 }

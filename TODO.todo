@@ -32,11 +32,26 @@ projectdata.js
  ✔ add a loop for the above query and pull the query again and this time pull everything that matches this id @done (23-05-23 14:02)
  ✔ build a results object that is the schema (could be another end point) and the data flattened based on the schema @done (23-05-23 14:02)
  ✔ recode the render table function to use this new format. @done (23-05-25 01:46)
- ☐ Check the edit button works renderTable
- ☐ Check the delete buttons works on renderTable
+ ✔ Check the edit button works renderTable @done (23-05-25 21:50)
+ ✔ Check the delete buttons works on renderTable @done (23-05-25 21:50)
  ✔ Check the view button works on renderTable @done (23-05-25 01:58)
  ✔ project data edit code the update method @done (23-05-25 14:25)
  ✔ add a put element to the projectdata.js API @done (23-05-25 14:26)
+
+ export.js
+
+ ☐ user the secret to verify
+ ☐ add the field headers to the data (maybe)
+
+ schema
+
+ template
+
+ download
+
+ add record
+
+
 
  Login
 
