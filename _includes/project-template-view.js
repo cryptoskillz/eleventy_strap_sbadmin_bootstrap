@@ -50,5 +50,5 @@ whenDocumentReady(isReady = () => {
 
     }
     //make the call.
-    xhrcall(1, `${apiUrl}projectdata/?projectId=&getTemplate=1&projectDataId=${window.localStorage.currentDataItemId}`, "", "json", "", xhrDone, token)
+    xhrcall(1, `${apiUrl}projectdata/?projectId=&getTemplate=1&projectDataId=${window.localStorage.currentDataItemId}`, "", "json", "", xhrDone, token);
 })

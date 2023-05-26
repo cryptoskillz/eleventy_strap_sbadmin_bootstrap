@@ -60,6 +60,7 @@ CREATE TABLE "projectSchema" (
 	"id" INTEGER,
 	"projectId" INTEGER,
 	"fieldName" TEXT,
+	"originalFieldName" TEXT,
 	"isUsed" INTEGER DEFAULT 1,
 	"isDeleted" INTEGER DEFAULT 0,
 	"createdAt" TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -69,8 +70,8 @@ CREATE TABLE "projectSchema" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-INSERT INTO "projectSchema" ("projectId","fieldName") VALUES(1,'firstName');
-INSERT INTO "projectSchema" ("projectId","fieldName") VALUES(1,'secondName');
+INSERT INTO "projectSchema" ("projectId","fieldName","originalFieldName") VALUES(1,'firstName','firstName');
+INSERT INTO "projectSchema" ("projectId","fieldName","originalFieldName") VALUES(1,'secondName','secondName');
 
 
 

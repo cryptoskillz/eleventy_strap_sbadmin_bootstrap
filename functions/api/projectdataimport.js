@@ -54,10 +54,22 @@ export async function onRequestPost(context) {
             if (contentType != null) {
                 //get the data
                 theData = await request.json();
-                //clearconsole.log(theData)
+                //delete the schema data
+                const deleteResult = await context.env.DB.prepare(`DELETE from projectSchema where projectId = '${theData.projectId}'`).run();
+                console.log(deleteResult)
+
+                //get the fields
+                let theFields = theData.fields.fields;
+                //split it 
+                theFields = theFields.split(',');
+                for (var i = 0; i < theFields.length; ++i) {
+                    let theField = theFields[i];
+                    //insert the schema into the database
+                    const insertResult = await context.env.DB.prepare(`INSERT INTO projectSchema ('projectId','fieldName','originalFieldName') VALUES ('${theData.projectId}','${theField}','${theField}')`).run();
+                }
 
                 //delete old records
-                const deleteResult = await context.env.DB.prepare(`DELETE from projectData where projectId = ${theData.projectId}`).run();
+                const deleteResult2 = await context.env.DB.prepare(`DELETE from projectData where projectId = ${theData.projectId}`).run();
                 //console.log(deleteResult);
                 
                 //add them

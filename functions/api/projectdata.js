@@ -209,7 +209,7 @@ export async function onRequestGet(context) {
         if ((projectId != null) && (projectId != "")) {
 
             //get the schema
-            const query = context.env.DB.prepare(`SELECT id,isUsed,fieldName from projectSchema where projectId = '${projectId}'`);
+            const query = context.env.DB.prepare(`SELECT id,isUsed,fieldName,originalFieldName from projectSchema where projectId = '${projectId}'`);
             const queryResults = await query.all();
 
             //debug
@@ -228,7 +228,7 @@ export async function onRequestGet(context) {
                 //get the id
                 let projectDataId = queryResults2.results[i].projectDataId;
                 //get the data
-                const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' and projectData.isDeleted = 0`);
+                const query3 = context.env.DB.prepare(`SELECT projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.originalFieldName,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' and projectData.isDeleted = 0`);
                 //get the results
                 const queryResults3 = await query3.all();
                 //put them into our array
@@ -244,7 +244,7 @@ export async function onRequestGet(context) {
             //console.log(finData)
         } else {
             //return the one project
-            const queryData = context.env.DB.prepare(`SELECT projectData.projectId,projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
+            const queryData = context.env.DB.prepare(`SELECT projectData.projectId,projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,,projectSchema.originalFieldName,projectSchema.originalFieldName,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
             //get the results
             const queryDataResults = await queryData.all();
             //put them into our array
