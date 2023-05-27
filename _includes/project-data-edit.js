@@ -19,7 +19,7 @@ whenDocumentReady(isReady = () => {
             for (var i = 0; i < results.data.length; ++i) {
                 //get the row
                 let theRow = results.data[i];
-                console.log(theRow);
+                //console.log(theRow);
                 //loop through the fields
 
                 if (theRow.isUsed == 1) {

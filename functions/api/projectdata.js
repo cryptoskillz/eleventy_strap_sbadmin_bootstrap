@@ -121,6 +121,31 @@ export async function onRequestPost(context) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
+
+    let theData;
+    let token = await decodeJwt(request.headers, env.SECRET);
+    if (token == "") {
+        return new Response(JSON.stringify({ error: "Not allowed to add records" }), { status: 400 });
+    } else {
+        //get the content type
+        const contentType = request.headers.get('content-type')
+        //check we have a content type
+        if (contentType != null) {
+            //get the data
+            theData = await request.json();
+            //console.log(theData);
+            const dataId = uuid.v4();
+            for (var i = 0; i < theData.data.length; ++i) {
+                const theSQL = `INSERT INTO projectData ('projectId','projectDataId','SchemaId','fieldValue') VALUES ('${theData.projectId}','${dataId}','${theData.data[i].id}','${theData.data[i].fieldValue}')`
+                //console.log(theSQL);
+                const insertResult = await context.env.DB.prepare(theSQL).run();
+            }
+        }
+    }
+    return new Response(JSON.stringify({ message: "Record added" }), { status: 200 });
+
+
+    /*
     let payLoad;
     let projectName = "";
     const contentType = request.headers.get('content-type')
@@ -141,7 +166,7 @@ export async function onRequestPost(context) {
     projectData = JSON.stringify(projectData)
     await KV.put(kvname, projectData);
     return new Response(JSON.stringify({ message: "Item added", data: projectData }), { status: 200 });
-
+    */
 
 }
 
@@ -237,7 +262,7 @@ export async function onRequestGet(context) {
                 //console.log(queryResults3.results)
             }
 
-             if (getTemplate != null) {
+            if (getTemplate != null) {
                 const queryTemplate = context.env.DB.prepare(`SELECT template,templateName as name from projects where id = '${projectId}'`);
                 const queryTemplateResult = await queryTemplate.first();
                 //console.log(queryTemplateResults)

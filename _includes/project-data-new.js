@@ -1,3 +1,7 @@
+let project = JSON.parse(window.localStorage.currentDataItem);
+
+
+
 let fields;
 let originalfields;
 let projectid;
@@ -6,76 +10,100 @@ let whenDocumentReady = (f) => {
 }
 
 whenDocumentReady(isReady = () => {
-
-    let project = window.localStorage.project
-    if (project == undefined)
-        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
-    else {
-        //get the project
-        project = JSON.parse(project);
-        fields = project.schema.fields.split(",");
-        originalfields = project.schema.originalfields.split(",")
-
-        //console.log(fields)
-
-        //fields = Object.keys(fields);
-        //loop through  the keys
+    //done function
+    let xhrDone = (res) => {
+        //set at input variable
         let inpHtml = "";
-        for (var i = 0; i < fields.length; ++i) {
-
-            if (fields[i] == "UNUSED") {
-                inpHtml = inpHtml + `    <div class="form-group" >
-            <label>${originalfields[i]} (note this is not used in the current schema)</label>
-<input type="text" class="form-control form-control-user" id="inp-${originalfields[i]}" aria-describedby="emailHelp" placeholder="Enter ${originalfields[i]}" value="">
+        //prcess the results
+        results = JSON.parse(res);
+        //check we have some 
+        if ((results.length != 0) && (results != "") && (results != null)) {
+            //loop through the results
+            for (var i = 0; i < results.schema.length; ++i) {
+                //get the row
+                let theRow = results.schema[i];
+                //check if it is used element
+                if (theRow.isUsed == 1) {
+                    //build the input elements
+                    inpHtml = inpHtml + `<div class="form-group" >
+                                            <label>${theRow.fieldName}</label>
+                                            <input type="text" class="form-control form-control-user" id="inp-${theRow.fieldName}" aria-describedby="emailHelp" placeholder="Enter ${theRow.fieldName}" value="">
+                                            </div>`
+                } else {
+                    //build the unused element
+                    inpHtml = inpHtml + `    <div class="form-group" >
+            <label>${theRow.originalFieldName} (note this is not used in the current schema)</label>
+<input type="text" class="form-control form-control-user" id="inp-${theRow.originalFieldName}" aria-describedby="emailHelp" placeholder="Enter ${theRow.originalFieldName}" value="">
 </div>`
-            } else {
+                }
 
 
-                inpHtml = inpHtml + `<div class="form-group" >
-            <label>${fields[i]}</label>
-<input type="text" class="form-control form-control-user" id="inp-${fields[i]}" aria-describedby="emailHelp" placeholder="Enter ${fields[i]}" value="">
-</div>`
             }
-            //console.log(inpHtml)
+            //set the header
+            document.getElementById('project-header').innerHTML = `Add Record`;
+            //add the elements
+            document.getElementById('formInputs').innerHTML = inpHtml
+            //show the body
+            document.getElementById('showBody').classList.remove('d-none');
+        } else {
+            //record not found
+            showAlert(`record not found`, 2, 0)
         }
-        document.getElementById('formInputs').innerHTML = inpHtml
-        //show the body
-        document.getElementById('showBody').classList.remove('d-none');
 
     }
+    //make the call.
+    if ((project == undefined) || (project == null) || (project == ""))
+        showAlert(`project not found click <a href="/projects/">here</a> to add one`, 2, 0);
+    else
+        xhrcall(1, `${apiUrl}projectdata/?projectId=${project.id}&projectDataId=`, "", "json", "", xhrDone, token)
 
 })
 
-document.getElementById('btn-create').addEventListener('click', function() {
-    let project = getCurrentProject()
+
+document.getElementById('btn-create-data').addEventListener('click', function() {
+    //done function
     let xhrDone = (res) => {
         //parse the response
         res = JSON.parse(res);
+        //show the done message
         showAlert(res.message, 1, 0);
-        addCachedProjectData(res, 0);
-        document.getElementById('project-header').innerHTML = "Project record added";
+        //hide the header
+        document.getElementById('project-header').classList.add("d-none");
+        //hide the form inputs
+        //note we could just blank them so they can add another
         document.getElementById('formInputs').classList.add("d-none");
-        document.getElementById('btn-create').classList.add("d-none");
+        //hide the button create (same as above)
+        document.getElementById('btn-create-data').classList.add("d-none");
     }
-    let data = {};
-    for (var i = 0; i < fields.length; ++i) {
+    //set a data array
+    let data = [];
+    //loop throuh the schema
+    for (var i = 0; i < results.schema.length; ++i) {
+        //get the trow
+        const theRow = results.schema[i];
+        //set an input value
         let inpValue = "";
-        if (fields[i] == "UNUSED") {
-            inpValue = document.getElementById("inp-" + originalfields[i]).value;
-            data[originalfields[i]] = inpValue;
+        //check if it is being used
+        if (theRow.isUsed == 0) {
+            //set the original field name
+            inpValue = document.getElementById("inp-" + theRow.originalFieldName).value;
+            theRow.fieldValue = inpValue;
 
         } else {
-            inpValue = document.getElementById("inp-" + fields[i]).value;
-            data[fields[i]] = inpValue;
-
+            //set the new field name
+            inpValue = document.getElementById("inp-" + theRow.fieldName).value;
+            theRow.fieldValue = inpValue;
         }
+        //add it to the array
+        data.push(theRow);
     }
-    //let project = window.localStorage.project
-    //project = JSON.parse(project);
+    //build the object
     let bodyobj = {
         data: data,
-        projectid: project.id
+        projectId: project.id
     }
+    //parse the JSON
     var bodyobjectjson = JSON.stringify(bodyobj);
-    xhrcall(0, `api/projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
+    //make the call
+    xhrcall(0, `${apiUrl}projectdata/`, bodyobjectjson, "json", "", xhrDone, token)
 })

@@ -56,7 +56,7 @@ export async function onRequestPost(context) {
                 theData = await request.json();
                 //delete the schema data
                 const deleteResult = await context.env.DB.prepare(`DELETE from projectSchema where projectId = '${theData.projectId}'`).run();
-                console.log(deleteResult)
+                //console.log(deleteResult)
 
                 //get the fields
                 let theFields = theData.fields.fields;
