@@ -237,6 +237,15 @@ export async function onRequestGet(context) {
                 //console.log(queryResults3.results)
             }
 
+             if (getTemplate != null) {
+                const queryTemplate = context.env.DB.prepare(`SELECT template,templateName as name from projects where id = '${projectId}'`);
+                const queryTemplateResult = await queryTemplate.first();
+                //console.log(queryTemplateResults)
+                finData.template = queryTemplateResult;
+            } else {
+                finData.template = "";
+            }
+
             //store the schema
             finData.schema = queryResults.results;
             //store the results. 
@@ -244,7 +253,7 @@ export async function onRequestGet(context) {
             //console.log(finData)
         } else {
             //return the one project
-            const queryData = context.env.DB.prepare(`SELECT projectData.projectId,projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,,projectSchema.originalFieldName,projectSchema.originalFieldName,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
+            const queryData = context.env.DB.prepare(`SELECT projectData.projectId,projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.originalFieldName,projectSchema.originalFieldName,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `);
             //get the results
             const queryDataResults = await queryData.all();
             //put them into our array
@@ -252,6 +261,8 @@ export async function onRequestGet(context) {
             finData.data = queryDataResults.results;
 
             if (getTemplate != null) {
+                //console.log(`SELECT projectData.projectId,projectData.id,projectData.projectDataId,projectData.schemaId,projectSchema.isUsed,projectSchema.originalFieldName,projectSchema.originalFieldName,projectSchema.fieldName,projectData.fieldValue from projectData LEFT JOIN projectSchema ON projectData.schemaId = projectSchema.id where projectData.projectDataId = '${projectDataId}' `)
+                //console.log(queryDataResults)
                 const queryTemplate = context.env.DB.prepare(`SELECT template,templateName as name from projects where id = '${queryDataResults.results[0].projectId}'`);
                 const queryTemplateResult = await queryTemplate.first();
                 //console.log(queryTemplateResults)
@@ -259,7 +270,7 @@ export async function onRequestGet(context) {
             } else {
                 finData.template = "";
             }
-            console.log(finData)
+            //console.log(finData)
         }
         //debug
         //console.log(queryResults)

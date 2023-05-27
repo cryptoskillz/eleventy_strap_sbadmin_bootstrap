@@ -46,7 +46,16 @@ projectdata.js
 
  schema
 
+ ✔ refactor the schema.js @done (23-05-26 14:05)
+ ✔ add the api method @done (23-05-26 14:05)
+
  template
+
+ ☐ add a template library
+ ☐ add AI template generation
+ ☐ clean up the design
+ ☐ maybe add a template name as well as template render name ie "awesome template 1" and "//${{id}_{{name}}"
+ ☐ make codemirror show as right now you have to click it, it is something to do with the refresh i think.
 
  download
 

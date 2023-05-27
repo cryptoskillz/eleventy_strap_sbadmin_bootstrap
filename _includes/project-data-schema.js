@@ -104,5 +104,4 @@ document.getElementById('btn-edit').addEventListener('click', function() {
     var bodyobjectjson = JSON.stringify(bodyobj);
     //pass it to the API
     xhrcall(4, `${apiUrl}schema/`, bodyobjectjson, "json", "", xhrDone, token);
-
 })
