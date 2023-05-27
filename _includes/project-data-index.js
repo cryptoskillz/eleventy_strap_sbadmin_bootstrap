@@ -14,7 +14,7 @@ add record will rely on the schema to be set
 
 */
 let project = JSON.parse(window.localStorage.currentDataItem);
-let projectData;
+let results;
 
 
 let loadURL = (theUrl, theId, blank = 0) => {
@@ -32,8 +32,7 @@ let loadURL = (theUrl, theId, blank = 0) => {
 //table render
 let renderTable = (data, actions = [], method = "") => {
     //parse the results
-    let results = JSON.parse(data)
-
+    results = JSON.parse(data)
     //build the columns from the scheama
     let columns = [];
     //set the unsed fields
@@ -123,74 +122,64 @@ let renderTable = (data, actions = [], method = "") => {
 }
 
 let zipBackPages = () => {
-    let projectdata = getProjectAlldata()
-    let project = getCurrentProject();
-    let theCode = project.template;
-    let theTemplateName = project.templatename;
-    valid = 1;
-    //console.log(projectdata)
-
-    if ((projectdata.length == "") || (projectdata == null) || (projectdata == null)) {
+    //init zip
+    let zip = new JSZip();
+    //set a valid flag
+    let valid = 1;
+    //check we have some data
+    if ((results.data.length == "") || (results.data == null) || (results.data == null)) {
         showAlert('No data for this project add some here <a href="/project/data/import/">here</a>', 2)
         valid = 0;
     }
 
-    if ((theCode == "") || (theCode == null)) {
+    //check we have a template
+    if ((results.template.template == "") || (results.template.template == null)) {
         showAlert('Template is not set set it <a href="/project/data/template">here</a>', 2)
         valid = 0;
     }
-    if ((theTemplateName == "") || (theTemplateName == null)) {
-        showAlert('Template name is not set set it <a href="/project/data/template">here</a>', 2)
-        valid = 0;
+
+    //debug
+    //results.template.name = "";
+    //checkw we have a template name
+    if ((results.template.name == "") || (results.template.name == null)) {
+        showAlert('Template name is not set using GUID set it here if you want specific names <a href="/project/data/template">here</a>', 2)
     }
-
+    //check if we should process the templates
     if (valid == 1) {
-        //process the data
-        let keys;
-        let theData;
-        let theName
-        //init the zipper
-        let zip = new JSZip();
-        //loop through the pages
-        for (var i = 0; i < projectdata.length; ++i) {
-            let tmpCode = theCode;
-            //the keys should not be different so we could move this out of the loop
-            theKeys = Object.keys(projectdata[i].data)
-            //console.log(theKeys)
-            //get the data
-            theData = projectdata[i].data
-            //console.log(theData)
+        //get the first row of data
+        let theData = results.data;
+        //make sure we have data and someone is not trying to be naughty
+        //loop through the data
+        for (var i = 0; i < results.data.length; ++i) {
+            //get the row
+            let theRow = results.data[i];
+            //console.log(theRow)
             //set the template
-            theName = theTemplateName
-            //loop through the data
-            for (var key in theData) {
-                //loop through the keys
-                for (var key2 in theKeys) {
-
-                    //check if we have a matching key
-                    if (key == theKeys[key2]) {
-                        //set it up to suport liqiud
-                        let keyReplace = `\{\{${key}\}\}`
-                        //replace the key in the template with the data
-                        tmpCode = tmpCode.replace(keyReplace, theData[key])
-                        //check it is not blank
-                        if (theData[key] != "")
-                            theName = theName.replace(keyReplace, theData[key])
-                        else
-                            theName = theName.replace(keyReplace, "")
-                    }
-                }
+            let tmpTemplate = results.template.template;
+            //set the template name
+            tmpName = results.template.name
+            //loop through the fields
+            for (var i2 = 0; i2 < theRow.length; ++i2) {
+                //get the element
+                let theElement = `\{\{${theRow[i2].fieldName}\}\}`;
+                //replace it
+                tmpTemplate = tmpTemplate.replace(theElement, theRow[i2].fieldValue);
+                //check if its the template name and replace it
+                if (theRow[i2].fieldName == tmpName)
+                    tmpName = tmpName.replace(`${theRow[i2].fieldName}`, `${theRow[i2].fieldValue}`)
             }
-            //console.log(tmpCode)
-            //add the zip file
-            zip.file(`backpages/${theName}/index.html`, tmpCode);
+            //if there is not template name set the GUID
+            if (tmpName == "")
+                tmpName = `${theRow[0].projectDataId}`;
+            zip.file(`backpages/${tmpName}/index.html`, tmpTemplate);
         }
-        //create the zip
+        //create the zip file
         zip.generateAsync({
             type: "base64"
         }).then(function(content) {
             window.location.href = "data:application/zip;base64," + content;
         });
+
     }
 
 
@@ -214,8 +203,7 @@ whenDocumentReady(isReady = () => {
 
     }
     let project = JSON.parse(window.localStorage.currentDataItem);
-    console.log(project.id)
-    xhrcall(1, `${apiUrl}projectdata/?projectId=${project.id}`, "", "json", "", xhrDone, token)
+    xhrcall(1, `${apiUrl}projectdata/?projectId=${project.id}&getTemplate=1`, "", "json", "", xhrDone, token)
 
 })
 
@@ -231,8 +219,6 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
                 //prcess the results
                 results = JSON.parse(res);
                 //check we have some 
-                console.log(results)
-                console.log(projectData)
                 if ((results.length != 0) && (results != "") && (results != null)) {
                     let valid = 1;
                     if (projectData.data.length == 0) {
@@ -245,13 +231,13 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
                         valid = 0;
                     }
 
-                
+
                     if (results.template.name == "") {
                         showAlert(`Please add a template name to view it`, 2)
                         valid = 0;
 
                     }
-                    
+
                     if (valid == 1) {
                         let url = `/api/export/export/?projectId=${project.id}&secretId=${user.secret}`
                         window.open(`${url}`, '_blank');
@@ -262,7 +248,7 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
 
 
                 }
-               
+
 
             }
             //make the call.
@@ -306,8 +292,7 @@ document.getElementById('pageActionSelect').addEventListener('change', function(
             zipBackPages()
             break;
         case "6":
-            projectAllData = getProjectAlldata("", 0);
-            if ((projectAllData.length != 0) && (projectAllData != "") && (projectAllData != null))
+            if ((results.data.length != 0) && (results.data != "") && (results.data != null))
                 window.location.href = `/project/data/new/`
             else
                 showAlert(`No data added, click <a href="/project/data/import/">here<a/> to import from a CSV before you can add records`, 2)

@@ -56,10 +56,17 @@ projectdata.js
  ☐ clean up the design
  ☐ maybe add a template name as well as template render name ie "awesome template 1" and "//${{id}_{{name}}"
  ☐ make codemirror show as right now you have to click it, it is something to do with the refresh i think.
+ ☐ update place holder for template name
 
  download
 
  add record
+
+ publish
+
+ ☐ publish to s3
+ ☐ publish to github pages
+ ☐ publish to cloudflare
 
 
 
